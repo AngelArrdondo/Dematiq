@@ -1,0 +1,407 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Tipografía y Color Base - MODIFICACIÓN CLAVE */
+body {
+  /* Aplica la fuente Roboto a toda la página */
+  font-family: 'Roboto', sans-serif; 
+  /* Aplicamos el gris de fondo que tenías, aunque la imagen era blanca */
+  background-color: #a4aeb0; 
+}
+
+/* Barra de navegación */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 175px;
+  position: sticky;
+  top: 0;
+  background: #fff; /* fondo blanco */
+  z-index: 1000;    /* se asegura de estar encima */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* sombra sutil */
+}
+
+
+.logo img {
+  height: 100px;    /* un poco más compacto */
+  width: auto;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 22px; /* antes 25px, ahora más junto */
+}
+
+nav ul li a {
+  text-decoration: none;
+  /* Color de texto gris oscuro de la imagen */
+  color: #525A65; 
+  /* Peso de letra para que se vea como en la imagen */
+  font-weight: 700; 
+  font-size: 22px;  
+  /* Añadimos padding y radio para que el fondo del hover se vea bien */
+  padding: 8px 12px; 
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+/* ESTILOS DE HOVER MODIFICADOS */
+nav ul li a:hover {
+  /* Fondo azul medio claro */
+  background-color: #ADD8E6; 
+  /* Mantenemos el color de letra gris original para buen contraste */
+  color: #525A65; 
+}
+/* === Tipografía global (igual que la principal) === */
+body {
+  font-family: 'Roboto', sans-serif; 
+  background-color: #a4aeb0; /* gris claro que ya usabas */
+  color: #333;
+  line-height: 1.6;
+}
+
+/* === Títulos === */
+h1, h2 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  color: #212529;
+}
+
+/* === Recuadros de contacto === */
+.contact-card {
+  background: #fff; /* Fondo blanco */
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* === Botón de descarga === */
+.download-btn {
+  display: inline-block;
+  background: #007bff;
+  color: #fff !important;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-top: 15px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.download-btn:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+/* === Iconos sociales === */
+.social-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.social-icons img {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s ease;
+}
+
+.social-icons img:hover {
+  transform: scale(1.2);
+}
+/* Carrusel personalizado */
+.carousel {
+  max-width: 11100px;    /* ancho máximo del carrusel */
+  margin: 30px auto;    /* centrado y con espacio arriba/abajo */
+}
+
+.carousel-item img {
+  height: 550px;        /* altura fija */
+  object-fit: cover;    /* recorta sin deformar */
+  border-radius: 12px; /* esquinas redondeadas (opcional) */
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5); /* fondo semitransparente */
+  padding: 15px;
+  border-radius: 8px;
+}
+
+/* NUEVAS REGLAS PARA EL TAMAÑO DE TEXTO DEL CARRUSEL */
+.carousel-caption h5 {
+    /* Título principal grande y llamativo */
+    font-size: 3rem; 
+    font-weight: 700;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+.carousel-caption p {
+    /* Subtítulo o descripción */
+    font-size: 1.5rem; 
+    font-weight: 400; /* Normal para que contraste con el título */
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+/* FIN DE LAS NUEVAS REGLAS DEL CARRUSEL */
+
+
+/* Tarjetas personalizadas */
+.custom-card-link {
+  text-decoration: none;
+  /* Color de texto base, aplicamos el color de la imagen */
+  color: #525A65; 
+}
+
+.custom-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.custom-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 255, 0.4);
+  border: 3px solid #007bff;
+}
+
+.card-title {
+  font-size: 1.5rem; 
+  /* El color del título de la tarjeta en el carrusel lo mantengo en blanco para contraste */
+  color: #fff; 
+  font-weight: 700; /* Aseguramos el mismo peso que la navegación */
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+/* Sección de asociaciones */
+.asociaciones {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f8f9fa; /* fondo gris suave */
+}
+
+.asociaciones h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+/* Contenedor de los logos */
+.container-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* Tarjeta del logo */
+.logo-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 180px;
+  height: 120px;
+  text-decoration: none;
+}
+
+/* Imagen dentro del logo */
+.logo-card img {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+/* Efecto al pasar el cursor */
+.logo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+/* Sección de Ensamble */
+.ensamble {
+  text-align: center;
+  padding: 60px 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ensamble h2 {
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Botones de tipo de máquina */
+.tipo-maquina {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.btn-maquina {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-maquina:hover {
+  transform: translateY(-3px);
+}
+
+/* Colores activos */
+.active-auto {
+  background-color: #007bff; /* Azul principal */
+  color: white;
+}
+
+.active-semi {
+  background-color: #2196f3; /* Azul más claro */
+  color: white;
+}
+
+.active-manual {
+  background-color: #42a5f5; /* Azul celeste */
+  color: white;
+}
+
+/* Carruseles */
+.carrusel-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
+ /* === SECCIÓN SOLUCIONES === */
+    .seccion-soluciones {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .seccion-soluciones h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .botones-soluciones {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+
+    .botones-soluciones a {
+      text-decoration: none;
+    }
+
+    .btn-solucion {
+      background-color: #e9ecef;
+      border: none;
+      color: #333;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-solucion:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    /* === SECCIÓN ENSAMBLE === */
+    .ensamble {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .tipo-maquina {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-maquina {
+      background-color: #e9ecef;
+      border: none;
+      color: #333;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .btn-maquina:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-maquina.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+body {
+  margin: 0;
+  background: linear-gradient(
+    180deg,
+    #f8fbff 0%,
+    #eef4f9 100%
+  );
+}
+
+.custom-card {
+  height: 280px;            /* 👈 ajusta el alto que más te guste */
+  position: relative;
+}
+.custom-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* 👈 CLAVE: recorta sin deformar */
+}
+
+/* ===== Flechas del carrusel en color negro ===== */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-image: none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.carousel-control-prev-icon::after {
+  content: '‹';
+  font-size: 3rem;
+  color: #000;
+  font-weight: bold;
+}
+
+.carousel-control-next-icon::after {
+  content: '›';
+  font-size: 3rem;
+  color: #000;
+  font-weight: bold;
+}
+
