@@ -1,0 +1,55 @@
+/* Carrusel personalizado */
+.carousel {
+  max-width: 11100px;    /* ancho máximo del carrusel */
+  margin: 30px auto;    /* centrado y con espacio arriba/abajo */
+}
+
+.carousel-item img {
+  height: 550px;        /* altura fija */
+  object-fit: cover;    /* recorta sin deformar */
+  border-radius: 12px; /* esquinas redondeadas (opcional) */
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5); /* fondo semitransparente */
+  padding: 15px;
+  border-radius: 8px;
+}
+
+/* NUEVAS REGLAS PARA EL TAMAÑO DE TEXTO DEL CARRUSEL */
+.carousel-caption h5 {
+    /* Título principal grande y llamativo */
+    font-size: 3rem; 
+    font-weight: 700;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+.carousel-caption p {
+    /* Subtítulo o descripción */
+    font-size: 1.5rem; 
+    font-weight: 400; /* Normal para que contraste con el título */
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+/* FIN DE LAS NUEVAS REGLAS DEL CARRUSEL */
+
+/* ===== Flechas del carrusel en color negro ===== */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-image: none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.carousel-control-prev-icon::after {
+  content: '‹';
+  font-size: 3rem;
+  color: #000;
+  font-weight: bold;
+}
+
+.carousel-control-next-icon::after {
+  content: '›';
+  font-size: 3rem;
+  color: #000;
+  font-weight: bold;
+}

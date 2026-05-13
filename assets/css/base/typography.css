@@ -1,0 +1,22 @@
+/* Tipografía y Color Base - MODIFICACIÓN CLAVE */
+body {
+  /* Aplica la fuente Roboto a toda la página */
+  font-family: 'Roboto', sans-serif; 
+  /* Aplicamos el gris de fondo que tenías, aunque la imagen era blanca */
+  background-color: #a4aeb0; 
+}
+
+/* === Tipografía global (igual que la principal) === */
+body {
+  font-family: 'Roboto', sans-serif; 
+  background-color: #a4aeb0; /* gris claro que ya usabas */
+  color: #333;
+  line-height: 1.6;
+}
+
+/* === Títulos === */
+h1, h2 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  color: #212529;
+}

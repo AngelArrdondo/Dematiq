@@ -1,0 +1,17 @@
+/* Barra de navegación */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 175px;
+  position: sticky;
+  top: 0;
+  background: #fff; /* fondo blanco */
+  z-index: 1000;    /* se asegura de estar encima */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* sombra sutil */
+}
+
+.logo img {
+  height: 100px;    /* un poco más compacto */
+  width: auto;
+}

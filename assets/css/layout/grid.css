@@ -1,0 +1,13 @@
+/* Contenedor de los logos */
+.container-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* Carruseles */
+.carrusel-container {
+  max-width: 900px;
+  margin: 0 auto;
+}

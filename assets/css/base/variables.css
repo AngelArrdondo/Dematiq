@@ -1,0 +1,17 @@
+:root {
+  /* Color Palette */
+  --color-primary: #007bff;
+  --color-primary-hover: #0056b3;
+  --color-white: #fff;
+  --color-light-gray: #f8f9fa;
+  --color-medium-gray: #a4aeb0;
+  --color-dark-gray: #525A65;
+  --color-dark: #212529;
+  --color-black: #000;
+  --color-light-blue: #ADD8E6;
+  
+  /* Font */
+  --font-primary: 'Roboto', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+}

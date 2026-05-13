@@ -1,0 +1,26 @@
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 22px; /* antes 25px, ahora más junto */
+}
+
+nav ul li a {
+  text-decoration: none;
+  /* Color de texto gris oscuro de la imagen */
+  color: #525A65; 
+  /* Peso de letra para que se vea como en la imagen */
+  font-weight: 700; 
+  font-size: 22px;  
+  /* Añadimos padding y radio para que el fondo del hover se vea bien */
+  padding: 8px 12px; 
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+/* ESTILOS DE HOVER MODIFICADOS */
+nav ul li a:hover {
+  /* Fondo azul medio claro */
+  background-color: #ADD8E6; 
+  /* Mantenemos el color de letra gris original para buen contraste */
+  color: #525A65; 
+}

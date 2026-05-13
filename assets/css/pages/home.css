@@ -1,0 +1,64 @@
+/* Sección de asociaciones */
+.asociaciones {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f8f9fa; /* fondo gris suave */
+}
+
+.asociaciones h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+/* Sección de Ensamble */
+.ensamble {
+  text-align: center;
+  padding: 60px 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ensamble h2 {
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+ /* === SECCIÓN SOLUCIONES === */
+.seccion-soluciones {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.seccion-soluciones h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.botones-soluciones {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.botones-soluciones a {
+  text-decoration: none;
+}
+
+/* === SECCIÓN ENSAMBLE === */
+.ensamble {
+  text-align: center;
+  padding: 30px;
+}
+
+.tipo-maquina {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}

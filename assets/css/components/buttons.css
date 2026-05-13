@@ -1,0 +1,91 @@
+/* === Botón de descarga === */
+.download-btn {
+  display: inline-block;
+  background: #007bff;
+  color: #fff !important;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-top: 15px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.download-btn:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Botones de tipo de máquina */
+.tipo-maquina {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.btn-maquina {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-maquina:hover {
+  transform: translateY(-3px);
+}
+
+/* Colores activos */
+.active-auto {
+  background-color: #007bff; /* Azul principal */
+  color: white;
+}
+
+.active-semi {
+  background-color: #2196f3; /* Azul más claro */
+  color: white;
+}
+
+.active-manual {
+  background-color: #42a5f5; /* Azul celeste */
+  color: white;
+}
+
+.btn-solucion {
+  background-color: #e9ecef;
+  border: none;
+  color: #333;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-solucion:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-maquina {
+  background-color: #e9ecef;
+  border: none;
+  color: #333;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.btn-maquina:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-maquina.active {
+  background-color: #007bff;
+  color: white;
+}
