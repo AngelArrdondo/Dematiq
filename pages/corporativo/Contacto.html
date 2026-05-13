@@ -32,20 +32,7 @@
 
 <body>
 
-<header>
-    <div class="logo">
-        <img src="../../assets/images/logos/LOGO.png" alt="Logo DEMATIQ">
-    </div>
-    <nav>
-        <ul>
-            <li><a href="../../index.html">Inicio</a></li>
-            <li><a href="nosotros.html">Sobre Nosotros</a></li>
-            <li><a href="soluciones.html">Proyectos</a></li>
-            <li><a href="industrias.html">Industrias</a></li>
-            <li><a href="Contacto.html" class="active">Contacto</a></li>
-        </ul>
-    </nav>
-</header>
+<!-- Header will be inserted by JavaScript component -->
 
 <main class="container my-5">
     <h1 class="text-center mb-5">Contáctanos</h1>
@@ -59,7 +46,7 @@
                 </p>
                 <h2>Horario</h2>
                 <p>Lunes a Viernes de 8:30 a 18:00</p>
-                <a href="DEMATIQ.pdf" class="download-btn" download>
+                <a href="../../assets/docs/DEMATIQ.pdf" class="download-btn" download>
                     Descargar Información de la empresa en PDF
                 </a>
             </div>
@@ -72,10 +59,10 @@
 
                 <h2 class="mt-4 mb-3">Síguenos en</h2>
                 <div class="social-icons">
-                    <a href="#"><img src="../../assets/images/social/facebook.png" alt="Facebook"></a>
-                    <a href="#"><img src="../../assets/images/social/instagram.png" alt="Instagram"></a>
-                    <a href="#"><img src="../../assets/images/social/linkedin.png" alt="LinkedIn"></a>
-                    <a href="#"><img src="../../assets/images/general/video.png" alt="YouTube"></a>
+                    <a href="#" aria-label="Facebook"><img src="../../assets/images/social/facebook.png" alt="Facebook"></a>
+                    <a href="#" aria-label="Instagram"><img src="../../assets/images/social/instagram.png" alt="Instagram"></a>
+                    <a href="#" aria-label="LinkedIn"><img src="../../assets/images/social/linkedin.png" alt="LinkedIn"></a>
+                    <a href="#" aria-label="YouTube"><img src="../../assets/images/general/video.png" alt="YouTube"></a>
                 </div>
             </div>
         </div>
@@ -103,22 +90,11 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-    // Coordenadas proporcionadas
-    const lat = 20.5960;
-    const lng = -100.4470;
+<!-- Map initialization -->
+<script src="../../assets/js/components/map.js"></script>
 
-    const map = L.map('map').setView([lat, lng], 15);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup('<b>DEMATIQ</b><br>Santa María Magdalena, Querétaro')
-        .openPopup();
-</script>
+<!-- Header Component -->
+<script src="../../assets/js/components/header.js"></script>
 
 </body>
 </html>

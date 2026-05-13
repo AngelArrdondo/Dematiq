@@ -1,1 +1,113 @@
-/* Contact page styles - Add your contact page CSS here */
+/* Contact Page Styles */
+
+/* Map container */
+#map {
+  height: 400px;
+  width: 100%;
+  border-radius: 12px;
+  border: 3px solid #007bff;
+  z-index: 1; /* Ensure map is above other elements */
+}
+
+/* Contact cards */
+.contact-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* Contact links */
+.contact-card a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+}
+
+/* Lead text in contact section */
+.contact-card .lead {
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+/* Social icons in contact */
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.social-icons a {
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+}
+
+.social-icons img {
+  width: 32px;
+  height: 32px;
+}
+
+/* Download button */
+.download-btn {
+  display: inline-block;
+  background: #007bff;
+  color: #fff !important;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 6px;
+  text-decoration: none !important;
+  margin-top: 20px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.download-btn:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+  text-decoration: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #map {
+    height: 300px;
+  }
+  
+  .contact-card {
+    padding: 20px;
+  }
+  
+  .social-icons {
+    justify-content: center;
+  }
+}
+
+/* Accessibility - Focus styles */
+.contact-card a:focus-visible {
+  outline: 3px solid #007bff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Print styles */
+@media print {
+  #map {
+    border: 1px solid #000;
+  }
+  
+  .social-icons,
+  .download-btn {
+    display: none;
+  }
+}

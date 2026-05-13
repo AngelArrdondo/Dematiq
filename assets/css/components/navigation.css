@@ -1,26 +1,50 @@
 nav ul {
   list-style: none;
   display: flex;
-  gap: 22px; /* antes 25px, ahora más junto */
+  gap: 22px;
 }
 
 nav ul li a {
   text-decoration: none;
-  /* Color de texto gris oscuro de la imagen */
-  color: #525A65; 
-  /* Peso de letra para que se vea como en la imagen */
-  font-weight: 700; 
-  font-size: 22px;  
-  /* Añadimos padding y radio para que el fondo del hover se vea bien */
-  padding: 8px 12px; 
+  color: #525A65;
+  font-weight: 700;
+  font-size: 22px;
+  padding: 8px 12px 5px 12px; /* Less bottom padding */
   border-radius: 5px;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-/* ESTILOS DE HOVER MODIFICADOS */
+/* Underline animation from center */
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: #007bff;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+/* Hover effect - Blue line expands from center */
+nav ul li a:hover::after {
+  width: 80%;
+}
+
 nav ul li a:hover {
-  /* Fondo azul medio claro */
-  background-color: #ADD8E6; 
-  /* Mantenemos el color de letra gris original para buen contraste */
-  color: #525A65; 
+  color: #007bff;
+  background-color: transparent;
+}
+
+/* Active page indicator - Full blue line */
+nav ul li a.active::after {
+  width: 80%;
+}
+
+nav ul li a.active {
+  color: #007bff;
+  background-color: transparent;
+  font-weight: 700;
 }
