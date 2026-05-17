@@ -5,6 +5,12 @@ class FooterComponent {
     if (path === '/' || (path.endsWith('/index.html') && !path.includes('/pages/'))) {
       return '.';
     }
+    const pagesIdx = path.indexOf('/pages/');
+    if (pagesIdx !== -1) {
+      const parts = path.slice(pagesIdx + 1).split('/').filter(p => p.length > 0);
+      const depth = parts.length - 1;
+      return depth > 0 ? '../'.repeat(depth).slice(0, -1) : '.';
+    }
     const parts = path.split('/').filter(p => p.length > 0);
     const depth = parts.length - 1;
     if (depth <= 0) return '.';
@@ -37,9 +43,9 @@ class FooterComponent {
 
           <div class="footer-contact">
             <h4>Contacto</h4>
-            <p>📍 Col. Jardines del Sol<br>Querétaro, Qro. CP.76117</p>
-            <p>✉️ <a href="mailto:ventas@dematiq.com.mx">ventas@dematiq.com.mx</a></p>
-            <p>📞 <a href="tel:+524427214891">+52 442 721-4891</a></p>
+            <p>Col. Jardines del Sol<br>Querétaro, Qro. CP.76117</p>
+            <p><a href="mailto:ventas@dematiq.com.mx">ventas@dematiq.com.mx</a></p>
+            <p><a href="tel:+524427214891">+52 442 721-4891</a></p>
             <div class="footer-social">
               <a href="#" aria-label="Facebook">
                 <img src="${base}/assets/images/social/facebook.png" alt="Facebook">

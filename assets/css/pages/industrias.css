@@ -96,25 +96,52 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .industrias-lista-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
   .lista-industrias {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
-    justify-content: center;
+    padding: 4px 0 8px;
+    white-space: nowrap;
   }
 
   .lista-industrias li {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    margin: 2px;
+    flex-shrink: 0;
+    padding: 10px 16px;
+    font-size: 0.88rem;
+    margin: 0;
+    border-radius: 24px;
+    border: 1.5px solid var(--color-border, #c8d8f0);
+    background: #fff;
+    transform: none !important;
   }
 
-  .info-industria .carousel-inner img {
-    height: 200px;
+  .lista-industrias li.active {
+    border-color: #007bff;
+  }
+
+  .lista-industrias li:hover {
+    transform: none !important;
   }
 
   .info-industria {
-    padding: 15px;
+    padding: 16px;
+  }
+
+  .info-industria .carousel-inner img {
+    height: clamp(160px, 45vw, 220px);
+    object-fit: cover;
+  }
+}
+
+@media (min-width: 769px) {
+  .lista-industrias li {
+    min-height: 48px;
   }
 }
 

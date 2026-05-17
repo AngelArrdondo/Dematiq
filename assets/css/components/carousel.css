@@ -34,6 +34,20 @@
   text-shadow: 1px 2px 6px rgba(0,0,0,0.5);
 }
 
+/* ── Mobile: hero más bajo para que el header no tape todo ── */
+@media (max-width: 600px) {
+  #hero .carousel-item img {
+    height: 62svh;
+    min-height: 280px;
+  }
+  .carousel-caption {
+    padding: 10px 14px;
+    bottom: 6%;
+    left: 5%;
+    right: 5%;
+  }
+}
+
 /* ── Flechas ── */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {

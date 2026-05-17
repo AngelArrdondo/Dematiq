@@ -5,6 +5,13 @@ class HeaderComponent {
     if (path === '/' || (path.endsWith('/index.html') && !path.includes('/pages/'))) {
       return '.';
     }
+    // Use /pages/ as anchor so file:// and http:// give the same depth
+    const pagesIdx = path.indexOf('/pages/');
+    if (pagesIdx !== -1) {
+      const parts = path.slice(pagesIdx + 1).split('/').filter(p => p.length > 0);
+      const depth = parts.length - 1; // dirs between root and the file
+      return depth > 0 ? '../'.repeat(depth).slice(0, -1) : '.';
+    }
     const parts = path.split('/').filter(p => p.length > 0);
     const depth = parts.length - 1;
     if (depth <= 0) return '.';
