@@ -1,55 +1,57 @@
-/* Carrusel personalizado */
-.carousel {
-  max-width: 11100px;    /* ancho máximo del carrusel */
-  margin: 30px auto;    /* centrado y con espacio arriba/abajo */
+/* ===================== HERO CAROUSEL ===================== */
+#hero .carousel {
+  margin: 0;
+  border-radius: 0;
 }
 
-.carousel-item img {
-  height: 550px;        /* altura fija */
-  object-fit: cover;    /* recorta sin deformar */
-  border-radius: 12px; /* esquinas redondeadas (opcional) */
+#hero .carousel-item img {
+  height: 100svh;
+  min-height: 400px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
 }
 
 .carousel-caption {
-  background: rgba(0, 0, 0, 0.5); /* fondo semitransparente */
-  padding: 15px;
-  border-radius: 8px;
+  background: rgba(13, 33, 85, 0.55);   /* navy del logo semi-transparente */
+  padding: 18px 28px;
+  border-radius: 10px;
+  border-left: 4px solid var(--brand-mid);
+  bottom: 10%;
 }
 
-/* NUEVAS REGLAS PARA EL TAMAÑO DE TEXTO DEL CARRUSEL */
 .carousel-caption h5 {
-    /* Título principal grande y llamativo */
-    font-size: 3rem; 
-    font-weight: 700;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+  font-size: clamp(1.4rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 1px 2px 8px rgba(0,0,0,0.6);
 }
 
 .carousel-caption p {
-    /* Subtítulo o descripción */
-    font-size: 1.5rem; 
-    font-weight: 400; /* Normal para que contraste con el título */
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+  font-weight: 400;
+  color: #d0e0ff;
+  text-shadow: 1px 2px 6px rgba(0,0,0,0.5);
 }
-/* FIN DE LAS NUEVAS REGLAS DEL CARRUSEL */
 
-/* ===== Flechas del carrusel en color negro ===== */
+/* ── Flechas ── */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-image: none;
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
 }
 
 .carousel-control-prev-icon::after {
   content: '‹';
   font-size: 3rem;
-  color: #000;
+  color: rgba(255,255,255,0.85);
   font-weight: bold;
 }
 
 .carousel-control-next-icon::after {
   content: '›';
   font-size: 3rem;
-  color: #000;
+  color: rgba(255,255,255,0.85);
   font-weight: bold;
 }

@@ -1,7 +1,7 @@
 /* === Botón de descarga === */
 .download-btn {
   display: inline-block;
-  background: #007bff;
+  background: var(--brand-mid);
   color: #fff !important;
   padding: 10px 20px;
   font-size: 16px;
@@ -12,7 +12,7 @@
 }
 
 .download-btn:hover {
-  background: #0056b3;
+  background: var(--brand-dark);
   transform: scale(1.05);
 }
 
@@ -41,7 +41,7 @@
 
 /* Colores activos */
 .active-auto {
-  background-color: #007bff; /* Azul principal */
+  background-color: var(--brand-mid); /* Azul principal */
   color: white;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .btn-solucion:hover {
-  background-color: #007bff;
+  background-color: var(--brand-mid);
   color: white;
 }
 
@@ -81,11 +81,11 @@
 }
 
 .btn-maquina:hover {
-  background-color: #007bff;
+  background-color: var(--brand-mid);
   color: white;
 }
 
 .btn-maquina.active {
-  background-color: #007bff;
+  background-color: var(--brand-mid);
   color: white;
 }

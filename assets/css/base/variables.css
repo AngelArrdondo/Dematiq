@@ -1,17 +1,29 @@
 :root {
-  /* Color Palette */
-  --color-primary: #007bff;
-  --color-primary-hover: #0056b3;
-  --color-white: #fff;
-  --color-light-gray: #f8f9fa;
-  --color-medium-gray: #a4aeb0;
-  --color-dark-gray: #525A65;
-  --color-dark: #212529;
-  --color-black: #000;
-  --color-light-blue: #ADD8E6;
-  
-  /* Font */
-  --font-primary: 'Roboto', sans-serif;
+  /* ── Paleta del logo DEMATIQ ── */
+  --brand-dark:    #0d2155;   /* navy oscuro – texto del logo */
+  --brand-mid:     #1a4a9e;   /* azul medio – ícono del logo  */
+  --brand-light:   #2e6bcf;   /* azul claro  – hover / acento */
+  --brand-xlight:  #e8f0fc;   /* fondo azul muy suave         */
+
+  /* Grises y neutros */
+  --color-white:      #ffffff;
+  --color-bg:         #f5f8ff;   /* fondo general de la página  */
+  --color-bg-alt:     #eaf0fb;   /* secciones alternas          */
+  --color-text:       #1e2d50;   /* texto cuerpo                */
+  --color-text-light: #5a6f96;   /* texto secundario            */
+  --color-border:     #c8d8f0;   /* bordes suaves               */
+
+  /* Alias para compatibilidad con código antiguo */
+  --color-primary:       var(--brand-mid);
+  --color-primary-hover: var(--brand-light);
+  --color-dark-gray:     #525A65;
+  --color-medium-gray:   #a4aeb0;
+  --color-dark:          #212529;
+  --color-black:         #000;
+  --color-light-blue:    #ADD8E6;
+
+  /* Tipografía */
+  --font-primary:        'Roboto', sans-serif;
   --font-weight-regular: 400;
-  --font-weight-bold: 700;
+  --font-weight-bold:    700;
 }

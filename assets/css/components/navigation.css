@@ -1,50 +1,64 @@
+/* ===================== NAVIGATION ===================== */
 nav ul {
   list-style: none;
   display: flex;
-  gap: 22px;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
 }
 
 nav ul li a {
   text-decoration: none;
-  color: #525A65;
+  color: rgba(255, 255, 255, 0.88);       /* letras blancas sobre header azul */
   font-weight: 700;
-  font-size: 22px;
-  padding: 8px 12px 5px 12px; /* Less bottom padding */
-  border-radius: 5px;
-  transition: all 0.3s ease;
+  font-size: 16px;
+  padding: 8px 14px 6px;
+  border-radius: 6px;
+  transition: color 0.25s, background 0.25s;
   position: relative;
+  white-space: nowrap;
 }
 
-/* Underline animation from center */
+/* Subrayado animado blanco */
 nav ul li a::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   left: 50%;
   width: 0;
   height: 3px;
-  background-color: #007bff;
-  transition: all 0.3s ease;
+  background: #fff;
+  border-radius: 2px;
+  transition: width 0.3s ease, left 0.3s ease;
   transform: translateX(-50%);
 }
 
-/* Hover effect - Blue line expands from center */
-nav ul li a:hover::after {
-  width: 80%;
-}
-
-nav ul li a:hover {
-  color: #007bff;
-  background-color: transparent;
-}
-
-/* Active page indicator - Full blue line */
+nav ul li a:hover::after,
 nav ul li a.active::after {
   width: 80%;
 }
 
+nav ul li a:hover,
 nav ul li a.active {
-  color: #007bff;
-  background-color: transparent;
-  font-weight: 700;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Mobile ── */
+@media (max-width: 960px) {
+  nav ul {
+    flex-direction: column;
+    gap: 0;
+    padding: 10px 20px 18px;
+  }
+  nav ul li a {
+    font-size: 17px;
+    display: block;
+    padding: 13px 6px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.88);
+  }
+  nav ul li:last-child a { border-bottom: none; }
+  nav ul li a::after    { display: none; }
 }

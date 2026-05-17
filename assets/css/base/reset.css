@@ -4,11 +4,26 @@
   box-sizing: border-box;
 }
 
+/* Evita el destello blanco en todos los navegadores —
+   el color se aplica antes de que cargue el CSS principal */
+html {
+  background-color: #f5f8ff;
+}
+
 body {
-  margin: 0;
-  background: linear-gradient(
-    180deg,
-    #f8fbff 0%,
-    #eef4f9 100%
-  );
+  background-color: var(--color-bg);
+  /* Oculto hasta que header.js lo revele — evita el flash de contenido sin header */
+  visibility: hidden;
+}
+
+/* Transición automática entre páginas (Chrome / Edge 111+).
+   En Firefox e iOS Safari simplemente se ignora y navega normal. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.18s;
+  animation-timing-function: ease;
 }

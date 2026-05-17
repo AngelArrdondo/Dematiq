@@ -1,17 +1,83 @@
-/* Barra de navegación */
+/* ===================== HEADER ===================== */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 175px;
+  padding: 10px 60px;
   position: sticky;
   top: 0;
-  background: #fff; /* fondo blanco */
-  z-index: 1000;    /* se asegura de estar encima */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* sombra sutil */
+  background: var(--brand-dark);          /* navy oscuro del logo */
+  z-index: 1000;
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.35);
+  border-bottom: 3px solid var(--brand-mid);
+}
+
+/* Logo en caja blanca para que se vea sobre el fondo azul */
+.logo {
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
 }
 
 .logo img {
-  height: 100px;    /* un poco más compacto */
+  height: 72px;
   width: auto;
+}
+
+/* ── Hamburger ── */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px;
+  z-index: 1100;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background: #fff;                        /* líneas blancas sobre fondo azul */
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.nav-toggle.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  header {
+    padding: 10px 20px;
+    position: relative;
+  }
+  .nav-toggle {
+    display: flex;
+  }
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--brand-dark);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  nav.open {
+    max-height: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo img { height: 54px; }
 }
