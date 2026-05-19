@@ -95,8 +95,8 @@
 
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-  border-color: #00ffb9;
-  background: rgba(0, 255, 185, 0.15);
+  border-color: var(--brand-light);
+  background: rgba(46, 107, 207, 0.2);
 }
 
 .carousel-control-prev-icon,
@@ -140,7 +140,7 @@
 }
 
 .carousel-indicators .active {
-  background: #00ffb9;
+  background: var(--brand-light);
   width: 28px;
 }
 

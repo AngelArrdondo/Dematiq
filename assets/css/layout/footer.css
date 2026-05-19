@@ -1,6 +1,6 @@
 /* ===================== FOOTER ===================== */
 #footer {
-  background: var(--brand-dark);
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   color: #9ab0d4;
   font-family: var(--font-primary);
 }
@@ -88,6 +88,42 @@
 
 .footer-contact a:hover {
   color: #fff;
+}
+
+/* ── Action links (Gmail / WhatsApp) ── */
+.footer-action-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8aa0c8;
+  text-decoration: none;
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.footer-action-link svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: #8aa0c8;
+  transition: color 0.2s;
+}
+
+.footer-action-link:hover {
+  color: #fff;
+}
+
+.footer-action-link:hover svg {
+  color: #fff;
+}
+
+.footer-action-link--wa:hover {
+  color: #25d366;
+}
+
+.footer-action-link--wa:hover svg {
+  color: #25d366;
 }
 
 /* ── Social icons ── */

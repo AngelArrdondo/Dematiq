@@ -2,65 +2,7 @@
    GLOBAL RESPONSIVE — aplica a todas las páginas
    ══════════════════════════════════════════ */
 
-/* ── Page hero reducido con fondo sólido oscuro ── */
-.page-hero {
-  background: #000028;
-  padding: clamp(36px, 6vw, 64px) clamp(16px, 5vw, 48px) clamp(28px, 5vw, 52px);
-  text-align: center;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-}
-
-.page-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-  pointer-events: none;
-}
-
-/* Línea verde en la parte inferior del hero */
-.page-hero::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #00ffb9;
-}
-
-.page-hero-inner {
-  position: relative;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.page-hero-tag {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #00ffb9;
-  margin-bottom: 10px;
-}
-
-.page-hero h1 {
-  font-size: clamp(1.8rem, 6vw, 3.2rem);
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 12px;
-  line-height: 1.15;
-}
-
-.page-hero p {
-  font-size: clamp(0.9rem, 3vw, 1.05rem);
-  color: rgba(255,255,255,0.85);
-  line-height: 1.7;
-  margin: 0;
-}
+/* ── Page hero — estilos definidos en contact.css (compartido) ── */
 
 /* ── Títulos de sección sin línea decorativa ── */
 .section-title {
@@ -79,7 +21,7 @@
 }
 
 .page-section--alt {
-  background: #001a3d;
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   padding: clamp(48px, 7vw, 80px) clamp(16px, 5vw, 48px);
 }
 
@@ -104,10 +46,10 @@
 
 /* ── Misión/Visión/Valores cards — estilo oscuro coherente con el index ── */
 .mvv-card {
-  background: #000028;
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   border-radius: 4px;
   padding: clamp(28px, 4vw, 40px);
-  border-top: 3px solid #00ffb9;
+  border-top: 3px solid var(--brand-light);
   border-left: 1px solid rgba(255,255,255,0.08);
   border-right: 1px solid rgba(255,255,255,0.08);
   border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -118,7 +60,7 @@
 
 .mvv-card h3 {
   font-size: 1rem;
-  color: #00ffb9;
+  color: #fff;
   margin-bottom: 12px;
   font-weight: 700;
   text-transform: uppercase;

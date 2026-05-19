@@ -12,7 +12,7 @@
 }
 
 .download-btn:hover {
-  background: var(--brand-dark);
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   transform: scale(1.05);
 }
 

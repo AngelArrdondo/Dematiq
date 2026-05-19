@@ -9,7 +9,7 @@ nav ul {
 
 nav ul li a {
   text-decoration: none;
-  color: #002949;
+  color: var(--brand-dark);
   font-weight: 700;
   font-size: 16px;
   padding: 8px 14px 6px;
@@ -27,7 +27,7 @@ nav ul li a::after {
   left: 50%;
   width: 0;
   height: 3px;
-  background: #002949;
+  background: var(--brand-dark);
   border-radius: 2px;
   transition: width 0.3s ease, left 0.3s ease;
   transform: translateX(-50%);
@@ -40,8 +40,8 @@ nav ul li a.active::after {
 
 nav ul li a:hover,
 nav ul li a.active {
-  color: #000028;
-  background: rgba(0, 255, 185, 0.45);
+  color: var(--brand-dark);
+  background: var(--brand-xlight);
 }
 
 /* ── Mobile ── */
@@ -56,8 +56,8 @@ nav ul li a.active {
     display: block;
     padding: 13px 6px;
     border-radius: 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.88);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--brand-dark);
   }
   nav ul li:last-child a { border-bottom: none; }
   nav ul li a::after    { display: none; }

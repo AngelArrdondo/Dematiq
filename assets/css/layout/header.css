@@ -9,7 +9,7 @@ header {
   background: #ffffff;
   z-index: 1000;
   box-shadow: 0 3px 16px rgba(0, 0, 0, 0.12);
-  border-bottom: 3px solid #00cccc;
+  border-bottom: 3px solid var(--brand-mid);
 }
 
 /* Logo en caja blanca para que se vea sobre el fondo azul */
@@ -43,7 +43,7 @@ header {
   display: block;
   width: 26px;
   height: 3px;
-  background: #002949;
+  background: var(--brand-dark);
   border-radius: 3px;
   transition: all 0.3s ease;
 }

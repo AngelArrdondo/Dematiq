@@ -13,8 +13,9 @@
   margin-bottom: 8px;
 }
 
-/* ══ HERO ══ */
-.contact-hero {
+/* ══ HERO — compartido con todas las páginas ══ */
+.contact-hero,
+.page-hero {
   background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   padding: 72px 20px 56px;
   text-align: center;
@@ -23,7 +24,8 @@
   overflow: hidden;
 }
 
-.contact-hero::before {
+.contact-hero::before,
+.page-hero::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -31,18 +33,27 @@
   pointer-events: none;
 }
 
-.contact-hero-inner {
+.contact-hero-inner,
+.page-hero-inner {
   position: relative;
   max-width: 700px;
   margin: 0 auto;
 }
 
-.contact-hero .section-tag {
-  color: rgba(255,255,255,0.65);
+.contact-hero .section-tag,
+.contact-hero-tag,
+.page-hero-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
   letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 10px;
 }
 
-.contact-hero h1 {
+.contact-hero h1,
+.page-hero h1 {
   font-size: clamp(1.9rem, 8vw, 3.5rem);
   font-weight: 700;
   margin: 8px 0 14px;
@@ -50,11 +61,17 @@
   line-height: 1.15;
 }
 
-.contact-hero-sub {
+.contact-hero-sub,
+.page-hero p {
   font-size: clamp(0.9rem, 3.5vw, 1.05rem);
   color: rgba(255,255,255,0.78);
   line-height: 1.7;
   margin: 0;
+}
+
+@media (min-width: 640px) {
+  .contact-hero,
+  .page-hero { padding: 88px 32px 72px; }
 }
 
 /* ══ INFO STRIP ══ */
@@ -375,8 +392,9 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
 
 /* ══ MAP ══ */
 .contact-map-section {
-  background: var(--brand-dark);
-  padding: 48px 16px 0;
+  background: var(--color-bg);
+  padding: 48px 16px 56px;
+  border-top: 1px solid var(--color-border);
 }
 
 .map-header {
@@ -385,13 +403,13 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
 }
 
 .map-header .section-tag {
-  color: rgba(255,255,255,0.55);
+  color: var(--brand-light);
 }
 
 .map-header h2 {
   font-size: clamp(1.2rem, 5vw, 1.6rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--brand-dark);
   margin: 6px 0 0;
 }
 
@@ -399,9 +417,10 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
   max-width: 1200px;
   margin: 0 auto;
   height: 320px;
-  border-radius: 16px 16px 0 0;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+  border: 3px solid var(--brand-mid);
+  box-shadow: 0 4px 24px rgba(13,33,85,0.2), 0 0 0 6px rgba(26,74,158,0.15);
 }
 
 .map-wrapper iframe {
@@ -418,7 +437,7 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
 }
 
 .pdf-modal-header {
-  background: var(--brand-dark);
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   border-bottom: none;
   padding: 14px 18px;
 }
