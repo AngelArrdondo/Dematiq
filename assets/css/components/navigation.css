@@ -9,7 +9,7 @@ nav ul {
 
 nav ul li a {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.88);       /* letras blancas sobre header azul */
+  color: #002949;
   font-weight: 700;
   font-size: 16px;
   padding: 8px 14px 6px;
@@ -19,7 +19,7 @@ nav ul li a {
   white-space: nowrap;
 }
 
-/* Subrayado animado blanco */
+/* Subrayado animado oscuro */
 nav ul li a::after {
   content: '';
   position: absolute;
@@ -27,7 +27,7 @@ nav ul li a::after {
   left: 50%;
   width: 0;
   height: 3px;
-  background: #fff;
+  background: #002949;
   border-radius: 2px;
   transition: width 0.3s ease, left 0.3s ease;
   transform: translateX(-50%);
@@ -40,8 +40,8 @@ nav ul li a.active::after {
 
 nav ul li a:hover,
 nav ul li a.active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
+  color: #000028;
+  background: rgba(0, 255, 185, 0.45);
 }
 
 /* ── Mobile ── */

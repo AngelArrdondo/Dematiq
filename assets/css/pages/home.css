@@ -6,8 +6,7 @@
 
 /* ===================== SECTION TITLES ===================== */
 #empresas h2,
-#proyectos h2,
-#soluciones h2 {
+#proyectos h2 {
   text-align: center;
   font-size: clamp(1.3rem, 3vw, 2rem);
   font-weight: 700;
@@ -17,23 +16,20 @@
   position: relative;
 }
 
-/* Línea decorativa bajo el título */
-#empresas h2::after,
-#proyectos h2::after,
-#soluciones h2::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 4px;
-  background: var(--brand-mid);
-  border-radius: 2px;
-  margin: 10px auto 0;
+#soluciones h2 {
+  text-align: center;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 40px;
+  padding: 0 20px;
+  position: relative;
 }
 
 /* ===================== MARQUEE ===================== */
 #empresas,
 #proyectos {
-  padding: 60px 0;
+  padding: 20px 0;
   overflow: hidden;
 }
 
@@ -43,6 +39,14 @@
 .marquee-wrapper {
   overflow: hidden;
   width: 100%;
+}
+
+#empresas .marquee-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: -15px 0 15px -15px rgba(0,0,0,0.3),
+              15px 0 15px -15px rgba(0,0,0,0.3);
 }
 
 .marquee-track {
@@ -66,14 +70,11 @@
   width: 190px;
   height: 110px;
   margin: 0 16px;
-  background: #fff;
-  border-radius: 10px;
+  background: transparent;
   padding: 14px 18px;
-  box-shadow: 0 2px 10px rgba(13, 33, 85, 0.09);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border);
 }
 
 .marquee-item img {
@@ -122,8 +123,8 @@
 
 /* ===================== SOLUCIONES GRID ===================== */
 #soluciones {
-  padding: clamp(40px, 6vw, 80px) clamp(16px, 4vw, 48px);
-  background: var(--color-bg);
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 48px);
+  background: #001a3d;
 }
 
 .soluciones-grid {

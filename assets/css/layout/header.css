@@ -6,10 +6,10 @@ header {
   padding: 10px 60px;
   position: sticky;
   top: 0;
-  background: var(--brand-dark);          /* navy oscuro del logo */
+  background: #ffffff;
   z-index: 1000;
-  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.35);
-  border-bottom: 3px solid var(--brand-mid);
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.12);
+  border-bottom: 3px solid #00cccc;
 }
 
 /* Logo en caja blanca para que se vea sobre el fondo azul */
@@ -43,7 +43,7 @@ header {
   display: block;
   width: 26px;
   height: 3px;
-  background: #fff;                        /* líneas blancas sobre fondo azul */
+  background: #002949;
   border-radius: 3px;
   transition: all 0.3s ease;
 }
@@ -66,8 +66,8 @@ header {
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--brand-dark);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.35s ease;

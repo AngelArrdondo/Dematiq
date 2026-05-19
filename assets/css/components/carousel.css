@@ -4,68 +4,154 @@
   border-radius: 0;
 }
 
+#hero .carousel-item {
+  position: relative;
+}
+
 #hero .carousel-item img {
-  height: 100svh;
+  height: 600px;
   min-height: 400px;
   object-fit: cover;
   object-position: center;
   border-radius: 0;
 }
 
+/* Overlay de color para suavizar la imagen */
+#hero .carousel-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 41, 0.45);
+  pointer-events: none;
+}
+
+/* Caption sin caja */
 .carousel-caption {
-  background: rgba(13, 33, 85, 0.55);   /* navy del logo semi-transparente */
-  padding: 18px 28px;
-  border-radius: 10px;
-  border-left: 4px solid var(--brand-mid);
-  bottom: 10%;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  bottom: 90px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  text-align: center;
+  width: fit-content;
+  min-width: 340px;
+  max-width: 580px;
+  z-index: 5;
+  background: rgba(0, 0, 41, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 28px 40px;
 }
 
 .carousel-caption h5 {
-  font-size: clamp(1.4rem, 4vw, 3rem);
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
   font-weight: 700;
   color: #fff;
-  text-shadow: 1px 2px 8px rgba(0,0,0,0.6);
+  margin-bottom: 10px;
+  line-height: 1.2;
 }
 
 .carousel-caption p {
-  font-size: clamp(0.9rem, 2vw, 1.4rem);
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
   font-weight: 400;
-  color: #d0e0ff;
-  text-shadow: 1px 2px 6px rgba(0,0,0,0.5);
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
 }
 
-/* ── Mobile: hero más bajo para que el header no tape todo ── */
-@media (max-width: 600px) {
-  #hero .carousel-item img {
-    height: 62svh;
-    min-height: 280px;
-  }
-  .carousel-caption {
-    padding: 10px 14px;
-    bottom: 6%;
-    left: 5%;
-    right: 5%;
-  }
+/* ── Barra inferior: flechas + indicadores ── */
+#hero .carousel-controls-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: rgba(0, 0, 28, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 10;
 }
 
-/* ── Flechas ── */
+/* Flechas circulares en los extremos */
+.carousel-control-prev,
+.carousel-control-next {
+  position: static;
+  width: 34px;
+  height: 34px;
+  background: none;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  border-color: #00ffb9;
+  background: rgba(0, 255, 185, 0.15);
+}
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-image: none;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: auto;
+  height: auto;
 }
 
 .carousel-control-prev-icon::after {
   content: '‹';
-  font-size: 3rem;
-  color: rgba(255,255,255,0.85);
-  font-weight: bold;
+  font-size: 1.4rem;
+  color: #fff;
+  line-height: 1;
 }
 
 .carousel-control-next-icon::after {
   content: '›';
-  font-size: 3rem;
-  color: rgba(255,255,255,0.85);
-  font-weight: bold;
+  font-size: 1.4rem;
+  color: #fff;
+  line-height: 1;
+}
+
+/* Indicadores circulares que se alargan al estar activos */
+.carousel-indicators {
+  position: static;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  opacity: 1;
+  transition: background 0.3s, width 0.3s;
+}
+
+.carousel-indicators .active {
+  background: #00ffb9;
+  width: 28px;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  #hero .carousel-item img {
+    height: 420px;
+    min-height: 280px;
+  }
+  .carousel-caption {
+    bottom: 70px;
+    min-width: 280px;
+  }
 }

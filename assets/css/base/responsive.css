@@ -2,10 +2,10 @@
    GLOBAL RESPONSIVE — aplica a todas las páginas
    ══════════════════════════════════════════ */
 
-/* ── Page hero (banner superior de cada página interna) ── */
+/* ── Page hero reducido con fondo sólido oscuro ── */
 .page-hero {
-  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
-  padding: clamp(52px, 10vw, 96px) clamp(16px, 5vw, 48px) clamp(40px, 8vw, 80px);
+  background: #000028;
+  padding: clamp(36px, 6vw, 64px) clamp(16px, 5vw, 48px) clamp(28px, 5vw, 52px);
   text-align: center;
   color: #fff;
   position: relative;
@@ -16,8 +16,19 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
   pointer-events: none;
+}
+
+/* Línea verde en la parte inferior del hero */
+.page-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #00ffb9;
 }
 
 .page-hero-inner {
@@ -32,7 +43,7 @@
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
+  color: #00ffb9;
   margin-bottom: 10px;
 }
 
@@ -46,12 +57,12 @@
 
 .page-hero p {
   font-size: clamp(0.9rem, 3vw, 1.05rem);
-  color: rgba(255,255,255,0.78);
+  color: rgba(255,255,255,0.85);
   line-height: 1.7;
   margin: 0;
 }
 
-/* ── Títulos de sección en páginas internas ── */
+/* ── Títulos de sección sin línea decorativa ── */
 .section-title {
   font-size: clamp(1.35rem, 4vw, 2rem);
   font-weight: 700;
@@ -59,17 +70,7 @@
   text-align: center;
   margin-bottom: clamp(24px, 4vw, 48px);
   position: relative;
-  padding-bottom: 14px;
-}
-
-.section-title::after {
-  content: '';
-  display: block;
-  width: 52px;
-  height: 4px;
-  background: var(--brand-mid);
-  border-radius: 2px;
-  margin: 10px auto 0;
+  padding-bottom: 0;
 }
 
 /* ── Secciones: padding adaptable ── */
@@ -78,7 +79,8 @@
 }
 
 .page-section--alt {
-  background: var(--color-bg-alt);
+  background: #001a3d;
+  padding: clamp(48px, 7vw, 80px) clamp(16px, 5vw, 48px);
 }
 
 /* ── Logo cards responsive ── */
@@ -100,28 +102,39 @@
   padding: 0 clamp(8px, 3vw, 24px);
 }
 
-/* ── Misión/Visión/Valores cards ── */
+/* ── Misión/Visión/Valores cards — estilo oscuro coherente con el index ── */
 .mvv-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: clamp(20px, 4vw, 36px);
-  box-shadow: 0 4px 20px rgba(13,33,85,0.08);
-  border-top: 4px solid var(--brand-mid);
+  background: #000028;
+  border-radius: 4px;
+  padding: clamp(28px, 4vw, 40px);
+  border-top: 3px solid #00ffb9;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
   text-align: center;
   height: 100%;
 }
 
 .mvv-card h3 {
-  font-size: clamp(1rem, 3vw, 1.25rem);
-  color: var(--brand-dark);
+  font-size: 1rem;
+  color: #00ffb9;
   margin-bottom: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
 }
 
 .mvv-card p {
-  font-size: clamp(0.87rem, 2.5vw, 0.95rem);
-  color: var(--color-text-light);
-  line-height: 1.7;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
   margin: 0;
+}
+
+/* ── Sección título en page-section--alt (fondo oscuro) ── */
+.page-section--alt .section-title {
+  color: #fff;
 }
 
 /* ── Grids de industrias responsive ── */

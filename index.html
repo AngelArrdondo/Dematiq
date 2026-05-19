@@ -15,6 +15,19 @@
   <!-- ===================== HERO / CARRUSEL ===================== -->
   <section id="hero">
     <div id="carouselHero" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-controls-bar">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="assets/images/general/index.jpg" class="d-block w-100" alt="DEMATIQ">
@@ -38,19 +51,13 @@
           </div>
         </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
     </div>
   </section>
   <!-- ============================================================ -->
 
   <!-- ===================== EMPRESAS ===================== -->
   <section id="empresas">
-    <h2>Empresas con las que colaboramos</h2>
+    <h2>Empresas Asociadas</h2>
     <div class="marquee-wrapper">
       <div class="marquee-track">
         <div class="marquee-item"><img src="assets/images/partners/Danfoss.jpg"  alt="Danfoss"></div>
@@ -79,7 +86,7 @@
     <div class="soluciones-grid">
 
       <a href="pages/servicios/servicios.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/img3.png" class="card-img" alt="Servicios">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Servicios</h5>
@@ -88,7 +95,7 @@
       </a>
 
       <a href="pages/manufactura/maqindus.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/products/maq.jpg" class="card-img" alt="Manufactura">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Manufactura maquinados industriales</h5>
@@ -97,7 +104,7 @@
       </a>
 
       <a href="pages/ensamble/ensamble.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/cart.jpg" class="card-img" alt="Ensamble">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Ensamble</h5>
@@ -106,7 +113,7 @@
       </a>
 
       <a href="pages/maquinas/maqcontrol.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/t1.jpg" class="card-img" alt="Torque">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Máquinas de control de torque</h5>
@@ -115,7 +122,7 @@
       </a>
 
       <a href="pages/maquinas/maqprob.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/fuga.jpg" class="card-img" alt="Fuga">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Máquinas probadoras de fuga</h5>
@@ -124,7 +131,7 @@
       </a>
 
       <a href="pages/maquinas/maqinspe.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/inspeccion.jpg" class="card-img" alt="Inspección">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Máquinas de inspección</h5>
@@ -133,7 +140,7 @@
       </a>
 
       <a href="pages/maquinas/maclim.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/limpieza.jpg" class="card-img" alt="Limpieza">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Máquinas de limpieza</h5>
@@ -142,7 +149,7 @@
       </a>
 
       <a href="pages/maquinas/maqmar.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/micro.jpg" class="card-img" alt="Marcado">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Máquinas de marcado</h5>
@@ -151,7 +158,7 @@
       </a>
 
       <a href="pages/maquinas/macrobot.html" class="custom-card-link">
-        <div class="card text-bg-dark custom-card">
+        <div class="card custom-card">
           <img src="assets/images/general/celdas.jpg" class="card-img" alt="Robótica">
           <div class="card-img-overlay d-flex align-items-center justify-content-center">
             <h5 class="card-title">Celdas robóticas</h5>
