@@ -44,16 +44,42 @@ class HeaderComponent {
     return `
       <header>
         <div class="logo">
-          <img src="${base}/assets/images/logos/LOGO.jpeg" alt="Logo DEMATIQ">
+          <img src="${base}/assets/images/logos/logo1.png" alt="Logo DEMATIQ">
         </div>
-        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
         <nav id="main-nav">
           <ul>${navHTML}</ul>
+          <a href="${base}/pages/corporativo/login.html" class="nav-login-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Iniciar sesión
+          </a>
         </nav>
+        <div class="header-actions">
+          <a href="${base}/pages/corporativo/login.html" class="btn-login" aria-label="Iniciar sesión">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>Iniciar sesión</span>
+          </a>
+          <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </header>
     `;
+  }
+
+  static injectFavicon() {
+    const base = this.getBasePath();
+    document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(el => el.remove());
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = `${base}/assets/images/logos/favicon-d.svg`;
+    document.head.appendChild(link);
   }
 
   static init() {
@@ -61,6 +87,7 @@ class HeaderComponent {
     if (existing) existing.remove();
 
     document.body.insertAdjacentHTML('afterbegin', this.getHTML());
+    this.injectFavicon();
 
     // Hamburger toggle
     const toggle = document.querySelector('.nav-toggle');

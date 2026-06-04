@@ -6,17 +6,13 @@ header {
   padding: 10px 60px;
   position: sticky;
   top: 0;
-  background: #ffffff;
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
   z-index: 1000;
-  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.3);
   border-bottom: 3px solid var(--brand-mid);
 }
 
-/* Logo en caja blanca para que se vea sobre el fondo azul */
 .logo {
-  background: #fff;
-  padding: 4px 12px;
-  border-radius: 8px;
   display: flex;
   align-items: center;
 }
@@ -24,6 +20,42 @@ header {
 .logo img {
   height: 72px;
   width: auto;
+}
+
+/* ── Login button ── */
+.btn-login {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border: 2px solid #009999;
+  border-radius: 8px;
+  color: #009999;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.25s, color 0.25s;
+  flex-shrink: 0;
+}
+
+.btn-login svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn-login:hover {
+  background: #009999;
+  color: #ffffff;
+}
+
+/* ── Actions group (login + hamburger) ── */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 /* ── Hamburger ── */
@@ -43,7 +75,7 @@ header {
   display: block;
   width: 26px;
   height: 3px;
-  background: var(--brand-dark);
+  background: #ffffff;
   border-radius: 3px;
   transition: all 0.3s ease;
 }
@@ -52,29 +84,60 @@ header {
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
+/* Login link inside nav — hidden on desktop, shown in mobile dropdown */
+.nav-login-link {
+  display: none;
+}
+
 /* ── Responsive ── */
 @media (max-width: 960px) {
   header {
-    padding: 10px 20px;
+    padding: 10px 16px;
     position: relative;
   }
   .nav-toggle {
     display: flex;
   }
+  /* Hide header login button on mobile */
+  .btn-login { display: none; }
   nav {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: #ffffff;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.35s ease;
     border-top: 1px solid rgba(255,255,255,0.1);
   }
   nav.open {
-    max-height: 420px;
+    max-height: 480px;
+  }
+  /* Login link inside dropdown */
+  .nav-login-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 20px 16px;
+    padding: 12px 16px;
+    border: 2px solid #009999;
+    border-radius: 8px;
+    color: #009999;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-login-link svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  .nav-login-link:hover {
+    background: #009999;
+    color: #fff;
   }
 }
 

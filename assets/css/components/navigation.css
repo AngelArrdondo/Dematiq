@@ -9,7 +9,7 @@ nav ul {
 
 nav ul li a {
   text-decoration: none;
-  color: var(--brand-dark);
+  color: #ffffff;
   font-weight: 700;
   font-size: 16px;
   padding: 8px 14px 6px;
@@ -19,7 +19,7 @@ nav ul li a {
   white-space: nowrap;
 }
 
-/* Subrayado animado oscuro */
+/* Subrayado animado teal */
 nav ul li a::after {
   content: '';
   position: absolute;
@@ -27,7 +27,7 @@ nav ul li a::after {
   left: 50%;
   width: 0;
   height: 3px;
-  background: var(--brand-dark);
+  background: #009999;
   border-radius: 2px;
   transition: width 0.3s ease, left 0.3s ease;
   transform: translateX(-50%);
@@ -40,8 +40,8 @@ nav ul li a.active::after {
 
 nav ul li a:hover,
 nav ul li a.active {
-  color: var(--brand-dark);
-  background: var(--brand-xlight);
+  color: #009999;
+  background: rgba(0, 153, 153, 0.12);
 }
 
 /* ── Mobile ── */
@@ -56,8 +56,8 @@ nav ul li a.active {
     display: block;
     padding: 13px 6px;
     border-radius: 0;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--brand-dark);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
   }
   nav ul li:last-child a { border-bottom: none; }
   nav ul li a::after    { display: none; }
