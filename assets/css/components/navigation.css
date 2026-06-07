@@ -27,7 +27,7 @@ nav ul li a::after {
   left: 50%;
   width: 0;
   height: 3px;
-  background: #009999;
+  background: #00ffb9;
   border-radius: 2px;
   transition: width 0.3s ease, left 0.3s ease;
   transform: translateX(-50%);
@@ -40,8 +40,8 @@ nav ul li a.active::after {
 
 nav ul li a:hover,
 nav ul li a.active {
-  color: #009999;
-  background: rgba(0, 153, 153, 0.12);
+  color: #00ffb9;
+  background: none;
 }
 
 /* ── Mobile ── */

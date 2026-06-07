@@ -69,12 +69,13 @@
   flex-shrink: 0;
   width: 190px;
   height: 110px;
-  margin: 0 16px;
+  margin: 0;
   background: transparent;
   padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .marquee-item img {
@@ -124,7 +125,7 @@
 /* ===================== SOLUCIONES GRID ===================== */
 #soluciones {
   padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 48px);
-  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-mid) 100%);
+  background: #000028;
 }
 
 .soluciones-grid {

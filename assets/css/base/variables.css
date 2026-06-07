@@ -1,5 +1,6 @@
 :root {
   /* ── Paleta del logo DEMATIQ ── */
+  --color-blue-dark: #000028;  /* azul oscuro principal – header/footer */
   --brand-dark:    #0d2155;   /* navy oscuro – texto del logo */
   --brand-mid:     #1a4a9e;   /* azul medio – ícono del logo  */
   --brand-light:   #2e6bcf;   /* azul claro  – hover / acento */

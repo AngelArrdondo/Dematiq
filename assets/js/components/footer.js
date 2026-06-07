@@ -26,25 +26,12 @@ class FooterComponent {
         <div class="footer-inner">
 
           <div class="footer-brand">
-            <img src="${base}/assets/images/logos/LOGO.jpeg" alt="DEMATIQ">
+            <img src="${base}/assets/images/logos/logo1.png" alt="DEMATIQ">
             <p>Empresa mexicana especializada en proyectos de Automatización y Ensamble industrial con más de 10 años de experiencia.</p>
           </div>
 
-          <nav class="footer-nav" aria-label="Pie de página">
-            <h4>Navegación</h4>
-            <ul>
-              <li><a href="${base}/index.html">Inicio</a></li>
-              <li><a href="${base}/pages/corporativo/nosotros.html">Sobre Nosotros</a></li>
-              <li><a href="${base}/pages/corporativo/soluciones.html">Proyectos</a></li>
-              <li><a href="${base}/pages/corporativo/industrias.html">Industrias</a></li>
-              <li><a href="${base}/pages/corporativo/Contacto.html">Contacto</a></li>
-            </ul>
-          </nav>
-
           <div class="footer-contact">
             <h4>Contacto</h4>
-            <p>Col. Jardines del Sol<br>Querétaro, Qro. CP.76117</p>
-
             <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ventas@dematiq.com.mx"
                target="_blank" rel="noopener" class="footer-action-link">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -61,16 +48,27 @@ class FooterComponent {
               </svg>
               +52 (442) 721-4891
             </a>
+          </div>
 
-            <div class="footer-social">
-              <a href="#" aria-label="Facebook">
+          <div class="footer-location">
+            <h4>Ubicación</h4>
+            <p>Col. Jardines del Sol<br>Querétaro, Qro. CP. 76117</p>
+          </div>
+
+          <div class="footer-socials">
+            <h4>Síguenos</h4>
+            <div class="footer-social-icons">
+              <a href="#" aria-label="Facebook" class="footer-social-icon">
                 <img src="${base}/assets/images/social/facebook.png" alt="Facebook">
               </a>
-              <a href="#" aria-label="Instagram">
+              <a href="#" aria-label="Instagram" class="footer-social-icon">
                 <img src="${base}/assets/images/social/instagram.png" alt="Instagram">
               </a>
-              <a href="#" aria-label="LinkedIn">
+              <a href="#" aria-label="LinkedIn" class="footer-social-icon">
                 <img src="${base}/assets/images/social/linkedin.png" alt="LinkedIn">
+              </a>
+              <a href="#" aria-label="YouTube" class="footer-social-icon">
+                <img src="${base}/assets/images/social/youtube.png" alt="YouTube">
               </a>
             </div>
           </div>
