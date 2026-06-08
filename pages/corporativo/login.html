@@ -6,30 +6,31 @@
   <title>Iniciar sesión | DEMATIQ Admin</title>
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:      #08112e;
-      --deep:      #0a1a3e;
-      --brand:     #1a4a9e;
-      --mid:       #2e6bcf;
+      /* Exact match to the DEMATIQ site palette (variables.css) */
+      --navy:      #000028;   /* --color-blue-dark  */
+      --deep:      #0d2155;   /* --brand-dark        */
+      --brand:     #1a4a9e;   /* --brand-mid         */
+      --mid:       #2e6bcf;   /* --brand-light       */
       --glow:      #4d8de8;
-      --aqua:      #60a5fa;
+      --teal:      #00ffb9;   /* site accent / nav hover */
       --white:     #ffffff;
-      --form-bg:   #f7f9ff;
-      --text-dark: #0f1f45;
+      --form-bg:   #f5f8ff;   /* --color-bg          */
+      --text-dark: #1e2d50;   /* --color-text        */
       --text-mid:  #3d5a9a;
-      --text-lt:   #7b93c8;
-      --border:    #dde8ff;
+      --text-lt:   #5a6f96;   /* --color-text-light  */
+      --border:    #c8d8f0;   /* --color-border      */
     }
 
     html, body { height: 100%; }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--navy);
+      font-family: 'Roboto', sans-serif;
+      background: #000028;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -51,9 +52,10 @@
       inset: 0;
       z-index: 1;
       background:
-        radial-gradient(ellipse 70% 60% at 15% 25%, rgba(26,74,158,.5) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 85% 75%, rgba(46,107,207,.35) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(77,141,232,.12) 0%, transparent 60%);
+        radial-gradient(ellipse 70% 60% at 15% 25%, rgba(26,74,158,.48) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 85% 75%, rgba(0,255,185,.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(46,107,207,.1) 0%, transparent 60%),
+        linear-gradient(180deg, #000028 0%, #000028 100%);
     }
 
     /* ═══════════════════════════════════════
@@ -74,9 +76,9 @@
       background: conic-gradient(
         from var(--a, 0deg),
         transparent 30%,
-        rgba(77,141,232,.8) 45%,
-        rgba(96,165,250,.9) 50%,
-        rgba(77,141,232,.8) 55%,
+        rgba(26,74,158,.8) 42%,
+        rgba(0,255,185,.9) 50%,
+        rgba(26,74,158,.8) 58%,
         transparent 70%
       );
       animation: spinGlow 5s linear infinite;
@@ -122,7 +124,7 @@
     .brand-panel {
       flex: 0 0 44%;
       position: relative;
-      background: linear-gradient(155deg, #0c1d4a 0%, #081330 100%);
+      background: linear-gradient(155deg, #0d2155 0%, #000028 100%);
       padding: 52px 44px;
       display: flex;
       flex-direction: column;
@@ -179,9 +181,9 @@
 
     .brand-logo-text { line-height: 1; }
     .brand-logo-name {
-      font-size: 1.25rem; font-weight: 800;
+      font-size: 1.25rem; font-weight: 700;
       letter-spacing: 3px;
-      background: linear-gradient(90deg, #fff 0%, var(--aqua) 100%);
+      background: linear-gradient(90deg, #fff 0%, var(--teal) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -207,7 +209,7 @@
     }
     .brand-headline h1 em {
       font-style: normal;
-      background: linear-gradient(90deg, var(--aqua), var(--glow));
+      background: linear-gradient(90deg, var(--teal), var(--mid));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -238,7 +240,7 @@
       border: 1px solid rgba(255,255,255,.1);
       display: flex; align-items: center; justify-content: center;
     }
-    .feature-dot svg { width: 15px; height: 15px; color: var(--aqua); }
+    .feature-dot svg { width: 15px; height: 15px; color: var(--teal); }
     .feature-item span {
       font-size: .83rem; font-weight: 500;
       color: rgba(255,255,255,.65);
@@ -268,11 +270,11 @@
 
     .secure-badge {
       display: flex; align-items: center; gap: 6px;
-      background: rgba(77,141,232,.12);
-      border: 1px solid rgba(77,141,232,.25);
+      background: rgba(0,255,185,.08);
+      border: 1px solid rgba(0,255,185,.22);
       border-radius: 20px;
       padding: 5px 12px;
-      font-size: .7rem; font-weight: 600; color: var(--aqua);
+      font-size: .7rem; font-weight: 600; color: var(--teal);
       letter-spacing: .5px;
     }
     .secure-badge .pulse {
@@ -419,7 +421,7 @@
       transition: color .18s, background .18s;
       z-index: 3;
     }
-    .eye-btn:hover { color: var(--brand); background: rgba(26,74,158,.07); }
+    .eye-btn:hover { color: var(--mid); background: rgba(26,74,158,.07); }
     .eye-btn svg { width: 17px; height: 17px; }
 
     /* Submit button */
@@ -510,7 +512,7 @@
       display: inline-flex; align-items: center; gap: 5px;
       transition: color .18s;
     }
-    .back-link a:hover { color: var(--brand); }
+    .back-link a:hover { color: var(--teal); }
     .back-link a svg { width: 13px; height: 13px; }
 
     /* ═══════════════════════════════════════
@@ -863,7 +865,11 @@
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
           const alpha = (1 - d / DIST) * .35;
-          ctx.strokeStyle = `rgba(96,165,250,${alpha})`;
+          /* teal lines to match brand accent */
+          const r2 = Math.round(0 + (46 - 0) * (d / DIST));
+          const g2 = Math.round(255 + (107 - 255) * (d / DIST));
+          const b2 = Math.round(185 + (207 - 185) * (d / DIST));
+          ctx.strokeStyle = `rgba(${r2},${g2},${b2},${alpha})`;
           ctx.lineWidth = .8;
           ctx.stroke();
         }
@@ -871,7 +877,7 @@
 
       ctx.beginPath();
       ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(96,165,250,.7)';
+      ctx.fillStyle = 'rgba(0,255,185,.65)';
       ctx.fill();
     }
 
