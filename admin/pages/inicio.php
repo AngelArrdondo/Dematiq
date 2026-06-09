@@ -1,3 +1,9 @@
+<?php
+require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/contenido.php';
+$user    = Auth::require('/pages/corporativo/login.php');
+$content = Contenido::getAll();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css">
-  <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
+
+<script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar"></aside>
@@ -24,8 +32,8 @@
       <span class="admin-topbar-title">Inicio</span>
     </div>
     <div class="admin-topbar-user">
-      <span>Administrador</span>
-      <div class="admin-avatar">A</div>
+      <span><?= htmlspecialchars($user['nombre']) ?></span>
+      <div class="admin-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
     </div>
   </div>
 
@@ -36,7 +44,6 @@
       <p>Edita las diapositivas del hero carousel de la página principal.</p>
     </div>
 
-    <!-- Hero Slides -->
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
@@ -52,9 +59,7 @@
           Agregar
         </button>
       </div>
-
       <div id="slides-container"></div>
-
       <p style="font-size:.78rem;color:#5a6f96;margin-top:4px">
         Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/index.jpg</code>
       </p>
@@ -81,7 +86,6 @@
 
 <script src="../assets/js/auth.js"></script>
 <script>
-  AdminAuth.require('../../pages/corporativo/login.html');
   AdminSidebar.init('inicio', '../', '../../');
 
   let slides = (CM.get('home').hero || []).map(s => Object.assign({}, s));
@@ -97,20 +101,17 @@
           <span class="repeat-item-title">Diapositiva ${i + 1}</span>
           <button class="btn-rm" onclick="removeSlide(${i})" title="Eliminar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/>
+              <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/>
             </svg>
           </button>
         </div>
-        <div class="form-group">
-          <label>Título</label>
+        <div class="form-group"><label>Título</label>
           <input type="text" value="${s.title || ''}" oninput="slides[${i}].title=this.value">
         </div>
-        <div class="form-group">
-          <label>Subtítulo</label>
+        <div class="form-group"><label>Subtítulo</label>
           <input type="text" value="${s.subtitle || ''}" oninput="slides[${i}].subtitle=this.value">
         </div>
-        <div class="form-group">
-          <label>Ruta de imagen</label>
+        <div class="form-group"><label>Ruta de imagen</label>
           <input type="text" value="${s.image || ''}" oninput="slides[${i}].image=this.value" placeholder="assets/images/general/index.jpg">
         </div>
         ${s.image ? `<img src="../../${s.image}" alt="preview" style="max-height:90px;border-radius:6px;border:1px solid var(--border);margin-top:4px" onerror="this.style.display='none'">` : ''}
@@ -119,17 +120,11 @@
     });
   }
 
-  function addSlide() {
-    slides.push({ title: '', subtitle: '', image: '' });
-    renderSlides();
-  }
-
+  function addSlide() { slides.push({ title: '', subtitle: '', image: '' }); renderSlides(); }
   function removeSlide(i) {
     if (slides.length <= 1) { showToast('Debe haber al menos una diapositiva', 'error'); return; }
-    slides.splice(i, 1);
-    renderSlides();
+    slides.splice(i, 1); renderSlides();
   }
-
   function saveInicio() {
     const home = CM.get('home');
     home.hero  = slides;

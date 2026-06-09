@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/contenido.php';
+$user    = Auth::require('/pages/corporativo/login.php');
+$content = Contenido::getAll();
+$d       = $content['nosotros'] ?? [];
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +12,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosotros | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css">
-  <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
+
+<script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar"></aside>
@@ -24,8 +33,8 @@
       <span class="admin-topbar-title">Nosotros</span>
     </div>
     <div class="admin-topbar-user">
-      <span>Administrador</span>
-      <div class="admin-avatar">A</div>
+      <span><?= htmlspecialchars($user['nombre']) ?></span>
+      <div class="admin-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
     </div>
   </div>
 
@@ -36,7 +45,6 @@
       <p>Edita el contenido de la sección "Sobre Nosotros".</p>
     </div>
 
-    <!-- Hero -->
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
@@ -48,19 +56,18 @@
       </div>
       <div class="form-group">
         <label>Etiqueta (tag)</label>
-        <input type="text" id="hero-tag" placeholder="Conócenos">
+        <input type="text" id="hero-tag" value="<?= htmlspecialchars($d['hero']['tag'] ?? '') ?>" placeholder="Conócenos">
       </div>
       <div class="form-group">
         <label>Título principal (H1)</label>
-        <input type="text" id="hero-h1" placeholder="Sobre Nosotros">
+        <input type="text" id="hero-h1" value="<?= htmlspecialchars($d['hero']['h1'] ?? '') ?>" placeholder="Sobre Nosotros">
       </div>
       <div class="form-group">
         <label>Subtítulo</label>
-        <textarea id="hero-subtitle" placeholder="Empresa mexicana especializada…"></textarea>
+        <textarea id="hero-subtitle" placeholder="Empresa mexicana especializada…"><?= htmlspecialchars($d['hero']['subtitle'] ?? '') ?></textarea>
       </div>
     </div>
 
-    <!-- Quiénes Somos -->
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
@@ -72,15 +79,14 @@
       </div>
       <div class="form-group">
         <label>Párrafo 1</label>
-        <textarea id="qs-p1"></textarea>
+        <textarea id="qs-p1"><?= htmlspecialchars($d['p1'] ?? '') ?></textarea>
       </div>
       <div class="form-group">
         <label>Párrafo 2</label>
-        <textarea id="qs-p2"></textarea>
+        <textarea id="qs-p2"><?= htmlspecialchars($d['p2'] ?? '') ?></textarea>
       </div>
     </div>
 
-    <!-- Filosofía -->
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
@@ -93,16 +99,16 @@
       <div class="form-grid-2">
         <div class="form-group">
           <label>Misión</label>
-          <textarea id="mision"></textarea>
+          <textarea id="mision"><?= htmlspecialchars($d['mision'] ?? '') ?></textarea>
         </div>
         <div class="form-group">
           <label>Visión</label>
-          <textarea id="vision"></textarea>
+          <textarea id="vision"><?= htmlspecialchars($d['vision'] ?? '') ?></textarea>
         </div>
       </div>
       <div class="form-group">
         <label>Valores</label>
-        <textarea id="valores"></textarea>
+        <textarea id="valores"><?= htmlspecialchars($d['valores'] ?? '') ?></textarea>
       </div>
     </div>
 
@@ -127,18 +133,7 @@
 
 <script src="../assets/js/auth.js"></script>
 <script>
-  AdminAuth.require('../../pages/corporativo/login.html');
   AdminSidebar.init('nosotros', '../', '../../');
-
-  const d = CM.get('nosotros');
-  document.getElementById('hero-tag').value      = d.hero?.tag      || '';
-  document.getElementById('hero-h1').value       = d.hero?.h1       || '';
-  document.getElementById('hero-subtitle').value = d.hero?.subtitle || '';
-  document.getElementById('qs-p1').value         = d.p1             || '';
-  document.getElementById('qs-p2').value         = d.p2             || '';
-  document.getElementById('mision').value        = d.mision         || '';
-  document.getElementById('vision').value        = d.vision         || '';
-  document.getElementById('valores').value       = d.valores        || '';
 
   function saveNosotros() {
     CM.set('nosotros', {

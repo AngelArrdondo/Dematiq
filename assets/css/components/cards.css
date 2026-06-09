@@ -89,48 +89,89 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(14px, 3vw, 28px) clamp(8px, 2vw, 16px);
-  min-height: 110px;
-  background: #000028;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  border-radius: 14px !important;
+  gap: 16px;
+  padding: clamp(24px, 3.5vw, 40px) clamp(14px, 2vw, 24px);
+  min-height: clamp(170px, 20vw, 240px);
+  background: linear-gradient(160deg, #0d1f55 0%, #000028 100%);
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 16px !important;
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   cursor: pointer;
   overflow: hidden !important;
 }
 
 .solucion-icon-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 28px rgba(0,0,41,0.25);
-  background: #0a0a40;
+  transform: translateY(-6px);
+  box-shadow: 0 18px 44px rgba(26,74,158,0.45);
+  border-color: rgba(46,107,207,0.6) !important;
 }
 
-.solucion-icon {
-  width: clamp(32px, 5vw, 56px);
-  height: clamp(32px, 5vw, 56px);
-  object-fit: contain;
+/* Círculo de fondo detrás del ícono */
+.solucion-icon-wrap {
+  width: clamp(72px, 9vw, 96px);
+  height: clamp(72px, 9vw, 96px);
+  border-radius: 50%;
+  background: rgba(46,107,207,0.22);
+  border: 1.5px solid rgba(77,141,232,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.solucion-icon-card:hover .solucion-icon-wrap {
+  background: rgba(46,107,207,0.38);
+  border-color: rgba(124,184,255,0.8);
+  box-shadow: 0 0 28px rgba(46,107,207,0.5);
+}
+
+.solucion-svg-icon {
+  width: clamp(32px, 4.5vw, 46px);
+  height: clamp(32px, 4.5vw, 46px);
+  color: #7cb8ff;
   flex-shrink: 0;
   display: block;
-  filter: brightness(0) invert(1);
+  transition: color 0.25s ease;
+}
+
+.solucion-icon-card:hover .solucion-svg-icon {
+  color: #fff;
 }
 
 .solucion-icon-card .card-title {
-  display: none;
+  font-size: clamp(0.78rem, 1.05vw, 0.95rem);
+  font-weight: 600;
+  color: rgba(200,220,255,0.85);
+  text-shadow: none;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.solucion-icon-card:hover .card-title {
+  color: #fff;
 }
 
 @media (max-width: 480px) {
   .solucion-icon-card {
     flex-direction: row;
     justify-content: flex-start;
-    min-height: 64px;
-    padding: 14px 20px;
+    min-height: 72px;
+    padding: 16px 20px;
     gap: 16px;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
   }
-  .solucion-icon {
-    width: 36px;
-    height: 36px;
+  .solucion-icon-wrap {
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
+  }
+  .solucion-svg-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .solucion-icon-card .card-title {
+    text-align: left;
   }
 }

@@ -1,0 +1,24 @@
+<?php
+// Credenciales — en producción mover a variable de entorno o archivo fuera del webroot
+define('DB_HOST',    'localhost');
+define('DB_NAME',    'dematiq_db');
+define('DB_USER',    'dematiq_app');
+define('DB_PASS',    '3zjatGKsdEt8uMOwPt8YISaL6WF44xoc');
+define('DB_CHARSET', 'utf8mb4');
+
+try {
+    $pdo = new PDO(
+        sprintf('mysql:host=%s;dbname=%s;charset=%s', DB_HOST, DB_NAME, DB_CHARSET),
+        DB_USER,
+        DB_PASS,
+        [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ]
+    );
+} catch (PDOException $e) {
+    error_log('DB Connection failed: ' . $e->getMessage());
+    http_response_code(503);
+    die(json_encode(['error' => 'Error de servicio. Intente más tarde.']));
+}

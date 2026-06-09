@@ -1,3 +1,9 @@
+<?php
+require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/contenido.php';
+$user    = Auth::require('/pages/corporativo/login.php');
+$content = Contenido::getAll();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Socios | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css">
-  <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
+
+<script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar"></aside>
@@ -24,8 +32,8 @@
       <span class="admin-topbar-title">Empresas Socias</span>
     </div>
     <div class="admin-topbar-user">
-      <span>Administrador</span>
-      <div class="admin-avatar">A</div>
+      <span><?= htmlspecialchars($user['nombre']) ?></span>
+      <div class="admin-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
     </div>
   </div>
 
@@ -51,9 +59,7 @@
           Agregar socio
         </button>
       </div>
-
       <div id="partners-container"></div>
-
       <p style="font-size:.78rem;color:#5a6f96;margin-top:6px">
         Ruta del logo relativa a la raíz del sitio. Ejemplo: <code>assets/images/partners/Danfoss.jpg</code>
       </p>
@@ -80,7 +86,6 @@
 
 <script src="../assets/js/auth.js"></script>
 <script>
-  AdminAuth.require('../../pages/corporativo/login.html');
   AdminSidebar.init('partners', '../', '../../');
 
   let partners = (CM.get('partners') || []).map(p => Object.assign({}, p));
@@ -89,7 +94,6 @@
     const c = document.getElementById('partners-container');
     document.getElementById('partner-count').textContent = partners.length;
     c.innerHTML = '';
-
     partners.forEach((p, i) => {
       const div = document.createElement('div');
       div.className = 'repeat-item';
@@ -97,7 +101,6 @@
       div.style.gridTemplateColumns = 'auto 1fr';
       div.style.gap = '14px';
       div.style.alignItems = 'center';
-
       div.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;width:70px;height:50px;border:1px solid var(--border);border-radius:8px;background:#f9fbff;overflow:hidden;flex-shrink:0">
           ${p.logo ? `<img src="../../${p.logo}" alt="${p.nombre}" style="max-width:100%;max-height:100%;object-fit:contain" onerror="this.style.display='none'">` : ''}
@@ -107,21 +110,19 @@
             <span class="repeat-item-title">${p.nombre || 'Socio ' + (i + 1)}</span>
             <button class="btn-rm" onclick="removePartner(${i})" title="Eliminar">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/>
+                <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/>
+                <path d="M10,11v6"/><path d="M14,11v6"/>
               </svg>
             </button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div class="form-group" style="margin:0">
-              <label>Nombre</label>
+            <div class="form-group" style="margin:0"><label>Nombre</label>
               <input type="text" value="${p.nombre || ''}" oninput="partners[${i}].nombre=this.value;renderPartners()" placeholder="Nombre de la empresa">
             </div>
-            <div class="form-group" style="margin:0">
-              <label>URL del sitio</label>
+            <div class="form-group" style="margin:0"><label>URL del sitio</label>
               <input type="url" value="${p.url || ''}" oninput="partners[${i}].url=this.value" placeholder="https://...">
             </div>
-            <div class="form-group" style="margin:0;grid-column:1/-1">
-              <label>Ruta del logo</label>
+            <div class="form-group" style="margin:0;grid-column:1/-1"><label>Ruta del logo</label>
               <input type="text" value="${p.logo || ''}" oninput="partners[${i}].logo=this.value;renderPartners()" placeholder="assets/images/partners/logo.png">
             </div>
           </div>
@@ -131,20 +132,9 @@
     });
   }
 
-  function addPartner() {
-    partners.push({ nombre: '', logo: '', url: '' });
-    renderPartners();
-  }
-
-  function removePartner(i) {
-    partners.splice(i, 1);
-    renderPartners();
-  }
-
-  function savePartners() {
-    CM.set('partners', partners);
-    showToast('Cambios guardados correctamente');
-  }
+  function addPartner() { partners.push({ nombre: '', logo: '', url: '' }); renderPartners(); }
+  function removePartner(i) { partners.splice(i, 1); renderPartners(); }
+  function savePartners() { CM.set('partners', partners); showToast('Cambios guardados correctamente'); }
 
   renderPartners();
 </script>

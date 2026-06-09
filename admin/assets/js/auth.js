@@ -79,7 +79,7 @@ const AdminAuth = {
   login(pw)    { if (pw === ADMIN_PASS) { localStorage.setItem(SESSION_KEY, '1'); return true; } return false; },
   logout()     { localStorage.removeItem(SESSION_KEY); },
   require(path) {
-    if (!this.isLoggedIn()) window.location.href = path || '../../pages/corporativo/login.html';
+    if (!this.isLoggedIn()) window.location.href = path || '../../pages/corporativo/login.php';
   }
 };
 
@@ -91,6 +91,10 @@ const CM = {
   },
 
   get(section) {
+    // Use server-injected DB data if available
+    if (window.__DB_CONTENT && window.__DB_CONTENT[section] !== undefined) {
+      return window.__DB_CONTENT[section];
+    }
     const saved = this._all()[section];
     const def   = DEFAULT_CONTENT[section];
     if (!saved) return def;
@@ -102,9 +106,19 @@ const CM = {
   },
 
   set(section, data) {
+    // Save to localStorage as cache
     const all = this._all();
     all[section] = data;
     localStorage.setItem(CONTENT_KEY, JSON.stringify(all));
+    // Save to DB
+    if (window.__DB_CONTENT !== undefined) {
+      window.__DB_CONTENT[section] = data;
+      fetch('/admin/api/contenido.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clave: section, valor: data })
+      }).catch(() => {});
+    }
   },
 
   exportAll() {
@@ -144,7 +158,7 @@ function showToast(msg, type = 'success') {
 function adminLogout(e, loginPath) {
   if (e) e.preventDefault();
   AdminAuth.logout();
-  window.location.href = loginPath || '../../pages/corporativo/login.html';
+  window.location.href = loginPath || '../../pages/corporativo/login.php';
 }
 
 // ── Sidebar component ──────────────────────────────────────────────────
@@ -170,13 +184,13 @@ const AdminSidebar = {
     if (!sidebar) return;
 
     const nav = [
-      { href: `${bp}dashboard.html`,        icon: 'home',    text: 'Dashboard',  key: 'dashboard' },
-      { href: `${bp}pages/inicio.html`,     icon: 'monitor', text: 'Inicio',     key: 'inicio' },
-      { href: `${bp}pages/nosotros.html`,   icon: 'users',   text: 'Nosotros',   key: 'nosotros' },
-      { href: `${bp}pages/industrias.html`, icon: 'layers',  text: 'Industrias', key: 'industrias' },
-      { href: `${bp}pages/contacto.html`,   icon: 'phone',   text: 'Contacto',   key: 'contacto' },
-      { href: `${bp}pages/partners.html`,   icon: 'star',    text: 'Socios',     key: 'partners' },
-      { href: `${bp}pages/servicios.html`,  icon: 'tool',    text: 'Servicios',  key: 'servicios' }
+      { href: `${bp}dashboard.php`,        icon: 'home',    text: 'Dashboard',  key: 'dashboard' },
+      { href: `${bp}pages/inicio.php`,     icon: 'monitor', text: 'Inicio',     key: 'inicio' },
+      { href: `${bp}pages/nosotros.php`,   icon: 'users',   text: 'Nosotros',   key: 'nosotros' },
+      { href: `${bp}pages/industrias.php`, icon: 'layers',  text: 'Industrias', key: 'industrias' },
+      { href: `${bp}pages/contacto.php`,   icon: 'phone',   text: 'Contacto',   key: 'contacto' },
+      { href: `${bp}pages/partners.php`,   icon: 'star',    text: 'Socios',     key: 'partners' },
+      { href: `${bp}pages/servicios.php`,  icon: 'tool',    text: 'Servicios',  key: 'servicios' }
     ];
 
     const navHTML = nav.map(n => {
@@ -194,7 +208,7 @@ const AdminSidebar = {
         ${navHTML}
         <div class="admin-nav-section" style="margin-top:10px">Sistema</div>
         <a href="${rp}index.html" target="_blank">${this.icon(this.ICONS.eye)}Ver sitio</a>
-        <a href="#" onclick="adminLogout(event,'${rp}pages/corporativo/login.html')">${this.icon(this.ICONS.logout)}Cerrar sesión</a>
+        <a href="${rp}admin/logout.php">${this.icon(this.ICONS.logout)}Cerrar sesión</a>
       </nav>
       <div class="admin-sidebar-footer">DEMATIQ Admin v1.0</div>
     `;

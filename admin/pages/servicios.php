@@ -1,3 +1,9 @@
+<?php
+require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/contenido.php';
+$user    = Auth::require('/pages/corporativo/login.php');
+$content = Contenido::getAll();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Servicios | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css">
-  <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
+
+<script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar"></aside>
@@ -24,8 +32,8 @@
       <span class="admin-topbar-title">Servicios</span>
     </div>
     <div class="admin-topbar-user">
-      <span>Administrador</span>
-      <div class="admin-avatar">A</div>
+      <span><?= htmlspecialchars($user['nombre']) ?></span>
+      <div class="admin-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
     </div>
   </div>
 
@@ -51,9 +59,7 @@
           Agregar
         </button>
       </div>
-
       <div id="servicios-container"></div>
-
       <p style="font-size:.78rem;color:#5a6f96;margin-top:6px">
         Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/img1.png</code>
       </p>
@@ -80,7 +86,6 @@
 
 <script src="../assets/js/auth.js"></script>
 <script>
-  AdminAuth.require('../../pages/corporativo/login.html');
   AdminSidebar.init('servicios', '../', '../../');
 
   let servicios = (CM.get('servicios') || []).map(s => Object.assign({}, s));
@@ -110,17 +115,11 @@
             </button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div class="form-group" style="margin:0">
-              <label>Nombre del servicio</label>
-              <input type="text" value="${s.nombre || ''}"
-                oninput="servicios[${i}].nombre=this.value"
-                placeholder="Programación de PLC">
+            <div class="form-group" style="margin:0"><label>Nombre del servicio</label>
+              <input type="text" value="${s.nombre || ''}" oninput="servicios[${i}].nombre=this.value" placeholder="Programación de PLC">
             </div>
-            <div class="form-group" style="margin:0">
-              <label>Ruta de imagen</label>
-              <input type="text" value="${s.image || ''}"
-                oninput="servicios[${i}].image=this.value;renderServicios()"
-                placeholder="assets/images/general/img1.png">
+            <div class="form-group" style="margin:0"><label>Ruta de imagen</label>
+              <input type="text" value="${s.image || ''}" oninput="servicios[${i}].image=this.value;renderServicios()" placeholder="assets/images/general/img1.png">
             </div>
           </div>
         </div>
@@ -129,20 +128,9 @@
     });
   }
 
-  function addServicio() {
-    servicios.push({ id: 'servicio_' + Date.now(), nombre: '', image: '' });
-    renderServicios();
-  }
-
-  function removeServicio(i) {
-    servicios.splice(i, 1);
-    renderServicios();
-  }
-
-  function saveServicios() {
-    CM.set('servicios', servicios);
-    showToast('Cambios guardados correctamente');
-  }
+  function addServicio() { servicios.push({ id: 'servicio_' + Date.now(), nombre: '', image: '' }); renderServicios(); }
+  function removeServicio(i) { servicios.splice(i, 1); renderServicios(); }
+  function saveServicios() { CM.set('servicios', servicios); showToast('Cambios guardados correctamente'); }
 
   renderServicios();
 </script>

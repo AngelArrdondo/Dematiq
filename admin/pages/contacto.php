@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/contenido.php';
+$user    = Auth::require('/pages/corporativo/login.php');
+$content = Contenido::getAll();
+$d       = $content['contacto'] ?? [];
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +12,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css">
-  <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
+
+<script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar"></aside>
@@ -24,8 +33,8 @@
       <span class="admin-topbar-title">Contacto</span>
     </div>
     <div class="admin-topbar-user">
-      <span>Administrador</span>
-      <div class="admin-avatar">A</div>
+      <span><?= htmlspecialchars($user['nombre']) ?></span>
+      <div class="admin-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
     </div>
   </div>
 
@@ -36,7 +45,6 @@
       <p>Edita la información de contacto visible en el sitio.</p>
     </div>
 
-    <!-- Info de contacto -->
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
@@ -49,32 +57,31 @@
       <div class="form-grid-2">
         <div class="form-group">
           <label>Correo electrónico</label>
-          <input type="email" id="email" placeholder="ventas@dematiq.com.mx">
+          <input type="email" id="email" value="<?= htmlspecialchars($d['email'] ?? '') ?>" placeholder="ventas@dematiq.com.mx">
         </div>
         <div class="form-group">
           <label>WhatsApp (texto visible)</label>
-          <input type="text" id="whatsapp" placeholder="+52 (442) 721-4891">
+          <input type="text" id="whatsapp" value="<?= htmlspecialchars($d['whatsapp'] ?? '') ?>" placeholder="+52 (442) 721-4891">
         </div>
         <div class="form-group">
           <label>Número WhatsApp (para enlace)</label>
-          <input type="text" id="whatsapp-num" placeholder="524427214891">
+          <input type="text" id="whatsapp-num" value="<?= htmlspecialchars($d['whatsappNum'] ?? '') ?>" placeholder="524427214891">
         </div>
         <div class="form-group">
           <label>Horario de atención</label>
-          <input type="text" id="horario" placeholder="Lun – Vie · 8:30 – 18:00">
+          <input type="text" id="horario" value="<?= htmlspecialchars($d['horario'] ?? '') ?>" placeholder="Lun – Vie · 8:30 – 18:00">
         </div>
       </div>
       <div class="form-group">
         <label>Dirección completa</label>
-        <textarea id="direccion" style="min-height:60px"></textarea>
+        <textarea id="direccion" style="min-height:60px"><?= htmlspecialchars($d['direccion'] ?? '') ?></textarea>
       </div>
       <div class="form-group">
         <label>Coordenadas del mapa (lat,lng)</label>
-        <input type="text" id="map-coords" placeholder="20.621222,-100.470500">
+        <input type="text" id="map-coords" value="<?= htmlspecialchars($d['mapCoords'] ?? '') ?>" placeholder="20.621222,-100.470500">
       </div>
     </div>
 
-    <!-- Redes sociales -->
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
@@ -88,19 +95,19 @@
       <div class="form-grid-2">
         <div class="form-group">
           <label>Facebook (URL)</label>
-          <input type="url" id="social-fb" placeholder="https://facebook.com/dematiq">
+          <input type="url" id="social-fb" value="<?= htmlspecialchars($d['social']['facebook'] ?? '') ?>" placeholder="https://facebook.com/dematiq">
         </div>
         <div class="form-group">
           <label>Instagram (URL)</label>
-          <input type="url" id="social-ig" placeholder="https://instagram.com/dematiq">
+          <input type="url" id="social-ig" value="<?= htmlspecialchars($d['social']['instagram'] ?? '') ?>" placeholder="https://instagram.com/dematiq">
         </div>
         <div class="form-group">
           <label>LinkedIn (URL)</label>
-          <input type="url" id="social-li" placeholder="https://linkedin.com/company/dematiq">
+          <input type="url" id="social-li" value="<?= htmlspecialchars($d['social']['linkedin'] ?? '') ?>" placeholder="https://linkedin.com/company/dematiq">
         </div>
         <div class="form-group">
           <label>YouTube (URL)</label>
-          <input type="url" id="social-yt" placeholder="https://youtube.com/@dematiq">
+          <input type="url" id="social-yt" value="<?= htmlspecialchars($d['social']['youtube'] ?? '') ?>" placeholder="https://youtube.com/@dematiq">
         </div>
       </div>
     </div>
@@ -126,20 +133,7 @@
 
 <script src="../assets/js/auth.js"></script>
 <script>
-  AdminAuth.require('../../pages/corporativo/login.html');
   AdminSidebar.init('contacto', '../', '../../');
-
-  const d = CM.get('contacto');
-  document.getElementById('email').value        = d.email       || '';
-  document.getElementById('whatsapp').value     = d.whatsapp    || '';
-  document.getElementById('whatsapp-num').value = d.whatsappNum || '';
-  document.getElementById('horario').value      = d.horario     || '';
-  document.getElementById('direccion').value    = d.direccion   || '';
-  document.getElementById('map-coords').value  = d.mapCoords   || '';
-  document.getElementById('social-fb').value   = d.social?.facebook  || '';
-  document.getElementById('social-ig').value   = d.social?.instagram || '';
-  document.getElementById('social-li').value   = d.social?.linkedin  || '';
-  document.getElementById('social-yt').value   = d.social?.youtube   || '';
 
   function saveContacto() {
     CM.set('contacto', {

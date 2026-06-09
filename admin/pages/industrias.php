@@ -1,3 +1,9 @@
+<?php
+require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/contenido.php';
+$user    = Auth::require('/pages/corporativo/login.php');
+$content = Contenido::getAll();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Industrias | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css">
-  <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
+
+<script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar"></aside>
@@ -24,8 +32,8 @@
       <span class="admin-topbar-title">Industrias</span>
     </div>
     <div class="admin-topbar-user">
-      <span>Administrador</span>
-      <div class="admin-avatar">A</div>
+      <span><?= htmlspecialchars($user['nombre']) ?></span>
+      <div class="admin-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
     </div>
   </div>
 
@@ -51,7 +59,6 @@
           Agregar
         </button>
       </div>
-
       <div id="industrias-container"></div>
     </div>
 
@@ -76,7 +83,6 @@
 
 <script src="../assets/js/auth.js"></script>
 <script>
-  AdminAuth.require('../../pages/corporativo/login.html');
   AdminSidebar.init('industrias', '../', '../../');
 
   let industrias = (CM.get('industrias') || []).map(ind => Object.assign({}, ind));
@@ -118,20 +124,9 @@
     });
   }
 
-  function addIndustria() {
-    industrias.push({ id: '', nombre: '', descripcion: '' });
-    renderIndustrias();
-  }
-
-  function removeIndustria(i) {
-    industrias.splice(i, 1);
-    renderIndustrias();
-  }
-
-  function saveIndustrias() {
-    CM.set('industrias', industrias);
-    showToast('Cambios guardados correctamente');
-  }
+  function addIndustria() { industrias.push({ id: '', nombre: '', descripcion: '' }); renderIndustrias(); }
+  function removeIndustria(i) { industrias.splice(i, 1); renderIndustrias(); }
+  function saveIndustrias() { CM.set('industrias', industrias); showToast('Cambios guardados correctamente'); }
 
   renderIndustrias();
 </script>
