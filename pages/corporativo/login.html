@@ -980,7 +980,7 @@ document.getElementById('submit-btn').addEventListener('click', function (e) {
 const SESSION_KEY = 'dematiq_admin_session';
 const ADMIN_PASS  = 'dematiq2024';
 
-if (sessionStorage.getItem(SESSION_KEY) === '1') {
+if (localStorage.getItem(SESSION_KEY) === '1') {
   window.location.href = '../../admin/dashboard.html';
 }
 
@@ -992,38 +992,22 @@ function handleLogin(e) {
   const label = document.getElementById('btn-label');
   const arrow = document.getElementById('btn-arrow');
 
-  btn.disabled = true;
-  arrow.style.display = 'none';
-  label.innerHTML = '';
-  btn.insertAdjacentHTML('afterbegin', '<span class="spin-ring"></span>');
-  btn.querySelector('#btn-label').textContent = ' Verificando…';
-
-  setTimeout(() => {
-    const spinner = btn.querySelector('.spin-ring');
-
-    if (pass === ADMIN_PASS) {
-      if (spinner) spinner.remove();
-      label.textContent = '✓  Acceso concedido';
-      btn.style.cssText += 'background:linear-gradient(135deg,#15803d,#22c55e);box-shadow:0 8px 28px rgba(21,128,61,.5)';
-      setTimeout(() => {
-        sessionStorage.setItem(SESSION_KEY, '1');
-        window.location.href = '../../admin/dashboard.html';
-      }, 550);
-    } else {
-      if (spinner) spinner.remove();
-      btn.disabled = false;
-      label.textContent = 'Acceder al panel';
-      arrow.style.display = '';
-      /* re-trigger shake */
-      err.classList.remove('show');
-      err.style.display = 'none';
-      void err.offsetWidth;
-      err.classList.add('show');
-      err.style.display = 'flex';
-      document.getElementById('login-pass').value = '';
-      document.getElementById('login-pass').focus();
-    }
-  }, 750);
+  if (pass === ADMIN_PASS) {
+    label.textContent = '✓  Acceso concedido';
+    btn.disabled = true;
+    btn.style.cssText += 'background:linear-gradient(135deg,#15803d,#22c55e);box-shadow:0 8px 28px rgba(21,128,61,.5)';
+    localStorage.setItem(SESSION_KEY, '1');
+    window.location.href = '../../admin/dashboard.html';
+  } else {
+    /* re-trigger shake */
+    err.classList.remove('show');
+    err.style.display = 'none';
+    void err.offsetWidth;
+    err.classList.add('show');
+    err.style.display = 'flex';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+  }
 }
 </script>
 </body>

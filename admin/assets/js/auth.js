@@ -75,9 +75,9 @@ const DEFAULT_CONTENT = {
 
 // ── Auth ───────────────────────────────────────────────────────────────
 const AdminAuth = {
-  isLoggedIn() { return sessionStorage.getItem(SESSION_KEY) === '1'; },
-  login(pw)    { if (pw === ADMIN_PASS) { sessionStorage.setItem(SESSION_KEY, '1'); return true; } return false; },
-  logout()     { sessionStorage.removeItem(SESSION_KEY); },
+  isLoggedIn() { return localStorage.getItem(SESSION_KEY) === '1'; },
+  login(pw)    { if (pw === ADMIN_PASS) { localStorage.setItem(SESSION_KEY, '1'); return true; } return false; },
+  logout()     { localStorage.removeItem(SESSION_KEY); },
   require(path) {
     if (!this.isLoggedIn()) window.location.href = path || '../../pages/corporativo/login.html';
   }
