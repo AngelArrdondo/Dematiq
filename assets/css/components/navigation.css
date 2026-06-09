@@ -49,7 +49,7 @@ nav ul li a.active {
   nav ul {
     flex-direction: column;
     gap: 0;
-    padding: 10px 20px 18px;
+    padding: 10px 20px 0;
   }
   nav ul li a {
     font-size: 17px;
@@ -59,6 +59,6 @@ nav ul li a.active {
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     color: #ffffff;
   }
-  nav ul li:last-child a { border-bottom: none; }
+  nav ul li:last-child a { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
   nav ul li a::after    { display: none; }
 }
