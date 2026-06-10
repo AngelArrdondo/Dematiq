@@ -100,7 +100,7 @@
   function getLayout(track) {
     const tw = track.offsetWidth;
     const isMobile = tw < 560;
-    const centerW = isMobile ? tw * 0.84 : Math.min(tw * 0.50, 500);
+    const centerW = isMobile ? tw * 0.88 : Math.min(tw * 0.52, 580);
     const centerH = centerW * (10 / 16);
     const sideScale = isMobile ? 0 : 0.80;
     const sideW = centerW * sideScale;
@@ -154,7 +154,7 @@
   function setTrackHeight(track) {
     const tw = track.offsetWidth;
     const isMobile = tw < 560;
-    const centerW = isMobile ? tw * 0.84 : Math.min(tw * 0.50, 500);
+    const centerW = isMobile ? tw * 0.88 : Math.min(tw * 0.52, 580);
     const centerH = centerW * (10 / 16);
     track.style.height = Math.round(centerH + 12) + 'px';
   }
