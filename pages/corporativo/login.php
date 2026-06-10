@@ -1,17 +1,18 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 
-// Si ya tiene sesión activa, redirigir al panel
 if (Auth::check()) {
     header('Location: ../../admin/dashboard.php');
     exit;
 }
 
 $error = '';
+$remembered_user = $_COOKIE['dematiq_remember_user'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
+    $remember = isset($_POST['remember']);
     $ip       = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     $ua       = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
 
@@ -20,6 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $result = Auth::login($username, $password, $ip, $ua);
         if ($result['ok']) {
+            if ($remember) {
+                setcookie('dematiq_remember_user', $username, [
+                    'expires'  => time() + (30 * 24 * 3600),
+                    'path'     => '/',
+                    'httponly' => true,
+                    'samesite' => 'Strict',
+                ]);
+            } else {
+                setcookie('dematiq_remember_user', '', ['expires' => time() - 3600, 'path' => '/']);
+            }
             header('Location: ../../admin/dashboard.php');
             exit;
         }
@@ -92,8 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .login-card {
       display: flex;
-      width: min(800px, calc(100vw - 40px));
-      min-height: 500px;
+      width: min(820px, calc(100vw - 40px));
+      min-height: 520px;
       border-radius: 28px; overflow: hidden;
       box-shadow: 0 50px 120px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.06);
       animation: cardIn .75s cubic-bezier(.22,.68,0,1.15) both;
@@ -107,57 +118,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .brand-panel {
       flex: 0 0 42%; position: relative;
       background: linear-gradient(155deg, #0d2155 0%, #000028 100%);
-      padding: 38px 32px; display: flex; flex-direction: column; overflow: hidden;
+      padding: 40px 32px; display: flex; flex-direction: column; overflow: hidden;
     }
     #net-canvas { position: absolute; inset: 0; opacity: .55; }
-    .brand-content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
-
-    .brand-logo { display:flex; align-items:center; gap:12px; margin-bottom:28px; animation: fadeRight .7s .1s both; }
-    .brand-logo-icon {
-      width:42px; height:42px;
-      background: linear-gradient(135deg, var(--brand), var(--mid));
-      border-radius:11px; display:flex; align-items:center; justify-content:center;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 8px 28px rgba(26,74,158,.6), inset 0 1px 0 rgba(255,255,255,.15);
+    .brand-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between;
+      height: 100%; text-align: center;
     }
-    .brand-logo-icon img { height:24px; width:auto; object-fit:contain; filter:brightness(0) invert(1); }
-    .brand-logo-name { font-size:1.25rem; font-weight:700; letter-spacing:3px;
-      background: linear-gradient(90deg,#fff 0%,var(--teal) 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .brand-logo-sub { font-size:.65rem; color:rgba(255,255,255,.38); letter-spacing:2px; text-transform:uppercase; margin-top:3px; }
 
-    .brand-headline { margin-bottom:22px; animation: fadeRight .7s .2s both; }
-    .brand-headline h1 { font-size:1.55rem; font-weight:800; color:#fff; line-height:1.18; letter-spacing:-.5px; }
-    .brand-headline h1 em { font-style:normal; background:linear-gradient(90deg,var(--teal),var(--mid));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .brand-headline p { font-size:.83rem; color:rgba(255,255,255,.45); margin-top:8px; line-height:1.6; }
+    /* Logo */
+    .brand-logo { display:flex; align-items:center; justify-content:center; flex:1; animation: fadeRight .7s .1s both; }
+    .brand-logo img { width: 90%; max-width: 280px; height: auto; object-fit: contain; }
 
-    .brand-features { flex:1; }
-    .feature-item { display:flex; align-items:center; gap:12px; margin-bottom:11px; opacity:0; animation:fadeRight .55s both; }
-    .feature-item:nth-child(1){animation-delay:.3s} .feature-item:nth-child(2){animation-delay:.38s}
-    .feature-item:nth-child(3){animation-delay:.46s} .feature-item:nth-child(4){animation-delay:.54s}
-    .feature-dot { width:32px;height:32px;flex-shrink:0;border-radius:9px;
-      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-      display:flex;align-items:center;justify-content:center; }
-    .feature-dot svg { width:15px;height:15px;color:var(--teal); }
-    .feature-item span { font-size:.83rem;font-weight:500;color:rgba(255,255,255,.65); }
+    /* Separador decorativo */
+    .brand-divider {
+      width: 100%; display: flex; align-items: center; gap: 12px;
+      margin: 8px 0; animation: fadeRight .7s .3s both;
+    }
+    .brand-divider::before, .brand-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,185,.3), transparent);
+    }
+    .brand-divider-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal); opacity: .6;
+      box-shadow: 0 0 8px var(--teal);
+    }
+
+    /* Reloj */
+    .brand-clock { text-align: center; animation: fadeRight .7s .4s both; margin-bottom: 4px; }
+    .clock-time {
+      font-size: 2rem; font-weight: 700; color: #fff;
+      letter-spacing: 3px; font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 20px rgba(0,255,185,.3);
+    }
+    .clock-date {
+      font-size: .72rem; color: rgba(255,255,255,.4);
+      text-transform: uppercase; letter-spacing: 2px; margin-top: 5px;
+    }
+
+    /* Badge versión */
+    .version-badge {
+      margin-top: 14px;
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: .65rem; font-weight: 600; color: rgba(255,255,255,.3);
+      letter-spacing: 1px; text-transform: uppercase;
+      animation: fadeRight .7s .5s both;
+    }
+    .version-badge span { color: rgba(0,255,185,.5); }
 
     @keyframes fadeRight { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
-
-    .brand-footer { margin-top:36px;display:flex;align-items:center;justify-content:space-between; animation:fadeRight .7s .62s both; }
-    .clock-time { font-size:1.45rem;font-weight:700;color:#fff;letter-spacing:2px;font-variant-numeric:tabular-nums; }
-    .clock-date { font-size:.68rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px; }
-    .secure-badge { display:flex;align-items:center;gap:6px;background:rgba(0,255,185,.08);
-      border:1px solid rgba(0,255,185,.22);border-radius:20px;padding:5px 12px;
-      font-size:.7rem;font-weight:600;color:var(--teal); }
-    .secure-badge .pulse { width:7px;height:7px;background:#22c55e;border-radius:50%;
-      box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:pulse 2s infinite; }
-    @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)} 70%{box-shadow:0 0 0 6px rgba(34,197,94,0)} 100%{box-shadow:0 0 0 0 rgba(34,197,94,0)} }
 
     /* ── Panel derecho ── */
     .form-panel {
       flex:1; background:var(--form-bg);
-      padding:38px 40px 34px; display:flex; flex-direction:column; justify-content:center;
+      padding:40px 40px 34px; display:flex; flex-direction:column; justify-content:center;
     }
 
     .form-header { margin-bottom:24px; animation:fadeLeft .65s .15s both; }
@@ -174,27 +193,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .form-error.show { display:flex; animation:shake .45s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake { 10%,90%{transform:translateX(-2px)} 20%,80%{transform:translateX(4px)} 30%,50%,70%{transform:translateX(-6px)} 40%,60%{transform:translateX(6px)} }
 
-    .field-wrap { position:relative; margin-bottom:18px; animation:fadeLeft .65s .25s both; }
+    .field-wrap { margin-bottom:18px; animation:fadeLeft .65s .25s both; }
+    .field-wrap label {
+      display:block; margin-bottom:7px; padding-left:3px;
+      font-size:.74rem; font-weight:700; color:var(--text-lt);
+      letter-spacing:.5px; text-transform:uppercase; transition:color .22s;
+    }
+    .field-wrap:focus-within label { color:var(--brand); }
+    .input-row { position:relative; }
     .field-icon { position:absolute;left:16px;top:50%;transform:translateY(-50%);
       color:var(--text-lt);pointer-events:none;transition:color .22s;z-index:2; }
     .field-icon svg { width:17px;height:17px;display:block; }
     .field-wrap input {
-      width:100%; padding:20px 46px 8px 46px;
+      width:100%; padding:13px 46px;
       background:var(--white);border:1.5px solid var(--border);border-radius:13px;
       font-size:.95rem;font-family:inherit;color:var(--text-dark);outline:none;
       transition:border-color .22s,box-shadow .22s;
     }
-    .field-wrap input::placeholder { color:transparent; }
-    .field-wrap label { position:absolute;left:46px;top:50%;transform:translateY(-50%);
-      font-size:.88rem;font-weight:500;color:var(--text-lt);pointer-events:none;transition:all .22s cubic-bezier(.4,0,.2,1); }
-    .field-wrap input:focus,
-    .field-wrap input:not(:placeholder-shown) { border-color:var(--mid);box-shadow:0 0 0 4px rgba(46,107,207,.1); }
-    .field-wrap input:focus + label,
-    .field-wrap input:not(:placeholder-shown) + label {
-      top:10px;transform:translateY(0);font-size:.64rem;font-weight:700;
-      letter-spacing:.6px;text-transform:uppercase;color:var(--brand);
-    }
-    .field-wrap input:focus ~ .field-icon { color:var(--mid); }
+    .field-wrap input::placeholder { color:var(--border); }
+    .field-wrap input:focus { border-color:var(--mid);box-shadow:0 0 0 4px rgba(46,107,207,.1); }
+    .field-wrap:focus-within .field-icon { color:var(--mid); }
 
     .eye-btn {
       position:absolute;right:14px;top:50%;transform:translateY(-50%);
@@ -204,7 +222,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .eye-btn:hover { color:var(--mid);background:rgba(26,74,158,.07); }
     .eye-btn svg { width:17px;height:17px; }
 
-    .btn-wrap { animation:fadeLeft .65s .35s both; }
+    /* Fila recordar + olvidé */
+    .form-extras {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; animation: fadeLeft .65s .3s both;
+    }
+    .remember-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .82rem; font-weight: 500; color: var(--text-lt);
+      cursor: pointer; user-select: none;
+    }
+    .remember-label input[type="checkbox"] { display: none; }
+    .remember-box {
+      width: 17px; height: 17px; border-radius: 5px;
+      border: 1.5px solid var(--border); background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .18s, background .18s; flex-shrink: 0;
+    }
+    .remember-label input:checked ~ .remember-box {
+      background: var(--brand); border-color: var(--brand);
+    }
+    .remember-box svg { width: 10px; height: 10px; color: #fff; opacity: 0; transition: opacity .15s; }
+    .remember-label input:checked ~ .remember-box svg { opacity: 1; }
+    .forgot-link {
+      font-size: .8rem; font-weight: 500; color: var(--text-lt);
+      text-decoration: none; transition: color .18s;
+    }
+    .forgot-link:hover { color: var(--brand); }
+
+    .btn-wrap { animation:fadeLeft .65s .38s both; }
     .submit-btn {
       width:100%;padding:15px 24px;
       background:linear-gradient(135deg,var(--brand) 0%,var(--mid) 60%,var(--glow) 100%);
@@ -223,14 +269,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .submit-btn:hover:not(:disabled) .arrow { transform:translateX(4px); }
     .submit-btn .arrow svg { width:17px;height:17px; }
 
-    .form-divider { display:flex;align-items:center;gap:12px;margin:22px 0 0;animation:fadeLeft .65s .42s both; }
+    /* Spinner */
+    .spinner {
+      display: none; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .submit-btn.loading .spinner { display: block; }
+    .submit-btn.loading .btn-label,
+    .submit-btn.loading .arrow { display: none; }
+
+    .form-divider { display:flex;align-items:center;gap:12px;margin:22px 0 0;animation:fadeLeft .65s .46s both; }
     .form-divider::before,.form-divider::after { content:'';flex:1;height:1px;background:var(--border); }
     .form-divider span { font-size:.74rem;color:var(--text-lt);white-space:nowrap;font-weight:500; }
 
-    .back-link { text-align:center;margin-top:22px;animation:fadeLeft .65s .5s both; }
+    .back-link { text-align:center;margin-top:16px;animation:fadeLeft .65s .52s both; }
     .back-link a { font-size:.8rem;font-weight:500;color:var(--text-lt);text-decoration:none;
       display:inline-flex;align-items:center;gap:5px;transition:color .18s; }
-    .back-link a:hover { color:var(--teal); }
+    .back-link a:hover { color:var(--brand); }
     .back-link a svg { width:13px;height:13px; }
 
     @media (max-width:600px) {
@@ -239,12 +297,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       .login-scene { padding:0;width:100%;min-height:100dvh;perspective:none;display:flex;align-items:stretch; }
       .glow-ring { display:none; }
       .login-card { flex-direction:column;width:100%;min-height:100dvh;border-radius:0;box-shadow:none; }
-      .brand-panel { flex:none;padding:20px 24px; }
+      .brand-panel { flex:none;padding:24px 24px 20px; }
       .brand-content { flex-direction:row;align-items:center;justify-content:space-between;height:auto; }
-      .brand-logo { margin-bottom:0; }
-      .brand-headline,.brand-features { display:none; }
-      .brand-footer { margin-top:0;flex-direction:column;align-items:flex-end; }
-      .brand-clock  { display:none; }
+      .brand-logo { flex:none; }
+      .brand-logo img { width:180px; }
+      .brand-divider, .version-badge { display:none; }
+      .brand-clock { text-align:right; }
+      .clock-time { font-size:1.3rem; }
       .form-panel { flex:1;padding:32px 24px 40px;justify-content:flex-start; }
       .field-wrap input { font-size:16px; }
       .submit-btn { min-height:52px; }
@@ -264,40 +323,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="brand-panel">
       <canvas id="net-canvas"></canvas>
       <div class="brand-content">
+
         <div class="brand-logo">
-          <div class="brand-logo-icon">
-            <img src="../../assets/images/logos/logo1.png" alt="DEMATIQ" onerror="this.style.display='none'">
-          </div>
-          <div>
-            <div class="brand-logo-name">DEMATIQ</div>
-            <div class="brand-logo-sub">Admin Panel</div>
-          </div>
+          <img src="../../assets/images/logos/logo1.png" alt="DEMATIQ">
         </div>
-        <div class="brand-headline">
-          <h1>Control total<br>en tus <em>manos.</em></h1>
-          <p>Gestiona tu empresa desde un solo lugar, rápido y seguro.</p>
+
+        <div class="brand-divider"><div class="brand-divider-dot"></div></div>
+
+        <div class="brand-clock">
+          <div class="clock-time" id="clock-time">00:00:00</div>
+          <div class="clock-date" id="clock-date">—</div>
         </div>
-        <div class="brand-features">
-          <div class="feature-item">
-            <div class="feature-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-            <span>Gestión de contenido web</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-            <span>Estadísticas en tiempo real</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
-            <span>Configuración avanzada</span>
-          </div>
-        </div>
-        <div class="brand-footer">
-          <div class="brand-clock">
-            <div class="clock-time" id="clock-time">00:00:00</div>
-            <div class="clock-date" id="clock-date">—</div>
-          </div>
-          <div class="secure-badge"><span class="pulse"></span>SSL Seguro</div>
-        </div>
+
+        <div class="version-badge">v1.0 &nbsp;·&nbsp; <span>Sistema activo</span></div>
+
       </div>
     </div>
 
@@ -315,35 +354,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <?php endif; ?>
 
-      <form method="POST" action="" autocomplete="off">
+      <form method="POST" action="" autocomplete="off" id="login-form">
 
         <div class="field-wrap">
-          <input type="email" id="login-user" name="username"
-                 value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
-                 placeholder="Correo electrónico" autocomplete="email" required autofocus>
           <label for="login-user">Correo electrónico</label>
-          <span class="field-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </span>
+          <div class="input-row">
+            <input type="email" id="login-user" name="username"
+                   value="<?= htmlspecialchars($_POST['username'] ?? $remembered_user) ?>"
+                   placeholder="ejemplo@correo.com" autocomplete="email" required autofocus>
+            <span class="field-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+          </div>
         </div>
 
         <div class="field-wrap">
-          <input type="password" id="login-pass" name="password"
-                 placeholder="Contraseña" autocomplete="current-password" required>
           <label for="login-pass">Contraseña</label>
-          <span class="field-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          </span>
-          <button type="button" class="eye-btn" id="eye-btn" tabindex="-1">
-            <svg id="eye-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-          </button>
+          <div class="input-row">
+            <input type="password" id="login-pass" name="password"
+                   placeholder="••••••••" autocomplete="current-password" required>
+            <span class="field-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </span>
+            <button type="button" class="eye-btn" id="eye-btn" tabindex="-1">
+              <svg id="eye-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-extras">
+          <label class="remember-label">
+            <input type="checkbox" name="remember" id="remember" <?= $remembered_user ? 'checked' : '' ?>>
+            <span class="remember-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Recordar sesión
+          </label>
+          <a href="forgot-password.php" class="forgot-link">¿Olvidaste tu contraseña?</a>
         </div>
 
         <div class="btn-wrap">
-          <button type="submit" class="submit-btn">
-            <span>Acceder al panel</span>
+          <button type="submit" class="submit-btn" id="submit-btn">
+            <span class="spinner"></span>
+            <span class="btn-label">Acceder al panel</span>
             <span class="arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </span>
@@ -351,7 +406,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </form>
 
-      <div class="form-divider"><span>DEMATIQ © 2024</span></div>
+      <div class="form-divider"><span>DEMATIQ © 2025</span></div>
       <div class="back-link">
         <a href="../../index.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -364,7 +419,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-/* Background canvas y animaciones — igual que login.php */
 (function(){const c=document.getElementById('bg-canvas'),x=c.getContext('2d');let W,H,s=[];function r(){W=c.width=innerWidth;H=c.height=innerHeight}function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,a:Math.random(),da:(Math.random()*.4+.1)*(Math.random()<.5?1:-1)*.008,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15}}function init(){r();s=Array.from({length:160},mk)}function draw(){x.clearRect(0,0,W,H);for(const p of s){p.x+=p.vx;p.y+=p.vy;p.a+=p.da;if(p.a<0||p.a>1)p.da*=-1;if(p.x<-2)p.x=W+2;if(p.x>W+2)p.x=-2;if(p.y<-2)p.y=H+2;if(p.y>H+2)p.y=-2;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(200,220,255,${p.a*.55})`;x.fill()}requestAnimationFrame(draw)}addEventListener('resize',r);init();draw()})();
 
 (function(){const c=document.getElementById('net-canvas'),x=c.getContext('2d'),p=c.parentElement;let W,H,n=[];const C=38,D=110;function r(){const rc=p.getBoundingClientRect();W=c.width=rc.width;H=c.height=rc.height}function mk(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.55,vy:(Math.random()-.5)*.55,r:Math.random()*2+1.2}}function draw(){x.clearRect(0,0,W,H);for(const a of n){a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1;for(const b of n){const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<D){x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);const al=(1-d/D)*.35,r2=Math.round(0+(46-0)*(d/D)),g2=Math.round(255+(107-255)*(d/D)),b2=Math.round(185+(207-185)*(d/D));x.strokeStyle=`rgba(${r2},${g2},${b2},${al})`;x.lineWidth=.8;x.stroke()}}x.beginPath();x.arc(a.x,a.y,a.r,0,Math.PI*2);x.fillStyle='rgba(0,255,185,.65)';x.fill()}requestAnimationFrame(draw)}function init(){r();n=Array.from({length:C},mk);draw()}addEventListener('resize',()=>r());init()})();
@@ -372,6 +426,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 (function(){const t=document.getElementById('clock-time'),d=document.getElementById('clock-date');if(!t)return;const D=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];function tick(){const n=new Date();t.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;d.textContent=`${D[n.getDay()]} ${n.getDate()} ${M[n.getMonth()]} ${n.getFullYear()}`}tick();setInterval(tick,1000)})();
 
 (function(){const i=document.getElementById('login-pass'),b=document.getElementById('eye-btn'),s=document.getElementById('eye-svg');const O='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',X='<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';let show=false;b.addEventListener('click',()=>{show=!show;i.type=show?'text':'password';s.innerHTML=show?X:O})})();
+
+(function(){const f=document.getElementById('login-form'),btn=document.getElementById('submit-btn');f.addEventListener('submit',()=>{btn.classList.add('loading');btn.disabled=true;});})();
 </script>
 </body>
 </html>
