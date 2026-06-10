@@ -5,7 +5,8 @@
 }
 
 /* ===================== SECTION TITLES ===================== */
-#empresas h2 {
+#empresas h2,
+#proyectos h2 {
   text-align: center;
   font-size: clamp(1.3rem, 3vw, 2rem);
   font-weight: 700;
@@ -13,27 +14,6 @@
   margin-bottom: 40px;
   padding: 0 20px;
   position: relative;
-}
-
-#proyectos h2 {
-  text-align: center;
-  font-size: clamp(1.4rem, 3vw, 2.1rem);
-  font-weight: 800;
-  color: var(--brand-dark);
-  margin-bottom: 0;
-  padding: 0 20px;
-  position: relative;
-  letter-spacing: -0.3px;
-}
-
-#proyectos h2::after {
-  content: '';
-  display: block;
-  width: 48px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--brand-mid), var(--brand-light, #4d8de8));
-  border-radius: 3px;
-  margin: 10px auto 0;
 }
 
 #soluciones h2 {
@@ -47,12 +27,13 @@
 }
 
 /* ===================== MARQUEE ===================== */
-#empresas {
+#empresas,
+#proyectos {
   padding: 20px 0;
   overflow: hidden;
-  background: var(--color-white);
 }
 
+#empresas  { background: var(--color-white); }
 #proyectos { background: var(--brand-xlight); }
 
 .marquee-wrapper {
@@ -113,7 +94,7 @@
 
 /* ===================== PROYECTOS — STAGE CAROUSEL ===================== */
 #proyectos {
-  padding: clamp(36px, 5vw, 64px) 0 clamp(32px, 4vw, 52px);
+  padding: clamp(14px, 1.8vw, 26px) 0 clamp(12px, 1.5vw, 20px);
   overflow: hidden;
   position: relative;
   background: var(--brand-xlight);
@@ -121,7 +102,7 @@
 
 #proyectos h2 {
   text-align: center;
-  margin-bottom: clamp(24px, 3vw, 36px);
+  margin-bottom: clamp(10px, 1.4vw, 18px);
 }
 
 .stage-carousel {
@@ -133,7 +114,7 @@
 /* Track */
 .stage-track {
   position: relative;
-  height: clamp(200px, 22vw, 340px);
+  height: clamp(140px, 17vw, 260px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -372,12 +353,12 @@
 
 /* ── Responsive ── */
 @media (max-width: 860px) {
-  .stage-track { height: clamp(220px, 44vw, 320px); }
+  .stage-track { height: clamp(170px, 38vw, 280px); }
 }
 
 @media (max-width: 560px) {
-  .stage-track { height: 240px; }
-  .stage-card__info-desc { font-size: 0.73rem; }
+  .stage-track { height: 200px; }
+  .stage-card__info-desc { display: none; }
 }
 
 /* ===================== SOLUCIONES GRID ===================== */
