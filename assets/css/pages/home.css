@@ -92,34 +92,273 @@
   opacity: 1;
 }
 
-/* ── Project items — todos igual tamaño, imagen completa ── */
-.marquee-item--project {
-  flex-shrink: 0;
-  width: 300px;
-  height: 220px;
-  margin: 0 10px;
-  border-radius: 10px;
+/* ===================== PROYECTOS — STAGE CAROUSEL ===================== */
+#proyectos {
+  padding: clamp(14px, 1.8vw, 26px) 0 clamp(12px, 1.5vw, 20px);
   overflow: hidden;
-  box-shadow: 0 3px 12px rgba(13, 33, 85, 0.15);
-  background: #c8d0e0;           /* fondo mientras carga */
-  border: 1px solid var(--color-border);
+  position: relative;
+  background: var(--brand-xlight);
 }
 
-.marquee-item--project img {
+#proyectos h2 {
+  text-align: center;
+  margin-bottom: clamp(10px, 1.4vw, 18px);
+}
+
+.stage-carousel {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;             /* llena el recuadro uniformemente */
-  object-position: center;
-  display: block;
-  filter: grayscale(100%) brightness(1.05);
-  opacity: 0.80;
-  transition: filter 0.35s, opacity 0.35s, transform 0.35s;
+  padding-bottom: 48px;
 }
 
-.marquee-item--project:hover img {
-  filter: grayscale(0%);
-  opacity: 1;
-  transform: scale(1.06);
+/* Track */
+.stage-track {
+  position: relative;
+  height: clamp(140px, 17vw, 260px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card base */
+.stage-card {
+  position: absolute;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #04041a;
+  width: var(--sc-w, 480px);
+  height: var(--sc-h, 300px);
+  transform: translateX(var(--sc-x, 0)) scale(var(--sc-s, 1));
+  opacity: var(--sc-o, 1);
+  z-index: var(--sc-z, 1);
+  transition:
+    transform  0.52s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity    0.52s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.38s ease,
+    width      0.52s cubic-bezier(0.4, 0, 0.2, 1),
+    height     0.52s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 24px rgba(0,0,20,0.5);
+  will-change: transform, opacity;
+}
+
+.stage-card__img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+  transition: transform 0.52s ease, filter 0.4s ease;
+  /* laterales: imagen natural, sin efecto blanquecino */
+  filter: brightness(0.78) saturate(0.85);
+}
+
+/* Gradiente inferior permanente — nombre legible */
+.stage-card__gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,28,0.88) 0%,
+    rgba(0,0,28,0.22) 45%,
+    transparent 70%
+  );
+  border-radius: 14px;
+  pointer-events: none;
+  transition: opacity 0.38s ease;
+}
+
+/* Nombre siempre visible en laterales */
+.stage-card__name {
+  position: absolute;
+  bottom: 14px; left: 16px; right: 16px;
+  color: rgba(255,255,255,0.9);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Info completa — solo central */
+.stage-card__info {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 22px 24px 20px;
+  opacity: 0;
+  transition: opacity 0.38s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.stage-card__info-nombre {
+  color: #fff;
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  position: relative; padding-bottom: 9px;
+}
+
+.stage-card__info-nombre::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0;
+  width: 28px; height: 2px;
+  background: #4da6ff; border-radius: 2px;
+}
+
+.stage-card__info-desc {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.68);
+  line-height: 1.58; margin: 0 0 14px;
+}
+
+.stage-card__btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 18px;
+  background: rgba(77,166,255,0.1);
+  border: 1px solid rgba(77,166,255,0.45);
+  color: #7ec8ff; border-radius: 7px;
+  font-size: 0.75rem; font-weight: 600;
+  text-decoration: none; letter-spacing: 0.5px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, gap 0.2s;
+  align-self: flex-start; pointer-events: all;
+}
+
+.stage-card__btn-arrow { font-style: normal; transition: transform 0.2s ease; }
+
+.stage-card__btn:hover {
+  background: #4da6ff; color: #000028; border-color: #4da6ff; gap: 11px;
+}
+.stage-card__btn:hover .stage-card__btn-arrow { transform: translateX(3px); }
+
+/* Overlay hover laterales */
+.stage-card__side-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,28,0);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.28s ease;
+  pointer-events: none; z-index: 2;
+}
+
+.stage-card__side-icon {
+  width: 38px; height: 38px;
+  border: 1.5px solid rgba(255,255,255,0);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; opacity: 0;
+  transition: opacity 0.28s ease, border-color 0.28s ease, transform 0.28s ease;
+  transform: scale(0.75);
+}
+.stage-card__side-icon svg { width: 18px; height: 18px; }
+
+/* ── Estados ── */
+
+/* CENTRAL */
+.stage-card.is-center {
+  cursor: default;
+  box-shadow:
+    0 8px 24px rgba(0,0,30,0.32),
+    0 0 0 1px rgba(77,166,255,0.12),
+    0 0 18px 2px rgba(77,166,255,0.04);
+}
+
+.stage-card.is-center .stage-card__img {
+  filter: brightness(0.55) saturate(1.0);
+}
+
+.stage-card.is-center .stage-card__gradient { opacity: 1; }
+.stage-card.is-center .stage-card__name    { opacity: 0; pointer-events: none; }
+.stage-card.is-center .stage-card__info    { opacity: 1; }
+.stage-card.is-center .stage-card__side-overlay { display: none; }
+
+.stage-card.is-center:hover .stage-card__img { transform: scale(1.035); }
+.stage-card.is-center:hover {
+  box-shadow:
+    0 12px 30px rgba(0,0,30,0.38),
+    0 0 0 1px rgba(77,166,255,0.18),
+    0 0 24px 3px rgba(77,166,255,0.06);
+}
+
+/* LATERAL — imagen natural, solo nombre */
+.stage-card.is-side { cursor: pointer; }
+.stage-card.is-side .stage-card__info { opacity: 0; pointer-events: none; }
+
+.stage-card.is-side:hover .stage-card__side-overlay { background: rgba(0,0,28,0.4); }
+.stage-card.is-side:hover .stage-card__side-icon {
+  opacity: 1; border-color: rgba(255,255,255,0.45); transform: scale(1);
+}
+.stage-card.is-side:hover .stage-card__img {
+  transform: scale(1.03);
+  filter: brightness(0.65) saturate(0.85);
+}
+.stage-card.is-side:hover {
+  box-shadow: 0 12px 36px rgba(0,0,30,0.5), 0 0 0 1px rgba(77,166,255,0.1);
+}
+
+.stage-card.is-hidden { pointer-events: none; }
+
+/* ── Barra de controles inferior ── */
+.stage-controls {
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 36px;
+}
+
+/* Flechas minimalistas */
+.stage-btn {
+  width: 36px; height: 36px;
+  background: none;
+  border: 1px solid rgba(13,33,85,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(13,33,85,0.45);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.stage-btn svg { width: 15px; height: 15px; }
+
+.stage-btn:hover {
+  border-color: var(--brand-mid);
+  color: var(--brand-mid);
+  transform: scale(1.1);
+}
+
+/* Puntos indicadores */
+.stage-dots {
+  display: flex; align-items: center; gap: 6px;
+}
+
+.stage-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(13,33,85,0.2);
+  border: none; padding: 0; cursor: pointer;
+  transition: background 0.25s, width 0.25s, border-radius 0.25s;
+  flex-shrink: 0;
+}
+
+.stage-dot.is-active {
+  background: var(--brand-mid);
+  width: 20px;
+  border-radius: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .stage-track { height: clamp(170px, 38vw, 280px); }
+}
+
+@media (max-width: 560px) {
+  .stage-track { height: 200px; }
+  .stage-card__info-desc { display: none; }
 }
 
 /* ===================== SOLUCIONES GRID ===================== */

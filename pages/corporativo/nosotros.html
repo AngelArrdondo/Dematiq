@@ -18,9 +18,9 @@
 <!-- ═══════════ HERO ═══════════ -->
 <section class="page-hero">
   <div class="page-hero-inner">
-    <p class="page-hero-tag" id="nos-tag">Conócenos</p>
-    <h1 id="nos-h1">Sobre Nosotros</h1>
-    <p id="nos-subtitle">Empresa mexicana especializada en automatización y ensamble industrial con más de 10 años de experiencia.</p>
+    <p class="page-hero-tag">Conócenos</p>
+    <h1>Sobre Nosotros</h1>
+    <p>Empresa mexicana especializada en automatización y ensamble industrial con más de 10 años de experiencia.</p>
   </div>
 </section>
 
@@ -29,8 +29,8 @@
   <div class="quienes-wrap">
     <div class="quienes-text">
       <h2 class="section-title" style="text-align:left;">¿Quiénes Somos?</h2>
-      <p id="nos-p1">En <strong>DEMATIQ</strong> somos una empresa especializada en soluciones tecnológicas e industriales enfocadas en optimizar los procesos de manufactura, automatización y desarrollo sostenible.</p>
-      <p id="nos-p2">Trabajamos de la mano con nuestros clientes y socios estratégicos para ofrecer innovación, eficiencia y calidad en cada uno de nuestros proyectos.</p>
+      <p>En <strong>DEMATIQ</strong> somos una empresa especializada en soluciones tecnológicas e industriales enfocadas en optimizar los procesos de manufactura, automatización y desarrollo sostenible.</p>
+      <p>Trabajamos de la mano con nuestros clientes y socios estratégicos para ofrecer innovación, eficiencia y calidad en cada uno de nuestros proyectos.</p>
     </div>
     <div class="quienes-img-wrap">
       <img src="../../assets/images/general/img3.png" alt="DEMATIQ equipo" class="quienes-img">
@@ -46,63 +46,50 @@
       <div class="col-12 col-md-4">
         <div class="filosofia-card">
           <h3>Misión</h3>
-          <p id="nos-mision">Brindar soluciones integrales en automatización y desarrollo tecnológico que impulsen la productividad y competitividad de nuestros clientes.</p>
+          <p>Brindar soluciones integrales en automatización y desarrollo tecnológico que impulsen la productividad y competitividad de nuestros clientes.</p>
         </div>
       </div>
       <div class="col-12 col-md-4">
         <div class="filosofia-card">
           <h3>Visión</h3>
-          <p id="nos-vision">Ser líderes en innovación tecnológica y un referente en la transformación industrial a nivel nacional e internacional.</p>
+          <p>Ser líderes en innovación tecnológica y un referente en la transformación industrial a nivel nacional e internacional.</p>
         </div>
       </div>
       <div class="col-12 col-md-4">
         <div class="filosofia-card">
           <h3>Valores</h3>
-          <p id="nos-valores">Compromiso, innovación, calidad, trabajo en equipo y responsabilidad social empresarial.</p>
+          <p>Compromiso, innovación, calidad, trabajo en equipo y responsabilidad social empresarial.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ EMPRESAS ASOCIADAS ═══════════ -->
+<!-- ═══════════ EMPRESAS ASOCIADAS — igual que index ═══════════ -->
 <section id="empresas">
   <h2 class="section-title" style="padding-top:20px; margin-bottom:16px;">Empresas Asociadas</h2>
   <div class="marquee-wrapper">
-    <div class="marquee-track" id="nos-partners-track"></div>
+    <div class="marquee-track">
+      <div class="marquee-item"><img src="../../assets/images/partners/Danfoss.jpg" alt="Danfoss"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/Eaton.png" alt="Eaton"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/METECNO.png" alt="Metecno"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/RPK.jpg" alt="RPK México"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/TTGREEN.png" alt="TT Green"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/CALIDRA.png" alt="Calidra"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/AMPACET.png" alt="Ampacet"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/Danfoss.jpg" alt="Danfoss"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/Eaton.png" alt="Eaton"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/METECNO.png" alt="Metecno"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/RPK.jpg" alt="RPK México"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/TTGREEN.png" alt="TT Green"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/CALIDRA.png" alt="Calidra"></div>
+      <div class="marquee-item"><img src="../../assets/images/partners/AMPACET.png" alt="Ampacet"></div>
+    </div>
   </div>
 </section>
 
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/components/header.js"></script>
 <script src="../../assets/js/components/footer.js"></script>
-<script>
-(async function() {
-  try {
-    const [d, partners] = await Promise.all([
-      fetch('/api/contenido.php?clave=nosotros').then(r => r.json()),
-      fetch('/api/contenido.php?clave=partners').then(r => r.json())
-    ]);
-    if (d) {
-      if (d.hero) {
-        document.getElementById('nos-tag').textContent      = d.hero.tag      || '';
-        document.getElementById('nos-h1').textContent       = d.hero.h1       || '';
-        document.getElementById('nos-subtitle').textContent = d.hero.subtitle || '';
-      }
-      if (d.p1) document.getElementById('nos-p1').textContent      = d.p1;
-      if (d.p2) document.getElementById('nos-p2').textContent      = d.p2;
-      if (d.mision)  document.getElementById('nos-mision').textContent  = d.mision;
-      if (d.vision)  document.getElementById('nos-vision').textContent  = d.vision;
-      if (d.valores) document.getElementById('nos-valores').textContent = d.valores;
-    }
-    if (partners && partners.length) {
-      const items = partners.map(p =>
-        `<div class="marquee-item"><img src="../../${p.logo}" alt="${p.nombre}"></div>`
-      ).join('');
-      document.getElementById('nos-partners-track').innerHTML = items + items;
-    }
-  } catch(e) {}
-})();
-</script>
 </body>
 </html>

@@ -446,7 +446,9 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
 }
 
 .map-wrapper {
-  height: 320px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 1000px;
   border-radius: 16px;
   overflow: hidden;
   border: 3px solid var(--brand-mid);
