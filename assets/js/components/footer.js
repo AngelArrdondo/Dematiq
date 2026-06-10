@@ -26,7 +26,7 @@ class FooterComponent {
         <div class="footer-inner">
 
           <div class="footer-brand">
-            <img src="${base}/assets/images/logos/logo1.png" alt="DEMATIQ">
+            <img src="${base}/assets/images/logos/logo1.webp" alt="DEMATIQ">
             <p>Empresa mexicana especializada en proyectos de Automatización y Ensamble industrial con más de 10 años de experiencia.</p>
           </div>
 
@@ -59,16 +59,16 @@ class FooterComponent {
             <h4>Síguenos</h4>
             <div class="footer-social-icons">
               <a href="#" aria-label="Facebook" class="footer-social-icon">
-                <img src="${base}/assets/images/social/facebook.png" alt="Facebook">
+                <img src="${base}/assets/images/social/facebook.webp" alt="Facebook">
               </a>
               <a href="#" aria-label="Instagram" class="footer-social-icon">
-                <img src="${base}/assets/images/social/instagram.png" alt="Instagram">
+                <img src="${base}/assets/images/social/instagram.webp" alt="Instagram">
               </a>
               <a href="#" aria-label="LinkedIn" class="footer-social-icon">
-                <img src="${base}/assets/images/social/linkedin.png" alt="LinkedIn">
+                <img src="${base}/assets/images/social/linkedin.webp" alt="LinkedIn">
               </a>
               <a href="#" aria-label="YouTube" class="footer-social-icon">
-                <img src="${base}/assets/images/social/youtube.png" alt="YouTube">
+                <img src="${base}/assets/images/social/youtube.webp" alt="YouTube">
               </a>
             </div>
           </div>

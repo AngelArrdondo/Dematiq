@@ -44,7 +44,7 @@ class HeaderComponent {
     return `
       <header>
         <div class="logo">
-          <img src="${base}/assets/images/logos/logo1.png" alt="Logo DEMATIQ">
+          <img src="${base}/assets/images/logos/logo1.webp" alt="Logo DEMATIQ">
         </div>
         <nav id="main-nav">
           <ul>${navHTML}</ul>

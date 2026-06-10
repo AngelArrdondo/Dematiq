@@ -61,7 +61,7 @@ $content = Contenido::getAll();
       </div>
       <div id="slides-container"></div>
       <p style="font-size:.78rem;color:#5a6f96;margin-top:4px">
-        Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/index.jpg</code>
+        Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/index.webp</code>
       </p>
     </div>
 
@@ -112,7 +112,7 @@ $content = Contenido::getAll();
           <input type="text" value="${s.subtitle || ''}" oninput="slides[${i}].subtitle=this.value">
         </div>
         <div class="form-group"><label>Ruta de imagen</label>
-          <input type="text" value="${s.image || ''}" oninput="slides[${i}].image=this.value" placeholder="assets/images/general/index.jpg">
+          <input type="text" value="${s.image || ''}" oninput="slides[${i}].image=this.value" placeholder="assets/images/general/index.webp">
         </div>
         ${s.image ? `<img src="../../${s.image}" alt="preview" style="max-height:90px;border-radius:6px;border:1px solid var(--border);margin-top:4px" onerror="this.style.display='none'">` : ''}
       `;

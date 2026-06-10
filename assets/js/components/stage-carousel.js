@@ -6,61 +6,61 @@
 
   const PROJECTS = [
     {
-      img: 'assets/images/general/cart.jpg',
+      img: 'assets/images/general/cart.webp',
       nombre: 'Proyecto 1',
       desc: 'Sistema de ensamble automatizado.',
       href: 'pages/ensamble/ensamble.html'
     },
     {
-      img: 'assets/images/products/en1.jpg',
+      img: 'assets/images/products/en1.webp',
       nombre: 'Proyecto 2',
       desc: 'Línea de ensamble de alta precisión con verificación integrada en cada estación.',
       href: 'pages/ensamble/ensamble.html'
     },
     {
-      img: 'assets/images/general/t1.jpg',
+      img: 'assets/images/general/t1.webp',
       nombre: 'Proyecto 3',
       desc: 'Máquinas de control de torque.',
       href: 'pages/maquinas/maqcontrol.html'
     },
     {
-      img: 'assets/images/general/fuga.jpg',
+      img: 'assets/images/general/fuga.webp',
       nombre: 'Proyecto 4',
       desc: 'Equipo de prueba de hermeticidad con sensores de alta sensibilidad para detección de fugas en componentes automotrices, con reporte de resultados en tiempo real y trazabilidad por código de pieza.',
       href: 'pages/maquinas/maqprob.html'
     },
     {
-      img: 'assets/images/general/inspeccion.jpg',
+      img: 'assets/images/general/inspeccion.webp',
       nombre: 'Proyecto 5',
       desc: 'Inspección automatizada con visión artificial.',
       href: 'pages/maquinas/maqinspe.html'
     },
     {
-      img: 'assets/images/general/limpieza.jpg',
+      img: 'assets/images/general/limpieza.webp',
       nombre: 'Proyecto 6',
       desc: 'Máquina de lavado industrial para piezas de producción en serie, con secado por aire y control de temperatura del fluido.',
       href: 'pages/maquinas/maclim.html'
     },
     {
-      img: 'assets/images/general/micro.jpg',
+      img: 'assets/images/general/micro.webp',
       nombre: 'Proyecto 7',
       desc: 'Marcado por micropercusión.',
       href: 'pages/maquinas/maqmar.html'
     },
     {
-      img: 'assets/images/general/celdas.jpg',
+      img: 'assets/images/general/celdas.webp',
       nombre: 'Proyecto 8',
       desc: 'Celda robótica integrada en línea de manufactura flexible.',
       href: 'pages/maquinas/macrobot.html'
     },
     {
-      img: 'assets/images/products/maq.jpg',
+      img: 'assets/images/products/maq.webp',
       nombre: 'Proyecto 9',
       desc: 'Maquinado CNC de precisión.',
       href: 'pages/manufactura/maqindus.html'
     },
     {
-      img: 'assets/images/general/semi.jpg',
+      img: 'assets/images/general/semi.webp',
       nombre: 'Proyecto 10',
       desc: 'Equipo de manejo y prueba de componentes electrónicos en ambiente controlado.',
       href: 'pages/corporativo/soluciones.html'

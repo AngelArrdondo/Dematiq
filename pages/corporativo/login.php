@@ -325,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="brand-content">
 
         <div class="brand-logo">
-          <img src="../../assets/images/logos/logo1.png" alt="DEMATIQ">
+          <img src="../../assets/images/logos/logo1.webp" alt="DEMATIQ">
         </div>
 
         <div class="brand-divider"><div class="brand-divider-dot"></div></div>

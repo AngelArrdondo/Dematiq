@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_data) {
 
 <div class="card">
   <div class="card-logo">
-    <img src="../../assets/images/logos/logo1.png" alt="DEMATIQ">
+    <img src="../../assets/images/logos/logo1.webp" alt="DEMATIQ">
   </div>
 
   <?php if ($success): ?>

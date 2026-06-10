@@ -34,19 +34,19 @@ const DEFAULT_CONTENT = {
     }
   },
   partners: [
-    { nombre: 'Danfoss',    logo: 'assets/images/partners/Danfoss.jpg',  url: 'https://www.danfoss.com/es-mx' },
-    { nombre: 'Eaton',      logo: 'assets/images/partners/Eaton.png',    url: 'https://www.eaton.com/mx/es-mx.html' },
-    { nombre: 'Metecno',    logo: 'assets/images/partners/METECNO.png',  url: 'https://metecnomexico.com' },
-    { nombre: 'RPK México', logo: 'assets/images/partners/RPK.jpg',      url: 'https://rpk-global.com/es/rpk-mexico' },
-    { nombre: 'TT Green',   logo: 'assets/images/partners/TTGREEN.png',  url: 'https://www.proveedores-greenmetals.com' },
-    { nombre: 'Calidra',    logo: 'assets/images/partners/CALIDRA.png',  url: 'https://www.calidra.com' },
-    { nombre: 'Ampacet',    logo: 'assets/images/partners/AMPACET.png',  url: 'https://www.ampacet.com/spanish' }
+    { nombre: 'Danfoss',    logo: 'assets/images/partners/Danfoss.webp',  url: 'https://www.danfoss.com/es-mx' },
+    { nombre: 'Eaton',      logo: 'assets/images/partners/Eaton.webp',    url: 'https://www.eaton.com/mx/es-mx.html' },
+    { nombre: 'Metecno',    logo: 'assets/images/partners/METECNO.webp',  url: 'https://metecnomexico.com' },
+    { nombre: 'RPK México', logo: 'assets/images/partners/RPK.webp',      url: 'https://rpk-global.com/es/rpk-mexico' },
+    { nombre: 'TT Green',   logo: 'assets/images/partners/TTGREEN.webp',  url: 'https://www.proveedores-greenmetals.com' },
+    { nombre: 'Calidra',    logo: 'assets/images/partners/CALIDRA.webp',  url: 'https://www.calidra.com' },
+    { nombre: 'Ampacet',    logo: 'assets/images/partners/AMPACET.webp',  url: 'https://www.ampacet.com/spanish' }
   ],
   home: {
     hero: [
-      { title: 'Bienvenido a DEMATIQ', subtitle: 'Soluciones inteligentes para la industria moderna',       image: 'assets/images/general/index.jpg' },
-      { title: 'Innovación',           subtitle: 'Experiencia en proyectos de Automatización y Ensamble',   image: 'assets/images/general/img2.png' },
-      { title: 'Confianza',            subtitle: 'Más de 10 años de Experiencia',                          image: 'assets/images/general/img3.png' }
+      { title: 'Bienvenido a DEMATIQ', subtitle: 'Soluciones inteligentes para la industria moderna',       image: 'assets/images/general/index.webp' },
+      { title: 'Innovación',           subtitle: 'Experiencia en proyectos de Automatización y Ensamble',   image: 'assets/images/general/img2.webp' },
+      { title: 'Confianza',            subtitle: 'Más de 10 años de Experiencia',                          image: 'assets/images/general/img3.webp' }
     ]
   },
   industrias: [
@@ -60,16 +60,16 @@ const DEFAULT_CONTENT = {
     { id: 'aeroespacial',     nombre: 'Aeroespacial',            descripcion: 'Desarrollamos soluciones de automatización y control de calidad para la producción de componentes aeroespaciales.' }
   ],
   servicios: [
-    { id: 'plc',           nombre: 'Programación de PLC',                    image: 'assets/images/general/img1.png' },
-    { id: 'hmi',           nombre: 'Programación de HMI, SCADA',             image: 'assets/images/general/img2.png' },
-    { id: 'vision',        nombre: 'Programación de Sistemas de Visión',      image: 'assets/images/general/img3.png' },
-    { id: 'servo',         nombre: 'Programación de Servomotores',            image: 'assets/images/general/img1.png' },
-    { id: 'diagramas',     nombre: 'Diseño de Diagramas Eléctricos',          image: 'assets/images/general/img2.png' },
-    { id: 'tableros',      nombre: 'Diseño de Tableros de Control',           image: 'assets/images/general/img3.png' },
-    { id: 'modernizacion', nombre: 'Modernización de Maquinaria',             image: 'assets/images/general/img1.png' },
-    { id: 'instalaciones', nombre: 'Servicio de Instalaciones Eléctricas',    image: 'assets/images/general/img2.png' },
-    { id: 'ingenieria',    nombre: 'Ingeniería Básica y de Detalle',          image: 'assets/images/general/img3.png' },
-    { id: 'variadores',    nombre: 'Programación de Variadores de Frecuencia',image: 'assets/images/general/img1.png' }
+    { id: 'plc',           nombre: 'Programación de PLC',                    image: 'assets/images/general/img1.webp' },
+    { id: 'hmi',           nombre: 'Programación de HMI, SCADA',             image: 'assets/images/general/img2.webp' },
+    { id: 'vision',        nombre: 'Programación de Sistemas de Visión',      image: 'assets/images/general/img3.webp' },
+    { id: 'servo',         nombre: 'Programación de Servomotores',            image: 'assets/images/general/img1.webp' },
+    { id: 'diagramas',     nombre: 'Diseño de Diagramas Eléctricos',          image: 'assets/images/general/img2.webp' },
+    { id: 'tableros',      nombre: 'Diseño de Tableros de Control',           image: 'assets/images/general/img3.webp' },
+    { id: 'modernizacion', nombre: 'Modernización de Maquinaria',             image: 'assets/images/general/img1.webp' },
+    { id: 'instalaciones', nombre: 'Servicio de Instalaciones Eléctricas',    image: 'assets/images/general/img2.webp' },
+    { id: 'ingenieria',    nombre: 'Ingeniería Básica y de Detalle',          image: 'assets/images/general/img3.webp' },
+    { id: 'variadores',    nombre: 'Programación de Variadores de Frecuencia',image: 'assets/images/general/img1.webp' }
   ]
 };
 

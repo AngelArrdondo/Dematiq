@@ -61,7 +61,7 @@ $content = Contenido::getAll();
       </div>
       <div id="servicios-container"></div>
       <p style="font-size:.78rem;color:#5a6f96;margin-top:6px">
-        Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/img1.png</code>
+        Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/img1.webp</code>
       </p>
     </div>
 
@@ -119,7 +119,7 @@ $content = Contenido::getAll();
               <input type="text" value="${s.nombre || ''}" oninput="servicios[${i}].nombre=this.value" placeholder="Programación de PLC">
             </div>
             <div class="form-group" style="margin:0"><label>Ruta de imagen</label>
-              <input type="text" value="${s.image || ''}" oninput="servicios[${i}].image=this.value;renderServicios()" placeholder="assets/images/general/img1.png">
+              <input type="text" value="${s.image || ''}" oninput="servicios[${i}].image=this.value;renderServicios()" placeholder="assets/images/general/img1.webp">
             </div>
           </div>
         </div>

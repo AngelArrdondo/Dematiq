@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="card">
   <div class="card-logo">
-    <img src="../../assets/images/logos/logo1.png" alt="DEMATIQ">
+    <img src="../../assets/images/logos/logo1.webp" alt="DEMATIQ">
   </div>
   <h2>Recuperar contraseña</h2>
   <p class="sub">Ingresa tu correo y se generará un enlace para restablecer tu contraseña.</p>

@@ -61,7 +61,7 @@ $content = Contenido::getAll();
       </div>
       <div id="partners-container"></div>
       <p style="font-size:.78rem;color:#5a6f96;margin-top:6px">
-        Ruta del logo relativa a la raíz del sitio. Ejemplo: <code>assets/images/partners/Danfoss.jpg</code>
+        Ruta del logo relativa a la raíz del sitio. Ejemplo: <code>assets/images/partners/Danfoss.webp</code>
       </p>
     </div>
 
@@ -123,7 +123,7 @@ $content = Contenido::getAll();
               <input type="url" value="${p.url || ''}" oninput="partners[${i}].url=this.value" placeholder="https://...">
             </div>
             <div class="form-group" style="margin:0;grid-column:1/-1"><label>Ruta del logo</label>
-              <input type="text" value="${p.logo || ''}" oninput="partners[${i}].logo=this.value;renderPartners()" placeholder="assets/images/partners/logo.png">
+              <input type="text" value="${p.logo || ''}" oninput="partners[${i}].logo=this.value;renderPartners()" placeholder="assets/images/partners/logo.webp">
             </div>
           </div>
         </div>
