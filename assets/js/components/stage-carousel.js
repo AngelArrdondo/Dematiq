@@ -67,7 +67,7 @@
     },
   ];
 
-  const TOTAL = PROJECTS.length;
+  let TOTAL = PROJECTS.length;
 
   function mod(n, m) { return ((n % m) + m) % m; }
 
@@ -159,14 +159,25 @@
     track.style.height = Math.round(centerH + 12) + 'px';
   }
 
-  function init() {
+  async function loadProjects() {
+    try {
+      const data = await fetch('/api/contenido.php?clave=proyectos').then(r => r.json());
+      if (Array.isArray(data) && data.length) return data;
+    } catch (_) {}
+    return PROJECTS;
+  }
+
+  async function init() {
     const track   = document.getElementById('stageTrack');
     const dotsEl  = document.getElementById('stageDots');
     const btnPrev = document.getElementById('stagePrev');
     const btnNext = document.getElementById('stageNext');
     if (!track) return;
 
-    const cards = PROJECTS.map(p => { const c = buildCard(p); track.appendChild(c); return c; });
+    const projectList = await loadProjects();
+    TOTAL = projectList.length;
+
+    const cards = projectList.map(p => { const c = buildCard(p); track.appendChild(c); return c; });
     const dots  = PROJECTS.map((_, i) => {
       const d = document.createElement('button');
       d.className = 'stage-dot';

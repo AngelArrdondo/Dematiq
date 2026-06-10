@@ -8,7 +8,7 @@ $user = Auth::require('/pages/corporativo/login.php');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="stylesheet" href="assets/css/admin.css?v=5">
   <link rel="icon" type="image/svg+xml" href="../assets/images/logos/favicon-d.svg">
 </head>
 <body>
@@ -88,6 +88,16 @@ $user = Auth::require('/pages/corporativo/login.php');
         </div>
       </article>
 
+      <article class="stat-card stat-green" role="listitem">
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value" id="stat-proyectos">—</span>
+          <span class="stat-label">Proyectos</span>
+        </div>
+      </article>
+
       <article class="stat-card stat-purple" role="listitem">
         <div class="stat-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -157,19 +167,79 @@ $user = Auth::require('/pages/corporativo/login.php');
           <div class="page-card-desc">Datos de contacto, mapa y redes sociales.</div>
         </a>
 
+        <a href="pages/proyectos.php" class="page-card" role="listitem">
+          <div class="page-card-icon" style="background:linear-gradient(135deg,#065f46,#10b981)" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <div class="page-card-title">Proyectos</div>
+          <div class="page-card-desc">Carrusel de proyectos destacados en la portada.</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Ver sitio -->
+    <section aria-labelledby="viewsite-heading" style="margin-top:28px">
+      <div class="section-header">
+        <h2 id="viewsite-heading">Ver en el sitio</h2>
+        <p>Abre cada página pública en una nueva pestaña</p>
+      </div>
+      <div class="site-links-grid">
+
+        <a href="../index.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          Inicio
+        </a>
+
+        <a href="../pages/corporativo/nosotros.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Nosotros
+        </a>
+
+        <a href="../pages/corporativo/industrias.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 2,7 12,12 22,7"/><polyline points="2,17 12,22 22,17"/><polyline points="2,12 12,17 22,12"/></svg>
+          Industrias
+        </a>
+
+        <a href="../pages/servicios/servicios.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          Servicios
+        </a>
+
+        <a href="../pages/corporativo/soluciones.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Proyectos
+        </a>
+
+        <a href="../pages/corporativo/Contacto.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.99-5.99 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 15.6 15.6 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 15.8 15.8 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          Contacto
+        </a>
+
+        <a href="../pages/manufactura/maqindus.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M17.66 17.66l-1.41-1.41M6.34 17.66l1.41-1.41"/></svg>
+          Manufactura
+        </a>
+
+        <a href="../pages/ensamble/ensamble.html" target="_blank" class="site-link-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+          Ensamble
+        </a>
+
       </div>
     </section>
 
   </main>
 </div>
 
-<script src="assets/js/auth.js"></script>
+<script src="assets/js/auth.js?v=2"></script>
 <script>
   AdminSidebar.init('dashboard', './', '../');
 
-  document.getElementById('stat-partners').textContent   = (CM.get('partners')  || []).length;
-  document.getElementById('stat-industrias').textContent = (CM.get('industrias') || []).length;
-  document.getElementById('stat-servicios').textContent  = (CM.get('servicios')  || []).length;
+  document.getElementById('stat-partners').textContent   = (CM.get('partners')   || []).length;
+  document.getElementById('stat-industrias').textContent = (CM.get('industrias')  || []).length;
+  document.getElementById('stat-servicios').textContent  = (CM.get('servicios')   || []).length;
+  document.getElementById('stat-proyectos').textContent  = (CM.get('proyectos')   || []).length;
   document.getElementById('stat-visits').textContent =
     parseInt(localStorage.getItem('dematiq_visits') || '0', 10).toLocaleString('es-MX');
 

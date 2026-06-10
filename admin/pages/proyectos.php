@@ -9,7 +9,7 @@ $content = Contenido::getAll();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio | DEMATIQ Admin</title>
+  <title>Proyectos | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css?v=5">
   <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
@@ -29,7 +29,7 @@ $content = Contenido::getAll();
           <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
-      <span class="admin-topbar-title">Inicio</span>
+      <span class="admin-topbar-title">Proyectos Destacados</span>
     </div>
     <div class="admin-topbar-user">
       <span><?= htmlspecialchars($user['nombre']) ?></span>
@@ -40,28 +40,28 @@ $content = Contenido::getAll();
   <div class="admin-content">
 
     <div class="section-header">
-      <h1>Página: Inicio</h1>
-      <p>Edita las diapositivas del hero carousel de la página principal.</p>
+      <h1>Proyectos Destacados</h1>
+      <p>Edita los proyectos del carrusel en la página principal.</p>
     </div>
 
     <div class="admin-card">
       <div class="admin-card-header">
         <div class="admin-card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17,2 12,7 7,2"/>
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
           </svg>
-          Diapositivas del Hero
+          Lista de proyectos
         </div>
-        <button class="btn-admin btn-outline-admin" onclick="addSlide()" style="font-size:.8rem;padding:6px 12px">
+        <button class="btn-admin btn-outline-admin" onclick="addProject()" style="font-size:.8rem;padding:6px 12px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
           Agregar
         </button>
       </div>
-      <div id="slides-container"></div>
-      <p style="font-size:.78rem;color:#5a6f96;margin-top:4px">
-        Ruta de imagen relativa a la raíz del sitio. Ejemplo: <code>assets/images/general/index.webp</code>
+      <div id="projects-container"></div>
+      <p style="font-size:.78rem;color:#5a6f96;margin-top:6px">
+        Rutas relativas a la raíz del sitio. Imagen: <code>assets/images/general/cart.webp</code> · Enlace: <code>pages/ensamble/ensamble.html</code>
       </p>
     </div>
 
@@ -72,7 +72,7 @@ $content = Contenido::getAll();
         </svg>
         Ver página
       </a>
-      <button class="btn-admin btn-primary-admin" onclick="saveInicio()">
+      <button class="btn-admin btn-primary-admin" onclick="saveProjects()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
           <polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/>
@@ -86,53 +86,75 @@ $content = Contenido::getAll();
 
 <script src="../assets/js/auth.js?v=2"></script>
 <script>
-  AdminSidebar.init('inicio', '../', '../../');
+  AdminSidebar.init('proyectos', '../', '../../');
 
-  let slides = (CM.get('home').hero || []).map(s => Object.assign({}, s));
+  let projects = (CM.get('proyectos') || []).map(p => Object.assign({}, p));
 
-  function renderSlides() {
-    const c = document.getElementById('slides-container');
+  function renderProjects() {
+    const c = document.getElementById('projects-container');
     c.innerHTML = '';
-    slides.forEach((s, i) => {
+    projects.forEach((p, i) => {
       const div = document.createElement('div');
       div.className = 'repeat-item';
       div.innerHTML = `
         <div class="repeat-item-header">
-          <span class="repeat-item-title">Diapositiva ${i + 1}</span>
-          <button class="btn-rm" onclick="removeSlide(${i})" title="Eliminar">
+          <span class="repeat-item-title">Proyecto ${i + 1}</span>
+          <button class="btn-rm" onclick="removeProject(${i})" title="Eliminar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/>
             </svg>
           </button>
         </div>
-        <div class="form-group"><label>Título</label>
-          <input type="text" value="${s.title || ''}" oninput="slides[${i}].title=this.value">
+        <div class="form-grid-2">
+          <div class="form-group"><label>Nombre</label>
+            <input type="text" value="${escHtml(p.nombre || '')}" oninput="projects[${i}].nombre=this.value">
+          </div>
+          <div class="form-group"><label>Enlace (href)</label>
+            <input type="text" value="${escHtml(p.href || '')}" oninput="projects[${i}].href=this.value" placeholder="pages/ensamble/ensamble.html">
+          </div>
         </div>
-        <div class="form-group"><label>Subtítulo</label>
-          <input type="text" value="${s.subtitle || ''}" oninput="slides[${i}].subtitle=this.value">
+        <div class="form-group"><label>Descripción</label>
+          <textarea oninput="projects[${i}].desc=this.value">${escHtml(p.desc || '')}</textarea>
         </div>
         <div class="form-group"><label>Ruta de imagen</label>
-          <input type="text" value="${s.image || ''}" oninput="slides[${i}].image=this.value" placeholder="assets/images/general/index.webp">
+          <input type="text" value="${escHtml(p.img || '')}" oninput="projects[${i}].img=this.value; updatePreview(${i}, this.value)" placeholder="assets/images/general/cart.webp">
         </div>
-        ${s.image ? `<img src="../../${s.image}" alt="preview" style="max-height:90px;border-radius:6px;border:1px solid var(--border);margin-top:4px" onerror="this.style.display='none'">` : ''}
+        ${p.img ? `<img id="preview-${i}" src="../../${escHtml(p.img)}" alt="preview" style="max-height:90px;border-radius:6px;border:1px solid var(--border);margin-top:4px" onerror="this.style.display='none'">` : `<img id="preview-${i}" style="display:none">`}
       `;
       c.appendChild(div);
     });
   }
 
-  function addSlide() { slides.push({ title: '', subtitle: '', image: '' }); renderSlides(); }
-  function removeSlide(i) {
-    if (slides.length <= 1) { showToast('Debe haber al menos una diapositiva', 'error'); return; }
-    slides.splice(i, 1); renderSlides();
-  }
-  function saveInicio() {
-    const home = CM.get('home');
-    home.hero  = slides;
-    CM.set('home', home);
-    showToast('Cambios guardados correctamente');
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  renderSlides();
+  function updatePreview(i, val) {
+    const img = document.getElementById('preview-' + i);
+    if (!img) return;
+    img.src = '../../' + val;
+    img.style.display = val ? '' : 'none';
+  }
+
+  function addProject() {
+    projects.push({ nombre: '', desc: '', img: '', href: '' });
+    renderProjects();
+    document.getElementById('projects-container').lastElementChild
+      ?.querySelector('input')?.focus();
+  }
+
+  function removeProject(i) {
+    if (projects.length <= 1) { showToast('Debe haber al menos un proyecto', 'error'); return; }
+    projects.splice(i, 1);
+    renderProjects();
+  }
+
+  function saveProjects() {
+    CM.set('proyectos', projects);
+    showToast('Proyectos guardados correctamente');
+  }
+
+  renderProjects();
 </script>
 
 </body>
