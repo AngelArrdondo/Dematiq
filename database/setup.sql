@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   username          VARCHAR(60)      NOT NULL UNIQUE,
   password_hash     VARCHAR(255)     NOT NULL,
   nombre            VARCHAR(100)     NOT NULL,
+  foto              VARCHAR(255)              DEFAULT NULL,
   activo            TINYINT(1)       NOT NULL DEFAULT 1,
   intentos_fallidos SMALLINT         NOT NULL DEFAULT 0,
   bloqueado_hasta   DATETIME                  DEFAULT NULL,
