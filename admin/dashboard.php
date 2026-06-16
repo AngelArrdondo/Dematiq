@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/conexion.php';
-$user = Auth::require('/pages/corporativo/login.php');
-$initials = strtoupper(substr($user['nombre'], 0, 1));
+$user      = Auth::require('/pages/corporativo/login.php');
+$initials  = strtoupper(substr($user['nombre'], 0, 1));
+$csrfToken = Auth::csrfToken();
 
 // Fetch foto separately so auth.php doesn't depend on the column existing yet
 $fotoPath = '';
@@ -19,7 +20,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="assets/css/admin.css?v=6">
+  <link rel="stylesheet" href="assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../assets/images/logos/favicon-d.svg">
   <style>
     .summary-row {
@@ -215,9 +216,35 @@ try {
           <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadAvatar(this)">
         </div>
 
-        <div class="profile-field">
-          <label for="profileNombre">Nombre completo</label>
-          <input type="text" id="profileNombre" maxlength="100" placeholder="Tu nombre completo">
+        <div class="profile-field-row">
+          <div class="profile-field">
+            <label for="profilePrimerNombre">Primer nombre *</label>
+            <input type="text" id="profilePrimerNombre" maxlength="60" placeholder="Primer nombre">
+          </div>
+          <div class="profile-field">
+            <label for="profileSegundoNombre">Segundo nombre</label>
+            <input type="text" id="profileSegundoNombre" maxlength="60" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="profile-field-row">
+          <div class="profile-field">
+            <label for="profileApellidoPaterno">Apellido paterno *</label>
+            <input type="text" id="profileApellidoPaterno" maxlength="60" placeholder="Apellido paterno">
+          </div>
+          <div class="profile-field">
+            <label for="profileApellidoMaterno">Apellido materno</label>
+            <input type="text" id="profileApellidoMaterno" maxlength="60" placeholder="Opcional">
+          </div>
+        </div>
+        <div class="profile-field-row">
+          <div class="profile-field">
+            <label for="profileEmail">Email de contacto</label>
+            <input type="email" id="profileEmail" maxlength="150" placeholder="tucorreo@ejemplo.com">
+          </div>
+          <div class="profile-field">
+            <label for="profileTelefono">Teléfono</label>
+            <input type="tel" id="profileTelefono" maxlength="30" placeholder="+52 55 0000 0000">
+          </div>
         </div>
         <div class="profile-field">
           <label for="profileUsername">Usuario</label>
@@ -249,6 +276,8 @@ try {
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="assets/js/auth.js?v=2"></script>
 <script>
+  const CSRF_TOKEN = '<?= $csrfToken ?>';
+
   AdminSidebar.init('dashboard', './', '../');
 
   /* ── User menu dropdown ─────────────────────────── */
@@ -302,9 +331,14 @@ try {
       const json = await res.json();
       if (!json.ok) return;
       profileData = json.data;
-      document.getElementById('profileNombre').value   = json.data.nombre;
-      document.getElementById('profileUsername').value = json.data.username;
-      setModalAvatar(json.data.foto, json.data.nombre);
+      document.getElementById('profilePrimerNombre').value    = json.data.primer_nombre    || '';
+      document.getElementById('profileSegundoNombre').value   = json.data.segundo_nombre   || '';
+      document.getElementById('profileApellidoPaterno').value = json.data.apellido_paterno || '';
+      document.getElementById('profileApellidoMaterno').value = json.data.apellido_materno || '';
+      document.getElementById('profileEmail').value           = json.data.email_contacto   || '';
+      document.getElementById('profileTelefono').value        = json.data.telefono         || '';
+      document.getElementById('profileUsername').value        = json.data.username;
+      setModalAvatar(json.data.foto, json.data.primer_nombre || json.data.nombre);
     } catch { /* silently ignore */ }
   }
 
@@ -327,8 +361,15 @@ try {
   }
 
   async function saveProfileInfo() {
-    const nombre = document.getElementById('profileNombre').value.trim();
-    if (!nombre) { showToast('El nombre es requerido', 'error'); return; }
+    const primerNombre    = document.getElementById('profilePrimerNombre').value.trim();
+    const segundoNombre   = document.getElementById('profileSegundoNombre').value.trim();
+    const apellidoPaterno = document.getElementById('profileApellidoPaterno').value.trim();
+    const apellidoMaterno = document.getElementById('profileApellidoMaterno').value.trim();
+    const email           = document.getElementById('profileEmail').value.trim();
+    const telefono        = document.getElementById('profileTelefono').value.trim();
+
+    if (!primerNombre)    { showToast('El primer nombre es requerido', 'error'); return; }
+    if (!apellidoPaterno) { showToast('El apellido paterno es requerido', 'error'); return; }
 
     const btn = document.getElementById('infoSaveBtn');
     btn.disabled = true;
@@ -336,16 +377,25 @@ try {
 
     const fd = new FormData();
     fd.append('action', 'update_info');
-    fd.append('nombre', nombre);
+    fd.append('primer_nombre', primerNombre);
+    fd.append('segundo_nombre', segundoNombre);
+    fd.append('apellido_paterno', apellidoPaterno);
+    fd.append('apellido_materno', apellidoMaterno);
+    fd.append('email_contacto', email);
+    fd.append('telefono', telefono);
 
     try {
-      const res  = await fetch('api/profile.php', { method: 'POST', body: fd });
+      const res  = await fetch('api/profile.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();
       if (json.ok) {
         showToast('Perfil actualizado');
-        document.getElementById('topbarName').textContent = nombre;
-        if (profileData) profileData.nombre = nombre;
-        if (!profileData?.foto) setTopbarAvatar(null, nombre);
+        document.getElementById('topbarName').textContent = json.nombre;
+        if (profileData) {
+          profileData.nombre          = json.nombre;
+          profileData.primer_nombre   = primerNombre;
+          profileData.apellido_paterno = apellidoPaterno;
+        }
+        if (!profileData?.foto) setTopbarAvatar(null, primerNombre);
       } else {
         showToast(json.msg || 'Error al guardar', 'error');
       }
@@ -371,7 +421,7 @@ try {
     editBtn.style.opacity = '.4';
 
     try {
-      const res  = await fetch('api/profile.php', { method: 'POST', body: fd });
+      const res  = await fetch('api/profile.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();
       if (json.ok) {
         showToast('Foto de perfil actualizada');
@@ -405,7 +455,7 @@ try {
     fd.append('confirm_password', confirm);
 
     try {
-      const res  = await fetch('api/profile.php', { method: 'POST', body: fd });
+      const res  = await fetch('api/profile.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();
       if (json.ok) {
         showToast('Contraseña cambiada correctamente');

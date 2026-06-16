@@ -10,7 +10,7 @@ $content = Contenido::getAll();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Servicios | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../assets/css/admin.css?v=5">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>

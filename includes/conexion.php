@@ -1,9 +1,11 @@
 <?php
-// Credenciales — en producción mover a variable de entorno o archivo fuera del webroot
-define('DB_HOST',    'localhost');
-define('DB_NAME',    'dematiq_db');
-define('DB_USER',    'dematiq_app');
-define('DB_PASS',    '3zjatGKsdEt8uMOwPt8YISaL6WF44xoc');
+// En producción (cPanel): define estas variables en el .env de tu hosting
+// o directamente en cPanel → Software → PHP → Environment Variables.
+// En local: edita los valores directamente aquí.
+define('DB_HOST',    getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME',    getenv('DB_NAME') ?: 'dematiq_db');
+define('DB_USER',    getenv('DB_USER') ?: 'dematiq_app');
+define('DB_PASS',    getenv('DB_PASS') ?: '');
 define('DB_CHARSET', 'utf8mb4');
 
 try {

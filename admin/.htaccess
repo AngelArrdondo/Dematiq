@@ -1,0 +1,33 @@
+# ── Admin panel — seguridad ──────────────────────────────────
+Options -Indexes
+
+# Impedir indexación por buscadores
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+
+  # Prevenir clickjacking (el admin no debe cargarse en iframes)
+  Header always set X-Frame-Options "DENY"
+
+  # Prevenir que el navegador adivine el tipo MIME
+  Header always set X-Content-Type-Options "nosniff"
+
+  # No enviar Referer a sitios externos
+  Header always set Referrer-Policy "same-origin"
+
+  # Deshabilitar características del navegador que no se usan
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>
+
+# Bloquear acceso directo a archivos sensibles del admin
+<FilesMatch "\.(log|env|bak|sql|sh|conf|json\.dist)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+# Bloquear scanners y bots comunes por User-Agent
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_USER_AGENT} (sqlmap|nikto|nmap|masscan|hydra|burpsuite|zgrab|dirbuster|gobuster|wfuzz|nuclei) [NC]
+  RewriteRule .* - [F,L]
+</IfModule>

@@ -1,9 +1,12 @@
 'use strict';
 
 // ── Constants ──────────────────────────────────────────────────────────
-const ADMIN_PASS  = 'dematiq2024';
-const SESSION_KEY = 'dematiq_admin_session';
 const CONTENT_KEY = 'dematiq_content';
+
+function _csrfToken() {
+  const m = document.cookie.match(/dematiq_csrf=([^;]+)/);
+  return m ? m[1] : '';
+}
 
 // ── Default content (mirrors the site's current hardcoded values) ──────
 const DEFAULT_CONTENT = {
@@ -85,16 +88,6 @@ const DEFAULT_CONTENT = {
   ]
 };
 
-// ── Auth ───────────────────────────────────────────────────────────────
-const AdminAuth = {
-  isLoggedIn() { return localStorage.getItem(SESSION_KEY) === '1'; },
-  login(pw)    { if (pw === ADMIN_PASS) { localStorage.setItem(SESSION_KEY, '1'); return true; } return false; },
-  logout()     { localStorage.removeItem(SESSION_KEY); },
-  require(path) {
-    if (!this.isLoggedIn()) window.location.href = path || '../../pages/corporativo/login.php';
-  }
-};
-
 // ── Content Manager ────────────────────────────────────────────────────
 const CM = {
   _all() {
@@ -127,7 +120,7 @@ const CM = {
       window.__DB_CONTENT[section] = data;
       fetch('/admin/api/contenido.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': _csrfToken() },
         body: JSON.stringify({ clave: section, valor: data })
       }).catch(() => {});
     }

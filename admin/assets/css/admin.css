@@ -234,7 +234,10 @@ body {
   background: #fff;
   border-radius: 18px;
   width: 100%;
-  max-width: 450px;
+  max-width: 520px;
+  max-height: calc(100dvh - 32px);
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 24px 64px rgba(13,33,85,.22);
   overflow: hidden;
   animation: modalIn .2s ease;
@@ -264,7 +267,16 @@ body {
   transition: background .15s, color .15s;
 }
 .profile-modal-close:hover { background: #fef2f2; color: var(--danger); }
-.profile-modal-body { padding: 22px 24px 26px; }
+.profile-modal-body {
+  padding: 22px 24px 26px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.profile-modal-body::-webkit-scrollbar { width: 5px; }
+.profile-modal-body::-webkit-scrollbar-track { background: transparent; }
+.profile-modal-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
 .profile-tabs {
   display: flex;
@@ -326,6 +338,49 @@ body {
   padding: 0;
 }
 .profile-avatar-edit-btn:hover { background: var(--accent-lt); }
+
+.profile-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.profile-field-row .profile-field { margin-bottom: 14px; }
+
+/* ── Profile modal — responsive ──────────────────────── */
+@media (max-width: 560px) {
+  .profile-modal-overlay   { padding: 10px; }
+  .profile-modal-card      { max-height: calc(100dvh - 20px); border-radius: 14px; }
+  .profile-modal-header    { padding: 16px 18px 12px; }
+  .profile-modal-body      { padding: 16px 18px 20px; }
+  .profile-avatar-wrap,
+  .profile-avatar-circle   { width: 76px; height: 76px; }
+  .profile-avatar-circle   { font-size: 1.9rem; }
+  .profile-avatar-wrap     { margin-bottom: 16px; }
+}
+
+@media (max-width: 480px) {
+  .profile-field-row       { grid-template-columns: 1fr; gap: 0; }
+  .profile-modal-overlay   { padding: 8px; }
+  .profile-modal-card      { max-height: calc(100dvh - 16px); }
+}
+
+@media (max-width: 360px) {
+  .profile-modal-body      { padding: 14px 14px 18px; }
+  .profile-field input     { padding: 8px 10px; font-size: .84rem; }
+  .profile-tabs            { margin-bottom: 16px; }
+}
+
+@media (max-height: 600px) {
+  .profile-avatar-wrap,
+  .profile-avatar-circle   { width: 60px; height: 60px; }
+  .profile-avatar-circle   { font-size: 1.5rem; }
+  .profile-avatar-wrap     { margin-bottom: 12px; }
+  .profile-modal-header    { padding: 12px 20px 10px; }
+  .profile-modal-body      { padding: 14px 24px 18px; }
+  .profile-tabs            { margin-bottom: 14px; }
+  .profile-field           { margin-bottom: 10px; }
+  .profile-field-row .profile-field { margin-bottom: 10px; }
+}
 
 .profile-field { margin-bottom: 14px; }
 .profile-field label {

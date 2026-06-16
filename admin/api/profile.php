@@ -13,32 +13,77 @@ if (!$user) {
 
 $action = $_POST['action'] ?? $_GET['action'] ?? 'get';
 
+// Verificar CSRF en todas las escrituras
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !Auth::csrfVerify()) {
+    http_response_code(403);
+    echo json_encode(['ok' => false, 'msg' => 'Solicitud no autorizada']);
+    exit;
+}
+
 if ($action === 'get') {
     try {
-        $stmt = $pdo->prepare('SELECT id, username, nombre, foto FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, username, nombre, primer_nombre, segundo_nombre, apellido_paterno, apellido_materno, email_contacto, telefono, foto FROM usuarios WHERE id = ? LIMIT 1');
         $stmt->execute([$user['id']]);
         $profile = $stmt->fetch();
     } catch (PDOException $e) {
-        // foto column not yet migrated — fetch without it
-        $stmt = $pdo->prepare('SELECT id, username, nombre FROM usuarios WHERE id = ? LIMIT 1');
-        $stmt->execute([$user['id']]);
-        $profile = $stmt->fetch();
-        $profile['foto'] = null;
+        // New columns not yet migrated — fall back
+        try {
+            $stmt = $pdo->prepare('SELECT id, username, nombre, foto FROM usuarios WHERE id = ? LIMIT 1');
+            $stmt->execute([$user['id']]);
+            $profile = $stmt->fetch();
+        } catch (PDOException $e2) {
+            $stmt = $pdo->prepare('SELECT id, username, nombre FROM usuarios WHERE id = ? LIMIT 1');
+            $stmt->execute([$user['id']]);
+            $profile = $stmt->fetch();
+            $profile['foto'] = null;
+        }
+        $profile['primer_nombre']    = '';
+        $profile['segundo_nombre']   = null;
+        $profile['apellido_paterno'] = '';
+        $profile['apellido_materno'] = null;
+        $profile['email_contacto']   = null;
+        $profile['telefono']         = null;
     }
     echo json_encode(['ok' => true, 'data' => $profile]);
 
 } elseif ($action === 'update_info') {
-    $nombre = trim($_POST['nombre'] ?? '');
-    if (!$nombre) {
-        echo json_encode(['ok' => false, 'msg' => 'El nombre es requerido']);
+    $primer_nombre    = trim($_POST['primer_nombre'] ?? '');
+    $segundo_nombre   = trim($_POST['segundo_nombre'] ?? '') ?: null;
+    $apellido_paterno = trim($_POST['apellido_paterno'] ?? '');
+    $apellido_materno = trim($_POST['apellido_materno'] ?? '') ?: null;
+    $email_contacto   = trim($_POST['email_contacto'] ?? '') ?: null;
+    $telefono         = trim($_POST['telefono'] ?? '') ?: null;
+
+    if (!$primer_nombre) {
+        echo json_encode(['ok' => false, 'msg' => 'El primer nombre es requerido']);
         exit;
     }
-    if (mb_strlen($nombre) > 100) {
-        echo json_encode(['ok' => false, 'msg' => 'Nombre demasiado largo']);
+    if (!$apellido_paterno) {
+        echo json_encode(['ok' => false, 'msg' => 'El apellido paterno es requerido']);
         exit;
     }
-    $pdo->prepare('UPDATE usuarios SET nombre = ? WHERE id = ?')->execute([$nombre, $user['id']]);
-    echo json_encode(['ok' => true, 'msg' => 'Perfil actualizado']);
+    if (mb_strlen($primer_nombre) > 60 || mb_strlen($apellido_paterno) > 60) {
+        echo json_encode(['ok' => false, 'msg' => 'Nombre demasiado largo (máx 60 caracteres)']);
+        exit;
+    }
+    if ($email_contacto && !filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['ok' => false, 'msg' => 'Email de contacto inválido']);
+        exit;
+    }
+
+    $parts  = array_filter([$primer_nombre, $segundo_nombre, $apellido_paterno, $apellido_materno]);
+    $nombre = implode(' ', $parts);
+
+    try {
+        $pdo->prepare(
+            'UPDATE usuarios SET nombre = ?, primer_nombre = ?, segundo_nombre = ?, apellido_paterno = ?, apellido_materno = ?, email_contacto = ?, telefono = ? WHERE id = ?'
+        )->execute([$nombre, $primer_nombre, $segundo_nombre, $apellido_paterno, $apellido_materno, $email_contacto, $telefono, $user['id']]);
+    } catch (PDOException $e) {
+        // Columns not migrated yet — update only nombre
+        $pdo->prepare('UPDATE usuarios SET nombre = ? WHERE id = ?')->execute([$nombre, $user['id']]);
+    }
+
+    echo json_encode(['ok' => true, 'msg' => 'Perfil actualizado', 'nombre' => $nombre]);
 
 } elseif ($action === 'upload_avatar') {
     if (empty($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
@@ -120,6 +165,10 @@ if ($action === 'get') {
 
     $newHash = password_hash($new, PASSWORD_BCRYPT, ['cost' => 12]);
     $pdo->prepare('UPDATE usuarios SET password_hash = ? WHERE id = ?')->execute([$newHash, $user['id']]);
+
+    // Cerrar todas las otras sesiones activas del usuario
+    Auth::invalidarOtrasSesiones($user['id']);
+
     echo json_encode(['ok' => true, 'msg' => 'Contraseña cambiada correctamente']);
 
 } else {
