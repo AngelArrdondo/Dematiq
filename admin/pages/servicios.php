@@ -10,7 +10,7 @@ $content = Contenido::getAll();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Servicios | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../assets/css/admin.css?v=5">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../assets/images/logos/favicon-d.svg">
 </head>
 <body>
@@ -95,11 +95,7 @@ $content = Contenido::getAll();
     c.innerHTML = '';
     servicios.forEach((s, i) => {
       const div = document.createElement('div');
-      div.className = 'repeat-item';
-      div.style.display = 'grid';
-      div.style.gridTemplateColumns = 'auto 1fr';
-      div.style.gap = '14px';
-      div.style.alignItems = 'center';
+      div.className = 'repeat-item item-media-layout';
       div.innerHTML = `
         <div style="width:80px;height:56px;border:1px solid var(--border);border-radius:8px;background:#f9fbff;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center">
           ${s.image ? `<img src="../../${s.image}" alt="${s.nombre}" style="max-width:100%;max-height:100%;object-fit:cover" onerror="this.style.display='none'">` : ''}
@@ -114,7 +110,7 @@ $content = Contenido::getAll();
               </svg>
             </button>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="field-grid-2">
             <div class="form-group" style="margin:0"><label>Nombre del servicio</label>
               <input type="text" value="${s.nombre || ''}" oninput="servicios[${i}].nombre=this.value" placeholder="Programación de PLC">
             </div>

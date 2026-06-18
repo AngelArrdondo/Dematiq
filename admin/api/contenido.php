@@ -12,6 +12,13 @@ if (!Auth::check()) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Verificar CSRF en escrituras
+if ($method === 'POST' && !Auth::csrfVerify()) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Solicitud no autorizada']);
+    exit;
+}
+
 if ($method === 'GET') {
     $clave = $_GET['clave'] ?? '';
     echo $clave
