@@ -1,1 +1,197 @@
 /* Services page styles - Add your services page CSS here */
+/* ══════════════════════════════════════════════════
+   SOLUCIONES (servicios, ensamble, máquinas, manufactura)
+   Layout: hero compacto + barra soluciones + sidebar full-bleed + contenido
+   Estilo cuadrado y formal (clases svc-*)
+   Paleta DEMATIQ: navy #000028, acento #00ffb9
+   ══════════════════════════════════════════════════ */
+
+/* ── 0. Hero compacto (menos espacio vacío) ── */
+.svc-hero-compact { padding: 22px 20px 18px; }
+.svc-hero-compact .page-hero-tag { margin-bottom: 3px; }
+.svc-hero-compact h1 {
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  margin: 2px 0 0;
+}
+@media (min-width: 640px) {
+  .svc-hero-compact { padding: 26px 32px 22px; }
+}
+
+/* ── 1. Barra superior de soluciones ── */
+.svc-quicknav {
+  background: #000028;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+.svc-quicknav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 12px;
+}
+.svc-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 15px 22px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  transition: color 0.18s ease;
+  white-space: nowrap;
+}
+.svc-chip + .svc-chip::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.svc-chip::after {
+  content: '';
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 7px;
+  height: 2px;
+  background: #00ffb9;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+.svc-chip:hover { color: #00ffb9; }
+.svc-chip:hover::after,
+.svc-chip.is-current::after { transform: scaleX(1); }
+.svc-chip.is-current { color: #00ffb9; }
+
+/* ── 2. Explorador: sidebar full-bleed (izq) + contenido (der) ── */
+.svc-explorer {
+  background: var(--color-bg);
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+/* IZQUIERDA — sidebar pegado al borde izquierdo y arriba */
+.svc-optionlist {
+  background: #000028;
+  min-width: 0;
+}
+.svc-optionlist-sticky {
+  position: sticky;
+  top: 54px;
+}
+.svc-optionlist-head {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 0;
+}
+.svc-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  padding: 15px 18px;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.svc-option-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.3;
+  transition: color 0.18s ease;
+}
+.svc-option::after {
+  content: '›';
+  font-size: 1.1rem;
+  line-height: 1;
+  opacity: 0;
+  color: #00ffb9;
+  font-weight: 700;
+  transition: opacity 0.18s ease;
+}
+/* hover: solo el nombre + línea (borde izq) */
+.svc-option:hover .svc-option-name { color: #00ffb9; }
+.svc-option:hover { border-left-color: #00ffb9; }
+.svc-option:hover::after { opacity: 0.6; }
+/* seleccionado: nombre + línea + leve fondo */
+.svc-option.active {
+  border-left-color: #00ffb9;
+  background: rgba(0, 255, 185, 0.07);
+}
+.svc-option.active .svc-option-name { color: #00ffb9; }
+.svc-option.active::after { opacity: 1; }
+
+/* DERECHA — contenido: título, imagen (75%), descripción */
+.svc-content-wrap {
+  padding: clamp(26px, 4vw, 48px) clamp(20px, 4vw, 56px);
+}
+.svc-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.svc-content-title {
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  color: var(--brand-dark);
+  margin: 0 0 18px;
+  line-height: 1.18;
+}
+.svc-content-media {
+  width: 75%;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #0a0a35;
+}
+.svc-content-media img {
+  width: 100%;
+  height: clamp(240px, 32vw, 420px);
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+.svc-content-desc {
+  margin: 22px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.78;
+  color: var(--color-text);
+  max-width: 760px;
+}
+
+/* fade al cambiar de opción */
+.svc-fade { animation: svcFade 0.3s ease; }
+@keyframes svcFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 880px) {
+  .svc-explorer { grid-template-columns: 1fr; }
+  .svc-optionlist-sticky { position: static; }
+  .svc-content-media { width: 100%; }
+}
+@media (max-width: 560px) {
+  .svc-chip { padding: 12px 15px; font-size: 0.8rem; }
+  .svc-chip::after { left: 15px; right: 15px; }
+  .svc-content-desc { font-size: 1rem; }
+}

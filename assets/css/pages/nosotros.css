@@ -68,3 +68,145 @@
   line-height: 1.75;
   margin: 0;
 }
+
+
+/* ── Rediseño visual (sin agregar contenido) ── */
+/* Filosofía: tarjetas cuadradas, acento superior, sin flotar */
+.filosofia-card {
+  border: 1px solid var(--color-border);
+  border-top: 3px solid #00ffb9;
+  border-radius: 4px;
+}
+.filosofia-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(0, 0, 41, 0.13);
+  border-color: var(--color-border);
+  border-top-color: #00ffb9;
+}
+.quienes-text .section-title { padding-bottom: 8px; }
+
+/* ═══════════════════════════════════════════════
+   MEJORAS SOBRE NOSOTROS (7 puntos)
+   ═══════════════════════════════════════════════ */
+
+
+
+
+/* #4 — Quitar la línea/borde verde de las tarjetas (acento ahora es el ícono) */
+.filosofia-card {
+  border-top: 1px solid var(--color-border);
+}
+.filosofia-card:hover {
+  border-color: var(--brand-light);
+  border-top-color: var(--brand-light);
+}
+
+/* #7 — Llamado a la acción final */
+.nosotros-cta {
+  background: #000028;
+  padding: clamp(48px, 7vw, 84px) clamp(16px, 5vw, 48px);
+  text-align: center;
+}
+.nosotros-cta-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.nosotros-cta h2 {
+  color: #fff;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.nosotros-cta p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.nosotros-cta-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.ncta-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 26px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.ncta-btn--primary {
+  background: #00ffb9;
+  color: #000028;
+  border: 1px solid #00ffb9;
+}
+.ncta-btn--primary:hover {
+  background: #00cccc;
+  border-color: #00cccc;
+  transform: translateY(-2px);
+}
+.ncta-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.ncta-btn--ghost:hover {
+  background: #fff;
+  color: #000028;
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .ncta-btn { flex: 1 1 auto; justify-content: center; }
+}
+
+/* ── ¿Quiénes Somos?: diferenciadores + CTA (rellena el espacio) ── */
+.quienes-list {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 26px;
+  display: grid;
+  gap: 13px;
+}
+.quienes-list li {
+  position: relative;
+  padding-left: 28px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--color-text, #1e2d50);
+}
+.quienes-list li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--brand-mid);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.quienes-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 24px;
+  background: var(--brand-mid);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+.quienes-cta:hover {
+  background: var(--brand-light);
+  transform: translateY(-2px);
+}

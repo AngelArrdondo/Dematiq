@@ -15,137 +15,62 @@
 
   <!-- Header inserted by JS -->
 
-  <section class="page-hero">
+  <section class="page-hero svc-hero-compact">
     <div class="page-hero-inner">
-      <p class="page-hero-tag">Servicios</p>
       <h1>Ensamble</h1>
     </div>
   </section>
 
-  <!-- Sección Soluciones -->
-   <section class="seccion-soluciones">
-    <h2>Soluciones y Servicios</h2>
-    <div class="botones-soluciones">
-      <a href="../servicios/servicios.html"><button class="btn-solucion">Servicios</button></a>
-      <a href="../ensamble/ensamble.html"><button class="btn-solucion">Ensamble</button></a>
-      <a href="../maquinas/maqcontrol.html"><button class="btn-solucion">Torque</button></a>
-      <a href="../maquinas/maqprob.html"><button class="btn-solucion">Fuga</button></a>
-      <a href="../maquinas/maqinspe.html"><button class="btn-solucion">Inspección</button></a>
-      <a href="../maquinas/maclim.html"><button class="btn-solucion">Limpieza</button></a>
-      <a href="../maquinas/maqmar.html"><button class="btn-solucion">Marcado</button></a>
-      <a href="../maquinas/macrobot.html"><button class="btn-solucion">Celdas robóticas</button></a>
-      <a href="../manufactura/maqindus.html"><button class="btn-solucion">Manufactura</button></a>
+  <!-- Barra superior de soluciones -->
+  <div class="svc-quicknav" role="navigation" aria-label="Soluciones DEMATIQ">
+    <div class="svc-quicknav-inner">
+      <a class="svc-chip" href="../servicios/servicios.html">Servicios</a>
+      <a class="svc-chip is-current" href="../ensamble/ensamble.html">Ensamble</a>
+      <a class="svc-chip" href="../maquinas/maqcontrol.html">Torque</a>
+      <a class="svc-chip" href="../maquinas/maqprob.html">Fuga</a>
+      <a class="svc-chip" href="../maquinas/maqinspe.html">Inspección</a>
+      <a class="svc-chip" href="../maquinas/maclim.html">Limpieza</a>
+      <a class="svc-chip" href="../maquinas/maqmar.html">Marcado</a>
+      <a class="svc-chip" href="../maquinas/macrobot.html">Celdas robóticas</a>
+      <a class="svc-chip" href="../manufactura/maqindus.html">Manufactura</a>
     </div>
-  </section>
+  </div>
 
-  <!-- Sección de Ensamble -->
-  <section class="ensamble">
-    <h2>Soluciones de Ensamble</h2>
-    
-    <div class="tipo-maquina">
-      <button class="btn-maquina active" data-target="automaticas">Máquinas Automáticas</button>
-      <button class="btn-maquina" data-target="semiautomaticas">Máquinas Semiautomáticas</button>
-      <button class="btn-maquina" data-target="manuales">Máquinas Manuales</button>
-    </div>
+  <!-- Explorador de la solución -->
+  <section class="svc-explorer">
 
-    <div class="carrusel-container">
-
-      <!-- Automáticas -->
-      <div id="automaticas" class="carrusel-maquina">
-        <div id="carouselAutomaticas" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="../../assets/images/general/ejem2.webp" class="d-block w-100" alt="Automática 1">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/images/general/ejem3.webp" class="d-block w-100" alt="Automática 2">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/images/general/ejem1.webp" class="d-block w-100" alt="Automática 3">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutomaticas" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselAutomaticas" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-          </button>
-        </div>
+    <!-- Opciones (izquierda, pegado al borde y arriba) -->
+    <aside class="svc-optionlist">
+      <div class="svc-optionlist-sticky">
+        <p class="svc-optionlist-head">Ensamble</p>
+        <button class="svc-option active" data-title="Máquinas Automáticas" data-img="../../assets/images/products/ejem2.webp" data-desc="Unión y montaje autónomo de componentes sin intervención humana directa. Optimizan los tiempos de ciclo, garantizan una repetibilidad perfecta y elevan la productividad en líneas de producción masiva.">
+          <span class="svc-option-name">Máquinas Automáticas</span>
+        </button>
+        <button class="svc-option" data-title="Máquinas Semiautomáticas" data-img="../../assets/images/products/en1.webp" data-desc="Estaciones de trabajo que combinan la flexibilidad de la carga manual del operador con el accionamiento automatizado y preciso de prensas o atornilladores. Maximizan la seguridad y controlan las variables críticas.">
+          <span class="svc-option-name">Máquinas Semiautomáticas</span>
+        </button>
+        <button class="svc-option" data-title="Máquinas Manuales" data-img="../../assets/images/general/img3.webp" data-desc="Dispositivos de sujeción y estaciones ergonómicas operadas por personal técnico. Ofrecen adaptabilidad total para cambios rápidos de modelo, ensamble de alta complejidad o producciones de bajo volumen y prototipos.">
+          <span class="svc-option-name">Máquinas Manuales</span>
+        </button>
       </div>
+    </aside>
 
-      <!-- Semiautomáticas -->
-      <div id="semiautomaticas" class="carrusel-maquina d-none">
-        <div id="carouselSemiautomaticas" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="../../assets/images/general/en1.webp" class="d-block w-100" alt="Semiautomática 1">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/images/general/semi.webp" class="d-block w-100" alt="Semiautomática 2">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/images/general/sem2.webp" class="d-block w-100" alt="Semiautomática 3">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselSemiautomaticas" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselSemiautomaticas" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-          </button>
+    <!-- Contenido (derecha): titulo, imagen, descripcion -->
+    <div class="svc-content-wrap">
+      <article class="svc-content">
+        <h2 class="svc-content-title" id="svcTitle">Máquinas Automáticas</h2>
+        <div class="svc-content-media">
+          <img id="svcImg" src="../../assets/images/products/ejem2.webp" alt="Máquinas Automáticas">
         </div>
-      </div>
-
-      <!-- Manuales -->
-      <div id="manuales" class="carrusel-maquina d-none">
-        <div id="carouselManuales" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="../../assets/images/general/img3.webp" class="d-block w-100" alt="Manual 1">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/images/general/img3.webp" class="d-block w-100" alt="Manual 2">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselManuales" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselManuales" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-          </button>
-        </div>
-      </div>
-
+        <p class="svc-content-desc" id="svcDesc">Unión y montaje autónomo de componentes sin intervención humana directa. Optimizan los tiempos de ciclo, garantizan una repetibilidad perfecta y elevan la productividad en líneas de producción masiva.</p>
+      </article>
     </div>
-  </section>
-  <section class="quienes-somos py-5">
-    <div class="container text-center">
-      <h1 class="mb-4">Ejemplo</h1>
-      <p class="lead">Esto solo es un ejemplo de texto</p>
-    </div>
+
   </section>
 
   <script src="../../assets/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/components/header.js"></script>
   <script src="../../assets/js/components/footer.js"></script>
-
-  <script>
-    const botones = document.querySelectorAll('.btn-maquina');
-    const carruseles = document.querySelectorAll('.carrusel-maquina');
-
-    botones.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // quitar color activo
-        botones.forEach(b => b.classList.remove('active'));
-        carruseles.forEach(c => c.classList.add('d-none'));
-
-        // activar el botón y el carrusel seleccionado
-        btn.classList.add('active');
-        const target = document.getElementById(btn.dataset.target);
-        target.classList.remove('d-none');
-      });
-    });
-  </script>
-
+  <script src="../../assets/js/components/solucion-selector.js"></script>
 </body>
 </html>

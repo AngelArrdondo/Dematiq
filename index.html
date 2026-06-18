@@ -16,7 +16,7 @@
 
   <!-- ===================== HERO / CARRUSEL ===================== -->
   <section id="hero">
-    <div id="carouselHero" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+    <div id="carouselHero" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6500">
       <div class="carousel-controls-bar">
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
           <span class="carousel-control-prev-icon"></span>
@@ -33,23 +33,35 @@
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="assets/images/general/index.webp" class="d-block w-100" alt="DEMATIQ">
-          <div class="carousel-caption d-none d-md-block">
+          <div class="carousel-caption">
             <h5>Bienvenido a DEMATIQ</h5>
             <p>Soluciones inteligentes para la industria moderna</p>
+            <div class="hero-cta-group">
+              <a href="pages/corporativo/Contacto.html" class="hero-cta hero-cta--primary">Cotiza tu proyecto</a>
+              <a href="#soluciones" class="hero-cta hero-cta--ghost">Nuestros servicios</a>
+            </div>
           </div>
         </div>
         <div class="carousel-item">
           <img src="assets/images/general/img2.webp" class="d-block w-100" alt="Innovación">
-          <div class="carousel-caption d-none d-md-block">
+          <div class="carousel-caption">
             <h5>Innovación</h5>
             <p>Experiencia en proyectos de Automatización y Ensamble</p>
+            <div class="hero-cta-group">
+              <a href="pages/corporativo/Contacto.html" class="hero-cta hero-cta--primary">Cotiza tu proyecto</a>
+              <a href="#soluciones" class="hero-cta hero-cta--ghost">Nuestros servicios</a>
+            </div>
           </div>
         </div>
         <div class="carousel-item">
           <img src="assets/images/general/img3.webp" class="d-block w-100" alt="Confianza">
-          <div class="carousel-caption d-none d-md-block">
+          <div class="carousel-caption">
             <h5>Confianza</h5>
             <p>Más de 10 años de Experiencia</p>
+            <div class="hero-cta-group">
+              <a href="pages/corporativo/Contacto.html" class="hero-cta hero-cta--primary">Cotiza tu proyecto</a>
+              <a href="#soluciones" class="hero-cta hero-cta--ghost">Nuestros servicios</a>
+            </div>
           </div>
         </div>
       </div>
@@ -85,7 +97,8 @@
   <!-- ===================== SOLUCIONES / TARJETAS ===================== -->
   <section id="soluciones">
     <h2>Nuestras Soluciones Y Servicios</h2>
-    <div class="soluciones-grid">
+
+    <div class="soluciones-grid soluciones-grid--featured">
 
       <a href="pages/servicios/servicios.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
@@ -96,18 +109,21 @@
 
       <a href="pages/manufactura/maqindus.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
-          <div class="solucion-icon-wrapper"><img src="assets/images/general/manufactura.webp" class="solucion-icon" alt="Manufactura"></div>
+          <div class="solucion-icon-wrapper"><img src="assets/images/general/manufactura.png" class="solucion-icon" alt="Manufactura"></div>
           <h5 class="card-title">Manufactura maquinados industriales</h5>
         </div>
       </a>
 
       <a href="pages/ensamble/ensamble.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
-          <div class="solucion-icon-wrapper"><img src="assets/images/general/ensamble.webp" class="solucion-icon" alt="Ensamble"></div>
+          <div class="solucion-icon-wrapper"><img src="assets/images/general/ensamble.png" class="solucion-icon" alt="Ensamble"></div>
           <h5 class="card-title">Ensamble</h5>
         </div>
       </a>
 
+    </div>
+
+    <div class="soluciones-grid soluciones-grid--machines">
       <a href="pages/maquinas/maqcontrol.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
           <div class="solucion-icon-wrapper"><img src="assets/images/general/maquinas de control de torque.webp" class="solucion-icon" alt="Torque"></div>
@@ -131,7 +147,7 @@
 
       <a href="pages/maquinas/maclim.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
-          <div class="solucion-icon-wrapper"><img src="assets/images/general/maquinas de limpieza.webp" class="solucion-icon" alt="Limpieza"></div>
+          <div class="solucion-icon-wrapper"><img src="assets/images/general/maquina de limpieza.png" class="solucion-icon" alt="Limpieza"></div>
           <h5 class="card-title">Máquinas de limpieza</h5>
         </div>
       </a>
@@ -218,8 +234,12 @@
         slidesEl.innerHTML = home.hero.map((s, i) => `
           <div class="carousel-item${i === 0 ? ' active' : ''}">
             <img src="${s.image}" class="d-block w-100" alt="${s.title}">
-            <div class="carousel-caption d-none d-md-block">
+            <div class="carousel-caption">
               <h5>${s.title}</h5><p>${s.subtitle}</p>
+              <div class="hero-cta-group">
+                <a href="pages/corporativo/Contacto.html" class="hero-cta hero-cta--primary">Cotiza tu proyecto</a>
+                <a href="#soluciones" class="hero-cta hero-cta--ghost">Nuestros servicios</a>
+              </div>
             </div>
           </div>`).join('');
         if (indicators) indicators.innerHTML = home.hero.map((_, i) =>

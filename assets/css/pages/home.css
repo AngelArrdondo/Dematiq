@@ -53,11 +53,16 @@
   display: flex;
   align-items: center;
   width: max-content;
-  animation: marquee 28s linear infinite;
+  animation: marquee 42s linear infinite;
 }
 
 .marquee-track:hover        { animation-play-state: paused; }
-.marquee-track--slow        { animation-duration: 45s; }
+.marquee-track--slow        { animation-duration: 55s; }
+
+/* Respeta la preferencia de movimiento reducido del sistema */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
 
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -83,7 +88,7 @@
   height: 100%;
   object-fit: contain;           /* logo completo, sin recortar */
   filter: grayscale(100%);
-  opacity: 0.65;
+  opacity: 0.85;
   transition: filter 0.3s, opacity 0.3s;
 }
 
@@ -200,12 +205,6 @@
   position: relative; padding-bottom: 9px;
 }
 
-.stage-card__info-nombre::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0;
-  width: 28px; height: 2px;
-  background: #4da6ff; border-radius: 2px;
-}
 
 .stage-card__info-desc {
   font-size: 0.78rem;
@@ -375,6 +374,38 @@
   margin: 0 auto;
 }
 
+/* ── #3 Mejor contraste de las tarjetas EN REPOSO (antes se veían apagadas) ── */
+#soluciones .solucion-icon {
+  filter: brightness(0) invert(1) opacity(0.9);
+}
+#soluciones .solucion-icon-card .card-title {
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+/* Las 9 tarjetas con el MISMO efecto: linea cian + tamano + titulo blanco */
+.soluciones-grid--featured {
+  margin-bottom: clamp(14px, 2vw, 26px);
+}
+#soluciones .solucion-icon-card {
+  min-height: 220px;
+}
+#soluciones .solucion-icon-card::before {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 204, 204, 0.55), transparent);
+}
+#soluciones .solucion-icon-wrapper {
+  width: clamp(88px, 10vw, 140px);
+  height: clamp(88px, 10vw, 140px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .soluciones-grid.soluciones-grid--featured { grid-template-columns: 1fr; }
+  .soluciones-grid.soluciones-grid--machines { grid-template-columns: repeat(2, 1fr); }
+  #soluciones .solucion-icon-card { min-height: 150px; }
+}
+
 /* ── Tablet ── */
 @media (max-width: 900px) {
   .soluciones-grid               { grid-template-columns: repeat(3, 1fr); }
@@ -481,4 +512,22 @@
   max-height: 500px;
   object-fit: contain;
   border-radius: 8px;
+}
+
+
+/* ── Rediseño visual de las tarjetas de soluciones (cuadradas + glow verde) ── */
+#soluciones .solucion-icon-card { border-radius: 4px !important; }
+#soluciones .solucion-icon-card::before { border-radius: 4px 4px 0 0; }
+#soluciones .solucion-icon-card:hover {
+  border-color: rgba(0, 255, 185, 0.45) !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 185, 0.20),
+    0 0 24px 2px rgba(0, 255, 185, 0.10),
+    0 16px 40px rgba(0, 0, 20, 0.5) !important;
+}
+#soluciones .solucion-icon-card:hover .card-title { color: #00ffb9 !important; }
+#soluciones .solucion-icon-card:hover .solucion-icon {
+  filter: brightness(0) invert(1) opacity(1)
+          drop-shadow(0 0 5px rgba(0, 255, 185, 0.8))
+          drop-shadow(0 0 14px rgba(0, 255, 185, 0.35)) !important;
 }

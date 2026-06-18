@@ -16,34 +16,29 @@
   border-radius: 0;
 }
 
-/* Overlay de color para suavizar la imagen */
+/* Degradado para legibilidad del caption (más oscuro abajo) */
 #hero .carousel-item::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 41, 0.45);
+  background: linear-gradient(to top, rgba(0,0,28,0.88) 0%, rgba(0,0,28,0.40) 42%, rgba(0,0,28,0.22) 100%);
   pointer-events: none;
 }
 
-/* Caption sin caja */
+/* Caption alineado a la izquierda, sin caja, con acento */
 .carousel-caption {
-  background: none;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  bottom: 90px;
+  z-index: 5;
+  text-align: left;
   left: 50%;
   right: auto;
   transform: translateX(-50%);
-  text-align: center;
-  width: fit-content;
-  min-width: 340px;
-  max-width: 580px;
-  z-index: 5;
-  background: rgba(0, 0, 41, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  padding: 28px 40px;
+  bottom: clamp(48px, 9vh, 96px);
+  width: 100%;
+  max-width: 1180px;
+  padding: 0 clamp(24px, 5vw, 60px);
+  background: none;
+  border: none;
+  border-radius: 0;
 }
 
 .carousel-caption h5 {
@@ -59,6 +54,46 @@
   font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
   margin: 0;
+}
+
+/* ── Botones CTA del hero ── */
+.hero-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 24px;
+  border-radius: 6px;
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.hero-cta--primary {
+  background: #00ffb9;
+  color: #000028;
+  border: 1px solid #00ffb9;
+}
+.hero-cta--primary:hover {
+  background: #00cccc;
+  border-color: #00cccc;
+  transform: translateY(-2px);
+}
+.hero-cta--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+.hero-cta--ghost:hover {
+  background: #fff;
+  color: #000028;
+  border-color: #fff;
+  transform: translateY(-2px);
 }
 
 /* ── Barra inferior: flechas + indicadores ── */
@@ -147,11 +182,21 @@
 /* ── Mobile ── */
 @media (max-width: 600px) {
   #hero .carousel-item img {
-    height: 420px;
-    min-height: 280px;
+    height: 460px;
+    min-height: 320px;
   }
   .carousel-caption {
-    bottom: 70px;
+    bottom: 80px;
     min-width: 280px;
+    text-align: left;
+  }
+  .hero-cta-group {
+    margin-top: 16px;
+    gap: 9px;
+  }
+  .hero-cta {
+    padding: 9px 16px;
+    flex: 1 1 auto;
+    justify-content: center;
   }
 }
