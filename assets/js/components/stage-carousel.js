@@ -174,20 +174,11 @@
     const btnNext = document.getElementById('stageNext');
     if (!track) return;
 
-    const projectList = await loadProjects();
-    TOTAL = projectList.length;
-
-    const cards = projectList.map(p => { const c = buildCard(p); track.appendChild(c); return c; });
-    const dots  = PROJECTS.map((_, i) => {
-      const d = document.createElement('button');
-      d.className = 'stage-dot';
-      d.setAttribute('aria-label', `Proyecto ${i + 1}`);
-      dotsEl.appendChild(d);
-      return d;
-    });
-
     let activeIdx = 0;
     let busy = false;
+    let autoplayTimer;
+    let cards = [];
+    let dots  = [];
 
     function goTo(idx) {
       if (busy) return;
@@ -198,15 +189,56 @@
       setTimeout(() => { busy = false; }, 560);
     }
 
-    btnPrev.addEventListener('click', () => goTo(activeIdx - 1));
-    btnNext.addEventListener('click', () => goTo(activeIdx + 1));
-    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+    function resetAutoplay() {
+      clearInterval(autoplayTimer);
+      autoplayTimer = setInterval(() => goTo(activeIdx + 1), 4000);
+    }
 
-    cards.forEach((card, i) => {
-      card.addEventListener('click', () => { if (card.classList.contains('is-side')) goTo(i); });
-      card.addEventListener('keydown', e => {
-        if ((e.key === 'Enter' || e.key === ' ') && card.classList.contains('is-side')) { e.preventDefault(); goTo(i); }
+    async function buildCarousel() {
+      clearInterval(autoplayTimer);
+      track.innerHTML  = '';
+      dotsEl.innerHTML = '';
+      activeIdx = 0;
+      busy = false;
+
+      const projectList = await loadProjects();
+      TOTAL = projectList.length;
+
+      cards = projectList.map(p => { const c = buildCard(p); track.appendChild(c); return c; });
+      dots  = projectList.map((_, i) => {
+        const d = document.createElement('button');
+        d.className = 'stage-dot';
+        d.setAttribute('aria-label', `Proyecto ${i + 1}`);
+        dotsEl.appendChild(d);
+        return d;
       });
+
+      setTrackHeight(track);
+      applyPositions(cards, activeIdx, track, false);
+      updateDots(dots, activeIdx);
+      resetAutoplay();
+    }
+
+    await buildCarousel();
+
+    btnPrev.addEventListener('click', () => { goTo(activeIdx - 1); resetAutoplay(); });
+    btnNext.addEventListener('click', () => { goTo(activeIdx + 1); resetAutoplay(); });
+    dots.forEach((d, i) => d.addEventListener('click', () => { goTo(i); resetAutoplay(); }));
+
+    track.addEventListener('click', e => {
+      const card = e.target.closest('.stage-card');
+      if (card) {
+        const i = cards.indexOf(card);
+        if (i !== -1 && card.classList.contains('is-side')) goTo(i);
+      }
+    });
+    track.addEventListener('keydown', e => {
+      const card = e.target.closest('.stage-card');
+      if (!card) return;
+      if ((e.key === 'Enter' || e.key === ' ') && card.classList.contains('is-side')) {
+        e.preventDefault();
+        goTo(cards.indexOf(card));
+      }
     });
 
     document.addEventListener('keydown', e => {
@@ -219,13 +251,23 @@
     });
 
     let touchX = null;
-    track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; clearInterval(autoplayTimer); }, { passive: true });
     track.addEventListener('touchend',   e => {
       if (touchX === null) return;
       const dx = e.changedTouches[0].clientX - touchX;
       if (Math.abs(dx) > 40) goTo(activeIdx + (dx < 0 ? 1 : -1));
       touchX = null;
+      resetAutoplay();
     }, { passive: true });
+
+    track.addEventListener('mouseover', e => {
+      const card = e.target.closest('.stage-card');
+      if (card && card.classList.contains('is-center')) clearInterval(autoplayTimer);
+    });
+    track.addEventListener('mouseout', e => {
+      const card = e.target.closest('.stage-card');
+      if (card && card.classList.contains('is-center')) resetAutoplay();
+    });
 
     let resizeTimer;
     window.addEventListener('resize', () => {
@@ -236,38 +278,10 @@
       }, 120);
     });
 
-    // Autoplay — avanza cada 4s, pausa al hover o touch
-    const AUTOPLAY_MS = 4000;
-    let autoplayTimer = setInterval(() => goTo(activeIdx + 1), AUTOPLAY_MS);
-
-    function resetAutoplay() {
-      clearInterval(autoplayTimer);
-      autoplayTimer = setInterval(() => goTo(activeIdx + 1), AUTOPLAY_MS);
-    }
-
-    // Pausa SOLO cuando el cursor está sobre el card central
-    track.addEventListener('mouseover', e => {
-      const card = e.target.closest('.stage-card');
-      if (card && card.classList.contains('is-center')) clearInterval(autoplayTimer);
-    });
-    track.addEventListener('mouseout', e => {
-      const card = e.target.closest('.stage-card');
-      if (card && card.classList.contains('is-center')) resetAutoplay();
-    });
-
-    // En táctil, pausa brevemente y reanuda
-    track.addEventListener('touchstart',  () => clearInterval(autoplayTimer), { passive: true });
-    track.addEventListener('touchend',    () => { resetAutoplay(); }, { passive: true });
-
-    // Resetear timer al navegar manualmente
-    const origGoTo = goTo;
-    btnPrev.addEventListener('click', resetAutoplay);
-    btnNext.addEventListener('click', resetAutoplay);
-    dots.forEach(d => d.addEventListener('click', resetAutoplay));
-
-    setTrackHeight(track);
-    applyPositions(cards, activeIdx, track, false);
-    updateDots(dots, activeIdx);
+    try {
+      const bc = new BroadcastChannel('dematiq-live');
+      bc.onmessage = e => { if (e.data.section === 'proyectos') buildCarousel(); };
+    } catch {}
   }
 
   if (document.readyState === 'loading') {

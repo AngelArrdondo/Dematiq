@@ -197,15 +197,48 @@
   function mostrarIndustria(id, item) {
     document.querySelectorAll('.info-industria').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.lista-industrias li').forEach(li => li.classList.remove('active'));
-
     document.getElementById(id).style.display = 'block';
     item.classList.add('active');
-
-    /* En móvil, hacer scroll suave hasta el panel de contenido */
     if (window.innerWidth < 769) {
       document.getElementById('infoContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+
+  async function loadIndustriasContent() {
+    try {
+      const data = await fetch('/api/contenido.php?clave=industrias').then(r => r.json());
+      if (!Array.isArray(data) || !data.length) return;
+      const IMGS = [
+        '../../assets/images/general/img1.webp',
+        '../../assets/images/general/img2.webp',
+        '../../assets/images/general/img3.webp'
+      ];
+      document.getElementById('listaIndustrias').innerHTML = data.map((ind, i) =>
+        `<li onclick="mostrarIndustria('ind${i}',this)"${i === 0 ? ' class="active"' : ''}>${ind.nombre}</li>`
+      ).join('');
+      document.getElementById('infoContainer').innerHTML = data.map((ind, i) => `
+        <div id="ind${i}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
+          <h3>${ind.nombre}</h3>
+          <p>${ind.descripcion}</p>
+          <div id="carouselInd${i}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
+            <div class="carousel-inner">
+              <div class="carousel-item active"><img src="${IMGS[0]}" class="d-block w-100" alt="${ind.nombre}"></div>
+              <div class="carousel-item"><img src="${IMGS[1]}" class="d-block w-100" alt="${ind.nombre}"></div>
+              <div class="carousel-item"><img src="${IMGS[2]}" class="d-block w-100" alt="${ind.nombre}"></div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselInd${i}" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselInd${i}" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>`
+      ).join('');
+    } catch (e) { console.warn('[content-loader] industrias unavailable'); }
+  }
+  loadIndustriasContent();
+  try { const _bc = new BroadcastChannel('dematiq-live'); _bc.onmessage = e => { if (e.data.section === 'industrias') loadIndustriasContent(); }; } catch {}
 </script>
 </body>
 </html>

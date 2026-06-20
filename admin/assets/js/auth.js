@@ -85,7 +85,56 @@ const DEFAULT_CONTENT = {
     { nombre: 'Proyecto 8',  desc: 'Celda robótica integrada en línea de manufactura flexible.',                                                                             img: 'assets/images/general/celdas.webp',      href: 'pages/maquinas/macrobot.html' },
     { nombre: 'Proyecto 9',  desc: 'Maquinado CNC de precisión.',                                                                                                           img: 'assets/images/products/maq.webp',        href: 'pages/manufactura/maqindus.html' },
     { nombre: 'Proyecto 10', desc: 'Equipo de manejo y prueba de componentes electrónicos en ambiente controlado.',                                                          img: 'assets/images/general/semi.webp',        href: 'pages/corporativo/soluciones.html' }
-  ]
+  ],
+  ensamble:   { titulo: 'Ensamble', subtitulo: 'Soluciones de Ensamble', tabs: [
+    { nombre: 'Máquinas Automáticas',     images: ['assets/images/general/ejem2.webp'] },
+    { nombre: 'Máquinas Semiautomáticas', images: ['assets/images/general/en1.webp']   },
+    { nombre: 'Máquinas Manuales',        images: ['assets/images/general/img3.webp']  }
+  ]},
+  maqcontrol: { titulo: 'Máquinas de Control de Torque', subtitulo: 'Soluciones de Torque', tabs: [
+    { nombre: 'Máquinas de Angulo',        images: ['assets/images/general/t1.webp', 'assets/images/general/t2.webp'] },
+    { nombre: 'Máquinas Numero de vuelta', images: ['assets/images/general/img2.webp'] }
+  ]},
+  maqprob:    { titulo: 'Máquinas Probadoras de Fuga', subtitulo: 'Soluciones de Probadoras de Fuga', tabs: [
+    { nombre: 'Fuga de gas',           images: ['assets/images/general/fuga.webp'] },
+    { nombre: 'Fuga de helio',         images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Fuga de Sniffer helio', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Burbuja',               images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Flujo',                 images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Caida de vacio',        images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Caida de Presion',      images: ['assets/images/general/img1.webp'] }
+  ]},
+  maqinspe:   { titulo: 'Máquinas de Inspección', subtitulo: 'Soluciones de Maquinas de Inspeccion', tabs: [
+    { nombre: 'Inspeccion 3d',             images: ['assets/images/general/inspeccion.webp'] },
+    { nombre: 'Codigo de barra 2d-3d',     images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Geometria textura-control', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Espesor Area-Altura',       images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Acabado-Presencia-Marcas',  images: ['assets/images/general/img2.webp'] }
+  ]},
+  maclim:     { titulo: 'Máquinas de Limpieza', subtitulo: 'Soluciones de Maquinas de Limpieza', tabs: [
+    { nombre: 'Aire de alta presion',   images: ['assets/images/general/limpieza.webp'] },
+    { nombre: 'Inmersion',              images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Aspersion alta Presion', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Ultrasonido',            images: ['assets/images/general/img1.webp'] }
+  ]},
+  maqmar:     { titulo: 'Máquinas de Marcado', subtitulo: 'Soluciones de Maquinas de Marcado', tabs: [
+    { nombre: 'Marcado Laser',      images: ['assets/images/general/micro.webp'] },
+    { nombre: 'Micropercusion',     images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Inyeccion de tinta', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Troquel',            images: ['assets/images/general/img3.webp'] }
+  ]},
+  macrobot:   { titulo: 'Celdas Robóticas', subtitulo: 'Soluciones en Celdas Robóticas', tabs: [
+    { nombre: 'Celdas de Paletizado',          images: ['assets/images/general/celdas.webp'] },
+    { nombre: 'Celdas de Alimentacion',        images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Celdas de sistema de vision',   images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Celdas de Soldadura',           images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Corte laser de pieza metalica', images: ['assets/images/general/img2.webp'] }
+  ]},
+  maqindus:   { titulo: 'Maquinados Industriales', subtitulo: 'Soluciones de Manufactura Maquinados Industriales', tabs: [
+    { nombre: 'Diseño 2d y 3d dispositivos',              images: ['assets/images/general/maq.webp', 'assets/images/general/maq2.webp'] },
+    { nombre: 'Diseño y fabricación de piezas mecanicas', images: ['assets/images/general/maq.webp', 'assets/images/general/maq2.webp'] },
+    { nombre: 'Diseño y fabricación de Fixture',          images: ['assets/images/general/img3.webp'] }
+  ]}
 };
 
 // ── Content Manager ────────────────────────────────────────────────────
@@ -118,12 +167,18 @@ const CM = {
     // Save to DB
     if (window.__DB_CONTENT !== undefined) {
       window.__DB_CONTENT[section] = data;
-      fetch('/admin/api/contenido.php', {
+      return fetch('/admin/api/contenido.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': _csrfToken() },
         body: JSON.stringify({ clave: section, valor: data })
-      }).catch(() => {});
+      }).then(r => r.json()).then(json => {
+        if (json.ok) {
+          try { const bc = new BroadcastChannel('dematiq-live'); bc.postMessage({ section }); bc.close(); } catch {}
+        }
+        return json;
+      });
     }
+    return Promise.resolve({ ok: true });
   },
 
   exportAll() {
@@ -182,14 +237,17 @@ const AdminSidebar = {
     tool:     '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>',
     eye:      '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
     logout:   '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/>',
-    projects: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'
+    projects: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+    gear:     '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>',
+    shield:   '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    image:    '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/>'
   },
 
   init(activePage, bp, rp) {
     const sidebar = document.querySelector('.admin-sidebar');
     if (!sidebar) return;
 
-    const nav = [
+    const pages = [
       { href: `${bp}dashboard.php`,         icon: 'home',     text: 'Dashboard',  key: 'dashboard' },
       { href: `${bp}pages/inicio.php`,      icon: 'monitor',  text: 'Inicio',     key: 'inicio' },
       { href: `${bp}pages/nosotros.php`,    icon: 'users',    text: 'Nosotros',   key: 'nosotros' },
@@ -199,11 +257,19 @@ const AdminSidebar = {
       { href: `${bp}pages/servicios.php`,   icon: 'tool',     text: 'Servicios',  key: 'servicios' },
       { href: `${bp}pages/proyectos.php`,   icon: 'projects', text: 'Proyectos',  key: 'proyectos' }
     ];
+    const maquinas = [
+      { href: `${bp}pages/maquinas.php`,    icon: 'gear',     text: 'Máquinas',   key: 'maquinas' }
+    ];
+    const tools = [
+      { href: `${bp}pages/usuarios.php`,    icon: 'users',    text: 'Usuarios',   key: 'usuarios' },
+      { href: `${bp}pages/accesos.php`,     icon: 'shield',   text: 'Accesos',    key: 'accesos' },
+      { href: `${bp}pages/imagenes.php`,    icon: 'image',    text: 'Imágenes',   key: 'imagenes' }
+    ];
 
-    const navHTML = nav.map(n => {
+    const link = (n) => {
       const cls = activePage === n.key ? ' class="active"' : '';
       return `<a href="${n.href}"${cls} title="${n.text}">${this.icon(this.ICONS[n.icon])}<span>${n.text}</span></a>`;
-    }).join('');
+    };
 
     sidebar.innerHTML = `
       <div class="admin-logo">
@@ -214,7 +280,11 @@ const AdminSidebar = {
       </div>
       <nav class="admin-nav">
         <div class="admin-nav-section"><span>Páginas</span></div>
-        ${navHTML}
+        ${pages.map(link).join('')}
+        <div class="admin-nav-section" style="margin-top:10px"><span>Máquinas</span></div>
+        ${maquinas.map(link).join('')}
+        <div class="admin-nav-section" style="margin-top:10px"><span>Herramientas</span></div>
+        ${tools.map(link).join('')}
         <div class="admin-nav-section" style="margin-top:10px"><span>Sistema</span></div>
         <a href="${rp}index.html" target="_blank" title="Ver sitio">${this.icon(this.ICONS.eye)}<span>Ver sitio</span></a>
         <a href="${rp}admin/logout.php" title="Cerrar sesión">${this.icon(this.ICONS.logout)}<span>Cerrar sesión</span></a>

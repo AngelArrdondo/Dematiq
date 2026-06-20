@@ -1,6 +1,20 @@
 # ── Admin panel — seguridad ──────────────────────────────────
 Options -Indexes
 
+# ── Subida de archivos ────────────────────────────────────────
+php_value upload_max_filesize 5M
+php_value post_max_size 10M
+
+# ── Forzar HTTPS ─────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP_HOST} !^localhost [NC]
+  RewriteCond %{HTTP_HOST} !^127\. [NC]
+  RewriteCond %{HTTP_HOST} !\.local$ [NC]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
 # Impedir indexación por buscadores
 <IfModule mod_headers.c>
   Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
@@ -16,6 +30,7 @@ Options -Indexes
 
   # Deshabilitar características del navegador que no se usan
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
 </IfModule>
 
 # Bloquear acceso directo a archivos sensibles del admin

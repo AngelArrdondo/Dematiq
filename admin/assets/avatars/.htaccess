@@ -1,0 +1,14 @@
+# Bloquear ejecución de scripts en carpeta de avatares
+<FilesMatch "\.php\d?$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+Options -ExecCGI
+RemoveHandler .php .php3 .php4 .php5 .php7 .phtml .phar
+RemoveType application/x-httpd-php

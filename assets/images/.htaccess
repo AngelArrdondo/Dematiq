@@ -1,0 +1,21 @@
+# Bloquear ejecución de scripts en carpeta de imágenes
+<FilesMatch "\.php\d?$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Solo permitir tipos de archivo de imagen
+<FilesMatch "(?i)\.(jpe?g|png|gif|webp|svg|ico|avif)$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+Options -ExecCGI
+RemoveHandler .php .php3 .php4 .php5 .php7 .phtml .phar
+RemoveType application/x-httpd-php
