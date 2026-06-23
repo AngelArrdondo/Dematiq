@@ -1,7 +1,42 @@
-This site can’t be reached
-dematiq.local refused to connect.
-Try:
+===== SSL dematiq.local =====
 
-Checking the connection
-Checking the proxy and the firewall
-ERR_CONNECTION_REFUSED
+PASO 1 — Agregar certificado al sistema (quita advertencia del navegador):
+
+sudo cp /etc/apache2/ssl/dematiq.local.crt /usr/local/share/ca-certificates/dematiq.local.crt && sudo update-ca-certificates
+
+PASO 2 — Importar en Chrome:
+1. Abre: chrome://settings/certificates
+2. Pestaña: Authorities
+3. Click: Import
+4. Selecciona el archivo: /etc/apache2/ssl/dematiq.local.crt
+5. Marca: "Trust this certificate for identifying websites"
+6. Click: OK
+
+Luego cierra y vuelve a abrir Chrome y entra a:
+https://dematiq.local/admin/dashboard.php
+
+Ya no debe aparecer la advertencia de sitio inseguro.
+
+===== URLs del Admin =====
+
+Dashboard:
+https://dematiq.local/admin/dashboard.php
+
+Páginas:
+https://dematiq.local/admin/pages/inicio.php
+https://dematiq.local/admin/pages/nosotros.php
+https://dematiq.local/admin/pages/servicios.php
+https://dematiq.local/admin/pages/proyectos.php
+https://dematiq.local/admin/pages/industrias.php
+https://dematiq.local/admin/pages/partners.php
+https://dematiq.local/admin/pages/imagenes.php
+https://dematiq.local/admin/pages/maquinas.php
+https://dematiq.local/admin/pages/contacto.php
+https://dematiq.local/admin/pages/accesos.php
+https://dematiq.local/admin/pages/usuarios.php
+
+APIs:
+https://dematiq.local/admin/api/contenido.php
+https://dematiq.local/admin/api/imagenes.php
+https://dematiq.local/admin/api/profile.php
+https://dematiq.local/admin/api/usuarios.php

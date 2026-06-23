@@ -11,7 +11,6 @@ php_value post_max_size 10M
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP_HOST} !^localhost [NC]
   RewriteCond %{HTTP_HOST} !^127\. [NC]
-  RewriteCond %{HTTP_HOST} !\.local$ [NC]
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </IfModule>
 
