@@ -117,6 +117,33 @@
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/components/header.js"></script>
 <script src="../../assets/js/components/footer.js"></script>
+
+<script>
+  // ── Carga dinámica desde la base de datos ──
+  (async function () {
+    try {
+      const data = await fetch('/api/contenido.php?clave=nosotros').then(r => r.json());
+      if (!data || typeof data !== 'object') return;
+
+      if (data.hero) {
+        const h = data.hero;
+        if (h.tag)      { const el = document.querySelector('.page-hero .page-hero-tag'); if (el) el.textContent = h.tag; }
+        if (h.h1)       { const el = document.querySelector('.page-hero h1');             if (el) el.textContent = h.h1; }
+        if (h.subtitle) { const el = document.querySelector('.page-hero-inner > p:last-of-type'); if (el) el.textContent = h.subtitle; }
+      }
+
+      const qParas = document.querySelectorAll('.quienes-text > p');
+      if (data.p1 && qParas[0]) qParas[0].textContent = data.p1;
+      if (data.p2 && qParas[1]) qParas[1].textContent = data.p2;
+
+      const filosofia = document.querySelectorAll('.filosofia-card');
+      if (data.mision  && filosofia[0]) { const p = filosofia[0].querySelector('p'); if (p) p.textContent = data.mision; }
+      if (data.vision  && filosofia[1]) { const p = filosofia[1].querySelector('p'); if (p) p.textContent = data.vision; }
+      if (data.valores && filosofia[2]) { const p = filosofia[2].querySelector('p'); if (p) p.textContent = data.valores; }
+    } catch (e) { /* fallo silencioso */ }
+  })();
+</script>
+
 <script>
   (function () {
     const el = document.getElementById('svcRotatorText');

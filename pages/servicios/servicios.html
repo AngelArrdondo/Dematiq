@@ -100,6 +100,33 @@
   <script src="../../assets/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/components/header.js"></script>
   <script src="../../assets/js/components/footer.js"></script>
-  <script src="../../assets/js/components/solucion-selector.js"></script>
+
+  <script>
+    // ── Carga dinámica de servicios desde la base de datos ──
+    (async function () {
+      try {
+        const data = await fetch('/api/contenido.php?clave=servicios').then(r => r.json());
+        if (!Array.isArray(data) || data.length === 0) return;
+
+        const options = document.querySelectorAll('.svc-option');
+        data.forEach((s, i) => {
+          if (!options[i]) return;
+          if (s.nombre) {
+            options[i].dataset.title = s.nombre;
+            const nameEl = options[i].querySelector('.svc-option-name');
+            if (nameEl) nameEl.textContent = s.nombre;
+          }
+          if (s.image) {
+            options[i].dataset.img = '../../' + s.image;
+          }
+        });
+      } catch (e) { /* fallo silencioso */ }
+    })().finally(() => {
+      // Inicializar el selector después de actualizar los datos
+      const script = document.createElement('script');
+      script.src = '../../assets/js/components/solucion-selector.js';
+      document.body.appendChild(script);
+    });
+  </script>
 </body>
 </html>

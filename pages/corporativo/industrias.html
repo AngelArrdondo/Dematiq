@@ -174,23 +174,72 @@
     pill.classList.add('active');
     pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
-</script>
-<script>
-  // Inicializa cada carrusel de 2 imágenes (autoplay 3s, pausa al pasar el mouse, solo puntos)
-  document.querySelectorAll('.carousel2').forEach(function(c){
-    var track=c.querySelector('.c2-track'); if(!track) return;
-    var count=track.children.length;
-    var dots=c.querySelectorAll('.c2-dots span');
-    var idx=0, timer=null;
-    function go(i){ idx=(i+count)%count; c.dataset.idx=idx; track.style.transform='translateX(-'+(idx*100)+'%)';
-      dots.forEach(function(d,k){d.classList.toggle('active',k===idx);}); }
-    function stop(){ if(timer){clearInterval(timer); timer=null;} }
-    function start(){ stop(); if(count>1) timer=setInterval(function(){go(idx+1);},3000); }
-    dots.forEach(function(d,k){ d.addEventListener('click',function(){go(k); start();}); });
-    c.addEventListener('mouseenter',stop);
-    c.addEventListener('mouseleave',start);
-    start();
-  });
+
+  function initCarousels() {
+    document.querySelectorAll('.carousel2').forEach(function(c){
+      var track=c.querySelector('.c2-track'); if(!track) return;
+      var count=track.children.length;
+      var dots=c.querySelectorAll('.c2-dots span');
+      var idx=0, timer=null;
+      function go(i){ idx=(i+count)%count; c.dataset.idx=idx; track.style.transform='translateX(-'+(idx*100)+'%)';
+        dots.forEach(function(d,k){d.classList.toggle('active',k===idx);}); }
+      function stop(){ if(timer){clearInterval(timer); timer=null;} }
+      function start(){ stop(); if(count>1) timer=setInterval(function(){go(idx+1);},3000); }
+      dots.forEach(function(d,k){ d.addEventListener('click',function(){go(k); start();}); });
+      c.addEventListener('mouseenter',stop);
+      c.addEventListener('mouseleave',start);
+      start();
+    });
+  }
+
+  initCarousels();
+
+  // ── Carga dinámica desde la base de datos ──
+  (async function () {
+    try {
+      const data = await fetch('/api/contenido.php?clave=industrias').then(r => r.json());
+      if (!Array.isArray(data) || data.length === 0) return;
+
+      const pillsWrap     = document.querySelector('.ind-pills');
+      const sidebarSticky = document.querySelector('.svc-optionlist-sticky');
+      const infoContainer = document.getElementById('infoContainer');
+      if (!pillsWrap || !sidebarSticky || !infoContainer) return;
+
+      // Rebuild pills
+      pillsWrap.innerHTML = data.map((ind, i) =>
+        `<button class="ind-pill${i === 0 ? ' active' : ''}" onclick="mostrarIndustriaPill('${ind.id}',this)">${ind.nombre}</button>`
+      ).join('');
+
+      // Rebuild sidebar
+      const head = sidebarSticky.querySelector('.svc-optionlist-head');
+      sidebarSticky.innerHTML = '';
+      if (head) sidebarSticky.appendChild(head);
+      data.forEach((ind, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'svc-option' + (i === 0 ? ' active' : '');
+        btn.onclick = function() { mostrarIndustria(ind.id, this); };
+        btn.innerHTML = `<span class="svc-option-name">${ind.nombre}</span>`;
+        sidebarSticky.appendChild(btn);
+      });
+
+      // Rebuild info panels
+      infoContainer.innerHTML = data.map((ind, i) =>
+        `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
+          <h3>${ind.nombre}</h3>
+          <p>${ind.descripcion}</p>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="${ind.nombre}">
+              <img src="../../assets/images/general/img2.webp" alt="${ind.nombre}">
+            </div>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
+          </div>
+        </div>`
+      ).join('');
+
+      initCarousels();
+    } catch (e) { /* fallo silencioso — contenido estático queda intacto */ }
+  })();
 </script>
 </body>
 </html>
