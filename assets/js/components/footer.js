@@ -88,8 +88,39 @@ class FooterComponent {
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => FooterComponent.init());
-} else {
+function footerInit() {
   FooterComponent.init();
+  fetch('/api/contenido.php?clave=contacto').then(r => r.json()).then(d => {
+    if (!d || typeof d !== 'object') return;
+    const footer = document.getElementById('footer');
+    if (!footer) return;
+    if (d.email) {
+      const el = footer.querySelector('.footer-action-link:not(.footer-action-link--wa)');
+      if (el) { el.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(d.email); el.childNodes[el.childNodes.length - 1].textContent = d.email; }
+    }
+    if (d.whatsappNum || d.whatsapp) {
+      const el = footer.querySelector('.footer-action-link--wa');
+      if (el) {
+        if (d.whatsappNum) el.href = d.whatsappNum;
+        if (d.whatsapp) el.childNodes[el.childNodes.length - 1].textContent = d.whatsapp;
+      }
+    }
+    if (d.direccion) {
+      const el = footer.querySelector('.footer-location p');
+      if (el) el.innerHTML = d.direccion.replace(/\n/g, '<br>');
+    }
+    if (d.social && typeof d.social === 'object') {
+      ['facebook','instagram','linkedin','youtube'].forEach(net => {
+        if (!d.social[net]) return;
+        const el = footer.querySelector(`.footer-social-icon[aria-label="${net.charAt(0).toUpperCase()+net.slice(1)}"]`);
+        if (el) el.href = d.social[net];
+      });
+    }
+  }).catch(() => {});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', footerInit);
+} else {
+  footerInit();
 }

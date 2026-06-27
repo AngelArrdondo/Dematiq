@@ -85,6 +85,37 @@
   <script src="../../assets/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/components/header.js"></script>
   <script src="../../assets/js/components/footer.js"></script>
-  <script src="../../assets/js/components/solucion-selector.js"></script>
+  <script>
+  (async function() {
+    try {
+      const data = await fetch('/api/contenido.php?clave=macrobot').then(r => r.json());
+      if (!data || !Array.isArray(data.tabs) || !data.tabs.length) return;
+      if (data.titulo) {
+        const h1 = document.querySelector('.page-hero h1');
+        if (h1) h1.textContent = data.titulo;
+        const head = document.querySelector('.svc-optionlist-head');
+        if (head) head.textContent = data.titulo;
+      }
+      const buttons = document.querySelectorAll('.svc-option');
+      data.tabs.forEach((tab, i) => {
+        const btn = buttons[i];
+        if (!btn) return;
+        if (tab.nombre) {
+          btn.dataset.title = tab.nombre;
+          const nm = btn.querySelector('.svc-option-name');
+          if (nm) nm.textContent = tab.nombre;
+        }
+        if (tab.images) {
+          if (tab.images[0]) btn.dataset.img = tab.images[0];
+          if (tab.images[1]) btn.dataset.img2 = tab.images[1];
+        }
+      });
+    } catch {}
+  })().finally(() => {
+    const s = document.createElement('script');
+    s.src = '../../assets/js/components/solucion-selector.js';
+    document.body.appendChild(s);
+  });
+  </script>
 </body>
 </html>
