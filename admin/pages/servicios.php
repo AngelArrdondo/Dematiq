@@ -290,6 +290,11 @@ try {
               <input type="text" value="${esc(s.nombre)}" placeholder="Programación de PLC"
                 oninput="servicios[${i}].nombre=this.value;const el=document.getElementById('itemTitle${i}');el.textContent=this.value||'Nuevo servicio';el.className='slide-header-title'+(this.value?'':' empty')">
             </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <textarea rows="4" placeholder="Descripción del servicio…"
+                oninput="servicios[${i}].desc=this.value" style="width:100%;resize:vertical">${esc(s.desc||'')}</textarea>
+            </div>
           </div>
         </div>`;
       c.appendChild(div);

@@ -250,7 +250,7 @@ try {
     currentData = {
       titulo:    raw.titulo    || '',
       subtitulo: raw.subtitulo || '',
-      tabs:      (raw.tabs     || []).map(t => ({ nombre: t.nombre || '', images: (t.images || []).slice() }))
+      tabs:      (raw.tabs     || []).map(t => ({ nombre: t.nombre || '', desc: t.desc || '', images: (t.images || []).slice() }))
     };
     document.getElementById('fieldTitulo').value    = currentData.titulo;
     document.getElementById('fieldSubtitulo').value = currentData.subtitulo;
@@ -299,6 +299,11 @@ try {
             <label>Nombre del tab</label>
             <input type="text" value="${esc(tab.nombre)}" placeholder="Ej: Máquinas Automáticas"
               oninput="currentData.tabs[${ti}].nombre=this.value;const el=document.getElementById('tabTitle_${ti}');el.textContent=this.value||'Nuevo tab';el.className='tab-header-title'+(this.value?'':' empty')">
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Descripción</label>
+            <textarea rows="3" placeholder="Descripción del tab…"
+              oninput="currentData.tabs[${ti}].desc=this.value" style="width:100%;resize:vertical">${esc(tab.desc||'')}</textarea>
           </div>
           <label style="font-size:.8rem;font-weight:600;color:var(--text-lt)">Imágenes</label>
           <div class="img-list" id="imgList_${ti}">${imgsHTML}</div>

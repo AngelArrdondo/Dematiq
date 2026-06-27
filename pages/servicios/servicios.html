@@ -124,7 +124,7 @@
           btn.dataset.title = s.nombre || '';
           btn.dataset.img   = s.image ? ap(s.image) : '';
           btn.dataset.img2  = imgs2[i] || (s.image ? ap(s.image) : '');
-          btn.dataset.desc  = descs[i] || '';
+          btn.dataset.desc  = s.desc || descs[i] || '';
           btn.innerHTML = `<span class="svc-option-name">${s.nombre || ''}</span>`;
           if (sticky) sticky.appendChild(btn);
         });

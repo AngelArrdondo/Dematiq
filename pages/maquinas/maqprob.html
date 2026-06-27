@@ -120,7 +120,7 @@
         btn.dataset.title = tab.nombre || '';
         btn.dataset.img   = ap(tab.images && tab.images[0]);
         btn.dataset.img2  = ap(tab.images && tab.images[1]) || ap(tab.images && tab.images[0]);
-        btn.dataset.desc  = descs[i] || '';
+        btn.dataset.desc  = tab.desc || descs[i] || '';
         btn.innerHTML = `<span class="svc-option-name">${tab.nombre || ''}</span>`;
         if (sticky) sticky.appendChild(btn);
       });

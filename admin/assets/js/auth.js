@@ -63,16 +63,16 @@ const DEFAULT_CONTENT = {
     { id: 'aeroespacial',     nombre: 'Aeroespacial',            descripcion: 'Desarrollamos soluciones de automatización y control de calidad para la producción de componentes aeroespaciales.' }
   ],
   servicios: [
-    { id: 'plc',           nombre: 'Programación de PLC',                    image: 'assets/images/general/img1.webp' },
-    { id: 'hmi',           nombre: 'Programación de HMI, SCADA',             image: 'assets/images/general/img2.webp' },
-    { id: 'vision',        nombre: 'Programación de Sistemas de Visión',      image: 'assets/images/general/img3.webp' },
-    { id: 'servo',         nombre: 'Programación de Servomotores',            image: 'assets/images/general/img1.webp' },
-    { id: 'diagramas',     nombre: 'Diseño de Diagramas Eléctricos',          image: 'assets/images/general/img2.webp' },
-    { id: 'tableros',      nombre: 'Diseño de Tableros de Control',           image: 'assets/images/general/img3.webp' },
-    { id: 'modernizacion', nombre: 'Modernización de Maquinaria',             image: 'assets/images/general/img1.webp' },
-    { id: 'instalaciones', nombre: 'Servicio de Instalaciones Eléctricas',    image: 'assets/images/general/img2.webp' },
-    { id: 'ingenieria',    nombre: 'Ingeniería Básica y de Detalle',          image: 'assets/images/general/img3.webp' },
-    { id: 'variadores',    nombre: 'Programación de Variadores de Frecuencia',image: 'assets/images/general/img1.webp' }
+    { id: 'plc',           nombre: 'Programación de PLC',                    image: 'assets/images/general/img1.webp', desc: 'Automatización de procesos y líneas de producción mediante lógica de control robusta. Optimizamos secuencias complejas, garantizamos la continuidad operativa y facilitamos diagnósticos rápidos para minimizar los tiempos muertos en planta.' },
+    { id: 'hmi',           nombre: 'Programación de HMI, SCADA',             image: 'assets/images/general/img2.webp', desc: 'Desarrollo de interfaces pantalla-operador intuitivas y ergonómicas para el monitoreo en tiempo real, el control seguro de las variables del proceso y la gestión de alarmas. Se complementa con sistemas SCADA que centralizan la supervisión y adquisición de datos de toda la planta.' },
+    { id: 'vision',        nombre: 'Sistemas de Visión',                     image: 'assets/images/general/img3.webp', desc: 'Inspección óptica automatizada para control de calidad, guiado de robots y trazabilidad. Detectamos defectos, verificamos ensambles y leemos códigos a alta velocidad, eliminando el error humano en la línea de producción.' },
+    { id: 'servo',         nombre: 'Programación de Servomotores',            image: 'assets/images/general/img1.webp', desc: 'Control de movimiento de alta precisión para perfiles de velocidad, aceleración y posicionamiento dinámico. Garantizamos la exactitud requerida en aplicaciones críticas de empaque, corte y manipulación de productos.' },
+    { id: 'diagramas',     nombre: 'Diseño de Diagramas Eléctricos',          image: 'assets/images/general/img2.webp', desc: 'Elaboración de planos y esquemas de conexiones detallados bajo normativas internacionales. Aseguramos la correcta interconexión de componentes, facilitando el montaje técnico, el mantenimiento preventivo y futuras expansiones.' },
+    { id: 'tableros',      nombre: 'Diseño de Tableros de Control',           image: 'assets/images/general/img3.webp', desc: 'Ingeniería, distribución y ensamble de gabinetes de control y fuerza. Calculamos protecciones y sistemas de gestión térmica que garantizan un entorno seguro, ordenado y con la ventilación adecuada para proteger los componentes.' },
+    { id: 'modernizacion', nombre: 'Modernización de Maquinaria',             image: 'assets/images/general/img1.webp', desc: 'Actualización tecnológica de maquinaria obsoleta o descontinuada. Reemplazamos hardware antiguo por sistemas modernos de control, incrementando la productividad, mejorando la seguridad y restituyendo la disponibilidad de refacciones.' },
+    { id: 'instalaciones', nombre: 'Instalaciones Eléctricas',                image: 'assets/images/general/img2.webp', desc: 'Montajes eléctricos industriales, canalizaciones pesadas y cableado de fuerza o control. Ejecutamos proyectos bajo estrictas normas de seguridad, garantizando inmunidad al ruido electromagnético e integridad en las señales de datos.' },
+    { id: 'ingenieria',    nombre: 'Ingeniería Básica y de Detalle',          image: 'assets/images/general/img3.webp', desc: 'Desarrollo técnico integral de proyectos desde la etapa conceptual hasta la ejecución. Generamos diagramas de flujo, listas de materiales y memorias de cálculo que aseguran la viabilidad financiera y operativa del proyecto.' },
+    { id: 'variadores',    nombre: 'Variadores de Frecuencia',                image: 'assets/images/general/img1.webp', desc: 'Control preciso de velocidad y torque en motores eléctricos industriales. Optimizamos los procesos de arranque y paro, reducimos el estrés mecánico de los equipos y logramos un ahorro significativo en el consumo de energía.' }
   ],
   proyectos: [
     { nombre: 'Proyecto 1',  desc: 'Sistema de ensamble automatizado.',                                                                                                      img: 'assets/images/general/cart.webp',        href: 'pages/ensamble/ensamble.html' },
@@ -87,53 +87,53 @@ const DEFAULT_CONTENT = {
     { nombre: 'Proyecto 10', desc: 'Equipo de manejo y prueba de componentes electrónicos en ambiente controlado.',                                                          img: 'assets/images/general/semi.webp',        href: 'pages/corporativo/soluciones.html' }
   ],
   ensamble:   { titulo: 'Ensamble', subtitulo: 'Soluciones de Ensamble', tabs: [
-    { nombre: 'Máquinas Automáticas',     images: ['assets/images/general/ejem2.webp'] },
-    { nombre: 'Máquinas Semiautomáticas', images: ['assets/images/general/en1.webp']   },
-    { nombre: 'Máquinas Manuales',        images: ['assets/images/general/img3.webp']  }
+    { nombre: 'Máquinas Automáticas',     desc: 'Unión y montaje autónomo de componentes sin intervención humana directa. Optimizan los tiempos de ciclo, garantizan una repetibilidad perfecta y elevan la productividad en líneas de producción masiva.', images: ['assets/images/products/ejem2.webp', 'assets/images/general/img1.webp'] },
+    { nombre: 'Máquinas Semiautomáticas', desc: 'Estaciones de trabajo que combinan la flexibilidad de la carga manual del operador con el accionamiento automatizado y preciso de prensas o atornilladores. Maximizan la seguridad y controlan las variables críticas.', images: ['assets/images/products/en1.webp', 'assets/images/general/img1.webp'] },
+    { nombre: 'Máquinas Manuales',        desc: 'Dispositivos de sujeción y estaciones ergonómicas operadas por personal técnico. Ofrecen adaptabilidad total para cambios rápidos de modelo, ensamble de alta complejidad o producciones de bajo volumen y prototipos.', images: ['assets/images/general/img3.webp', 'assets/images/general/img1.webp'] }
   ]},
   maqcontrol: { titulo: 'Máquinas de Control de Torque', subtitulo: 'Soluciones de Torque', tabs: [
-    { nombre: 'Máquinas de Angulo',        images: ['assets/images/general/t1.webp', 'assets/images/general/t2.webp'] },
-    { nombre: 'Máquinas Numero de vuelta', images: ['assets/images/general/img2.webp'] }
+    { nombre: 'Máquinas de Ángulo',        desc: 'Control y verificación del ángulo de apriete en tornillería crítica. Garantizan el par exacto para cada punto de ensamble, registrando cada resultado para trazabilidad total del proceso.', images: ['assets/images/general/t1.webp', 'assets/images/general/t2.webp'] },
+    { nombre: 'Máquinas Número de Vuelta', desc: 'Verificación del número de vueltas aplicadas en operaciones de roscado y apriete. Aseguran la correcta inserción de sujetadores y detectan anomalías en el torque de forma automática.', images: ['assets/images/general/img2.webp'] }
   ]},
   maqprob:    { titulo: 'Máquinas Probadoras de Fuga', subtitulo: 'Soluciones de Probadoras de Fuga', tabs: [
-    { nombre: 'Fuga de gas',           images: ['assets/images/general/fuga.webp'] },
-    { nombre: 'Fuga de helio',         images: ['assets/images/general/img2.webp'] },
-    { nombre: 'Fuga de Sniffer helio', images: ['assets/images/general/img3.webp'] },
-    { nombre: 'Burbuja',               images: ['assets/images/general/img1.webp'] },
-    { nombre: 'Flujo',                 images: ['assets/images/general/img2.webp'] },
-    { nombre: 'Caida de vacio',        images: ['assets/images/general/img3.webp'] },
-    { nombre: 'Caida de Presion',      images: ['assets/images/general/img1.webp'] }
+    { nombre: 'Fuga de gas',           desc: 'Detección de fugas mediante presurización con aire o nitrógeno. Ideal para componentes que requieren hermeticidad en condiciones de presión estándar.', images: ['assets/images/general/fuga.webp'] },
+    { nombre: 'Fuga de helio',         desc: 'Prueba de hermeticidad de alta sensibilidad usando helio como gas trazador. Detecta fugas mínimas en componentes críticos de la industria automotriz y aeroespacial.', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Fuga de Sniffer helio', desc: 'Localización puntual de fugas mediante rastreo superficial con detector portátil de helio. Permite identificar con precisión el origen de la fuga en piezas complejas.', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Burbuja',               desc: 'Método visual de detección de fugas por inmersión en agua con sobrepresión interna. Solución económica y confiable para piezas de geometría variable.', images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Flujo',                 desc: 'Medición del caudal de gas que atraviesa un componente para verificar restricciones, obstrucciones o holguras fuera de tolerancia en orificios y conductos.', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Caída de vacío',        desc: 'Evaluación de hermeticidad mediante la aplicación de vacío y el monitoreo de su estabilidad en el tiempo. Adecuada para piezas sensibles a la presión positiva.', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Caída de presión',      desc: 'Prueba de estanqueidad por monitoreo de la pérdida de presión en cavidades internas. Método versátil para una amplia gama de productos industriales.', images: ['assets/images/general/img1.webp'] }
   ]},
   maqinspe:   { titulo: 'Máquinas de Inspección', subtitulo: 'Soluciones de Maquinas de Inspeccion', tabs: [
-    { nombre: 'Inspeccion 3d',             images: ['assets/images/general/inspeccion.webp'] },
-    { nombre: 'Codigo de barra 2d-3d',     images: ['assets/images/general/img2.webp'] },
-    { nombre: 'Geometria textura-control', images: ['assets/images/general/img3.webp'] },
-    { nombre: 'Espesor Area-Altura',       images: ['assets/images/general/img1.webp'] },
-    { nombre: 'Acabado-Presencia-Marcas',  images: ['assets/images/general/img2.webp'] }
+    { nombre: 'Inspección 3D',              desc: 'Medición tridimensional de geometrías complejas mediante sensores láser o luz estructurada. Verifica dimensiones, planitud y perfil con tolerancias de micras sin contacto.', images: ['assets/images/general/inspeccion.webp'] },
+    { nombre: 'Código de barras 2D / 3D',   desc: 'Lectura y verificación de códigos DataMatrix, QR y de barras en movimiento o en estación. Garantiza la trazabilidad completa de cada pieza a lo largo de la línea.', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Geometría / Textura',        desc: 'Análisis de superficie para detección de defectos de textura, rayones, porosidad y variaciones de forma. Combina visión artificial con algoritmos de procesamiento de imagen.', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Espesor / Área / Altura',    desc: 'Medición precisa de espesores de pared, áreas de sellado y alturas de elementos en piezas ensambladas. Detecta faltantes y variaciones dimensionales fuera de especificación.', images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Acabado / Presencia / Marcas', desc: 'Verificación de acabado superficial, presencia de componentes ensamblados y correcta aplicación de marcas o etiquetas. Reduce rechazos en línea y asegura la conformidad visual del producto.', images: ['assets/images/general/img2.webp'] }
   ]},
   maclim:     { titulo: 'Máquinas de Limpieza', subtitulo: 'Soluciones de Maquinas de Limpieza', tabs: [
-    { nombre: 'Aire de alta presion',   images: ['assets/images/general/limpieza.webp'] },
-    { nombre: 'Inmersion',              images: ['assets/images/general/img2.webp'] },
-    { nombre: 'Aspersion alta Presion', images: ['assets/images/general/img3.webp'] },
-    { nombre: 'Ultrasonido',            images: ['assets/images/general/img1.webp'] }
+    { nombre: 'Aire de alta presión',   desc: 'Remoción de partículas, rebabas y contaminantes mediante chorros de aire comprimido a alta presión. Proceso seco y rápido, ideal para piezas mecanizadas antes del ensamble.', images: ['assets/images/general/limpieza.webp'] },
+    { nombre: 'Inmersión',              desc: 'Limpieza profunda de piezas por inmersión en soluciones acuosas con agentes desengrasantes. Elimina aceites de corte, emulsiones y residuos adheridos en geometrías complejas.', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Aspersión alta presión', desc: 'Remoción de contaminantes mediante boquillas de alta presión que proyectan solución limpiadora sobre todas las superficies. Combina acción mecánica y química para máxima eficacia.', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Ultrasonido',            desc: 'Limpieza por cavitación ultrasónica que alcanza zonas internas y geometrías inaccesibles. Ideal para componentes de precisión que requieren limpieza sin contacto mecánico.', images: ['assets/images/general/img1.webp'] }
   ]},
   maqmar:     { titulo: 'Máquinas de Marcado', subtitulo: 'Soluciones de Maquinas de Marcado', tabs: [
-    { nombre: 'Marcado Laser',      images: ['assets/images/general/micro.webp'] },
-    { nombre: 'Micropercusion',     images: ['assets/images/general/img1.webp'] },
-    { nombre: 'Inyeccion de tinta', images: ['assets/images/general/img2.webp'] },
-    { nombre: 'Troquel',            images: ['assets/images/general/img3.webp'] }
+    { nombre: 'Marcado Láser',      desc: 'Grabado permanente de códigos, logotipos y textos mediante haz láser de alta precisión. Sin consumibles, alta velocidad y contraste duradero en metales, plásticos y otros materiales.', images: ['assets/images/general/micro.webp'] },
+    { nombre: 'Micropercusión',     desc: 'Marcado por impacto de aguja en movimiento controlado por CNC. Genera marcas profundas y legibles en todo tipo de metales, resistentes al calor, abrasión y tratamientos superficiales.', images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Inyección de tinta', desc: 'Impresión de códigos y datos variables a alta velocidad mediante goteo controlado. Adecuado para superficies porosas y no planas donde otros métodos no son aplicables.', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Troquel',            desc: 'Marcado por presión con matrices intercambiables. Solución económica y robusta para series de producción donde se requiere marca en relieve o bajo relieve en materiales blandos.', images: ['assets/images/general/img3.webp'] }
   ]},
   macrobot:   { titulo: 'Celdas Robóticas', subtitulo: 'Soluciones en Celdas Robóticas', tabs: [
-    { nombre: 'Celdas de Paletizado',          images: ['assets/images/general/celdas.webp'] },
-    { nombre: 'Celdas de Alimentacion',        images: ['assets/images/general/img2.webp'] },
-    { nombre: 'Celdas de sistema de vision',   images: ['assets/images/general/img3.webp'] },
-    { nombre: 'Celdas de Soldadura',           images: ['assets/images/general/img1.webp'] },
-    { nombre: 'Corte laser de pieza metalica', images: ['assets/images/general/img2.webp'] }
+    { nombre: 'Celdas de Paletizado',          desc: 'Automatización del apilado y organización de productos en tarimas mediante robots articulados. Optimizan el flujo al final de línea, reducen lesiones por esfuerzo y aumentan la cadencia de producción.', images: ['assets/images/general/celdas.webp'] },
+    { nombre: 'Celdas de Alimentación',        desc: 'Sistemas de suministro automático de piezas a máquinas o líneas de ensamble. Incluyen tolvas vibratorias, bandas indexadas y robots de pick & place para flujo continuo sin intervención humana.', images: ['assets/images/general/img2.webp'] },
+    { nombre: 'Celdas con sistema de visión',  desc: 'Robots guiados por cámaras que localizan, orientan y manipulan piezas sin posicionamiento rígido previo. Adaptables a variaciones de forma y posición en tiempo real.', images: ['assets/images/general/img3.webp'] },
+    { nombre: 'Celdas de Soldadura',           desc: 'Soldadura MIG, TIG o láser automatizada con trayectorias programadas y repetibilidad milimétrica. Mejoran la calidad del cordón, eliminan exposición operativa y aumentan la productividad.', images: ['assets/images/general/img1.webp'] },
+    { nombre: 'Corte láser de pieza metálica', desc: 'Corte de alta precisión en láminas y perfiles metálicos mediante láser de fibra o CO₂. Bordes limpios, mínima zona afectada por calor y versatilidad total en geometrías 2D y 3D.', images: ['assets/images/general/img2.webp'] }
   ]},
   maqindus:   { titulo: 'Maquinados Industriales', subtitulo: 'Soluciones de Manufactura Maquinados Industriales', tabs: [
-    { nombre: 'Diseño 2d y 3d dispositivos',              images: ['assets/images/general/maq.webp', 'assets/images/general/maq2.webp'] },
-    { nombre: 'Diseño y fabricación de piezas mecanicas', images: ['assets/images/general/maq.webp', 'assets/images/general/maq2.webp'] },
-    { nombre: 'Diseño y fabricación de Fixture',          images: ['assets/images/general/img3.webp'] }
+    { nombre: 'Diseño 2D y 3D de Dispositivos',    desc: 'Modelado tridimensional y desarrollo de planos técnicos para herramentales y mecanismos. Aseguramos la viabilidad funcional, la ergonomía y la precisión geométrica de cada dispositivo antes de iniciar su fabricación.', images: ['assets/images/products/maq.webp', 'assets/images/general/img1.webp'] },
+    { nombre: 'Fabricación de Piezas Mecánicas',   desc: 'Manufactura de componentes de precisión mediante torneado, fresado y maquinado CNC en diversos materiales. Garantizamos el cumplimiento estricto de tolerancias dimensionales y los acabados superficiales requeridos.', images: ['assets/images/products/maq2.webp', 'assets/images/general/img1.webp'] },
+    { nombre: 'Diseño y Fabricación de Fixture',   desc: 'Creación de dispositivos de sujeción a la medida para optimizar procesos de ensamble, soldadura o inspección. Aseguran la repetibilidad operativa, mantienen la alineación exacta y reducen los tiempos de ciclo.', images: ['assets/images/products/maq3.webp', 'assets/images/general/img1.webp'] }
   ]}
 };
 
