@@ -218,14 +218,14 @@ try {
   AdminSidebar.init('maquinas', '../', '../../');
 
   const PAGE_URLS = {
-    ensamble:   '../../pages/ensamble/ensamble.html',
-    maqcontrol: '../../pages/maquinas/maqcontrol.html',
-    maqprob:    '../../pages/maquinas/maqprob.html',
-    maqinspe:   '../../pages/maquinas/maqinspe.html',
-    maclim:     '../../pages/maquinas/maclim.html',
-    maqmar:     '../../pages/maquinas/maqmar.html',
-    macrobot:   '../../pages/maquinas/macrobot.html',
-    maqindus:   '../../pages/manufactura/maqindus.html'
+    ensamble:   '/pages/ensamble/ensamble.html',
+    maqcontrol: '/pages/maquinas/maqcontrol.html',
+    maqprob:    '/pages/maquinas/maqprob.html',
+    maqinspe:   '/pages/maquinas/maqinspe.html',
+    maclim:     '/pages/maquinas/maclim.html',
+    maqmar:     '/pages/maquinas/maqmar.html',
+    macrobot:   '/pages/maquinas/macrobot.html',
+    maqindus:   '/pages/manufactura/maqindus.html'
   };
 
   /* ── User menu ─────────────────────────────────────── */
