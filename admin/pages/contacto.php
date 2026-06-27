@@ -315,6 +315,59 @@ try {
 
     @media (max-width: 480px) { .social-grid { grid-template-columns: 1fr; } }
 
+    /* Extra network icon colors */
+    .social-ico.tw { background: #000; color: #fff; }
+    .social-ico.tt { background: #010101; color: #fff; }
+    .social-ico.pt { background: #e60023; color: #fff; }
+    .social-ico.th { background: #000; color: #fff; }
+    .social-ico.sc { background: #fffc00; color: #000; }
+
+    /* ── Remove button on social card ─────────── */
+    .social-rm {
+      margin-left: auto; width: 26px; height: 26px; border-radius: 6px;
+      border: none; background: #fee2e2; color: #dc3545; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .14s; flex-shrink: 0;
+    }
+    .social-rm:hover { background: #dc3545; color: #fff; }
+
+    /* ── Add network button ────────────────────── */
+    .social-add-btn {
+      width: 100%; padding: 11px; border: 1.5px dashed #c8d8f0;
+      border-radius: 10px; background: none; font-size: .82rem;
+      color: var(--text-lt); cursor: pointer; transition: all .14s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 12px; -webkit-tap-highlight-color: transparent;
+    }
+    .social-add-btn:hover { border-color: var(--brand-light); color: var(--brand-mid); background: var(--brand-xlight); }
+
+    /* ── Picker ────────────────────────────────── */
+    .social-picker-wrap { position: relative; }
+    .social-picker {
+      display: none; position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+      background: #fff; border: 1.5px solid #dde5f5; border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(13,33,85,.16); z-index: 100; padding: 14px;
+    }
+    .social-picker.open { display: block; }
+    .social-picker-title {
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text-lt); margin-bottom: 10px;
+    }
+    .social-picker-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px;
+    }
+    .social-picker-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 10px 6px; border-radius: 10px; border: 1.5px solid #dde5f5;
+      background: #f8faff; cursor: pointer; transition: all .14s;
+      -webkit-tap-highlight-color: transparent;
+      font-size: .72rem; font-weight: 600; color: var(--brand-dark); text-align: center;
+    }
+    .social-picker-item:hover:not(.added) { border-color: var(--brand-mid); background: var(--brand-xlight); }
+    .social-picker-item.added { opacity: .38; cursor: default; pointer-events: none; }
+    .social-picker-item .social-ico { width: 32px; height: 32px; border-radius: 8px; }
+    .social-picker-item .social-ico svg { width: 18px; height: 18px; }
+
     /* ── Save bar (branded) ──────────────────── */
     .ct-save-bar {
       display: flex; align-items: center; justify-content: flex-end;
@@ -580,56 +633,16 @@ try {
         </div>
       </div>
       <div class="ct-body">
-        <div class="social-grid">
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico fb">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-              </div>
-              <span class="social-name">Facebook</span>
-            </div>
-            <input type="url" id="social-fb"
-              value="<?= htmlspecialchars($d['social']['facebook'] ?? '') ?>"
-              placeholder="https://facebook.com/dematiq">
+        <div class="social-grid" id="social-grid"></div>
+        <div class="social-picker-wrap" id="social-picker-wrap">
+          <button type="button" class="social-add-btn" onclick="toggleSocialPicker(event)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar red social
+          </button>
+          <div class="social-picker" id="social-picker">
+            <div class="social-picker-title">Elige una red social</div>
+            <div class="social-picker-grid" id="social-picker-grid"></div>
           </div>
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico ig">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-              </div>
-              <span class="social-name">Instagram</span>
-            </div>
-            <input type="url" id="social-ig"
-              value="<?= htmlspecialchars($d['social']['instagram'] ?? '') ?>"
-              placeholder="https://instagram.com/dematiq">
-          </div>
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico li">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-              </div>
-              <span class="social-name">LinkedIn</span>
-            </div>
-            <input type="url" id="social-li"
-              value="<?= htmlspecialchars($d['social']['linkedin'] ?? '') ?>"
-              placeholder="https://linkedin.com/company/dematiq">
-          </div>
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico yt">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="#fff"/></svg>
-              </div>
-              <span class="social-name">YouTube</span>
-            </div>
-            <input type="url" id="social-yt"
-              value="<?= htmlspecialchars($d['social']['youtube'] ?? '') ?>"
-              placeholder="https://youtube.com/@dematiq">
-          </div>
-
         </div>
       </div>
     </div>
@@ -957,21 +970,125 @@ async function saveContacto() {
       horario:     getHorario(),
       direccion:   document.getElementById('direccion').value.trim(),
       mapCoords:   document.getElementById('map-coords').value.trim(),
-      social: {
-        facebook:  document.getElementById('social-fb').value.trim(),
-        instagram: document.getElementById('social-ig').value.trim(),
-        linkedin:  document.getElementById('social-li').value.trim(),
-        youtube:   document.getElementById('social-yt').value.trim()
-      }
+      social: getSocials()
     });
     if (res && res.ok) showToast('Cambios guardados correctamente');
     else showToast(res?.error||'Error al guardar','error');
   } catch { showToast('Error de conexión','error'); }
 }
 
+/* ══ SOCIAL NETWORKS ════════════════════════════ */
+const NETWORKS = [
+  { id:'facebook',  name:'Facebook',   cls:'fb', placeholder:'https://facebook.com/dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>` },
+  { id:'instagram', name:'Instagram',  cls:'ig', placeholder:'https://instagram.com/dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>` },
+  { id:'linkedin',  name:'LinkedIn',   cls:'li', placeholder:'https://linkedin.com/company/dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>` },
+  { id:'youtube',   name:'YouTube',    cls:'yt', placeholder:'https://youtube.com/@dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="#fff"/></svg>` },
+  { id:'twitter',   name:'X / Twitter',cls:'tw', placeholder:'https://x.com/dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.737-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` },
+  { id:'tiktok',    name:'TikTok',     cls:'tt', placeholder:'https://tiktok.com/@dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 106.34 6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>` },
+  { id:'pinterest', name:'Pinterest',  cls:'pt', placeholder:'https://pinterest.com/dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.099.12.113.225.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>` },
+  { id:'threads',   name:'Threads',    cls:'th', placeholder:'https://threads.net/@dematiq',
+    icon:`<svg viewBox="0 0 192 192" fill="currentColor"><path d="M141.537 88.988a66.667 66.667 0 00-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.231c8.248.053 14.474 2.452 18.502 7.13 2.932 3.405 4.893 8.11 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.318-11.319 11.255-24.94 16.12-45.508 16.274-22.739-.169-39.951-7.418-51.15-21.551C27.36 139.343 21.96 120.712 21.768 96c.192-24.712 5.592-43.343 16.033-55.369C48.999 26.418 66.211 19.169 88.95 19c21.92.17 38.978 7.452 50.7 21.645 5.765 6.974 10.11 15.808 12.964 26.07l16.239-4.285c-3.5-12.93-9.044-24.116-16.609-33.333C136.637 11.816 115.498 2.295 89.04 2.1h-.1C62.578 2.295 41.205 11.848 26.891 29.2 14.3 44.438 7.694 65.796 7.5 95.976v.05c.194 30.18 6.8 51.538 19.391 66.774C41.205 180.152 62.578 189.705 89 189.9h.1c23.433-.16 39.912-6.53 53.5-20.045 17.679-17.579 17.154-39.663 11.337-53.12-4.216-9.822-12.208-17.799-24.4-23.747zM96.165 138.3c-10.39.583-21.208-4.074-21.727-14.053-.39-7.348 5.241-15.53 22.308-16.535 1.953-.112 3.868-.168 5.745-.168 6.097 0 11.808.606 17.05 1.778-1.939 24.184-12.834 28.394-23.376 28.978z"/></svg>` },
+  { id:'snapchat',  name:'Snapchat',   cls:'sc', placeholder:'https://snapchat.com/add/dematiq',
+    icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.166.001C10.009.001 4.5.56 4.5 6.899V9H3l-.5 2.5h2C4.18 13.274 3.5 14.5 2 15c0 0 .5 2 4 2 0 0 .9 2 6 2s6-2 6-2c3.5 0 4-2 4-2-1.5-.5-2.18-1.726-2.5-3.5h2L21 9h-1.5V6.899C19.5.56 14.323.001 12.166.001z"/></svg>` },
+];
+
+let socialItems = [];
+
+function getNetwork(id) { return NETWORKS.find(n => n.id === id); }
+
+function renderSocialGrid() {
+  const grid = document.getElementById('social-grid');
+  grid.innerHTML = '';
+  socialItems.forEach((item, idx) => {
+    const net = getNetwork(item.id);
+    if (!net) return;
+    const field = document.createElement('div');
+    field.className = 'social-field';
+    field.innerHTML = `
+      <div class="social-field-head">
+        <div class="social-ico ${net.cls}">${net.icon}</div>
+        <span class="social-name">${net.name}</span>
+        <button type="button" class="social-rm" title="Quitar">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <input type="url" data-social-id="${net.id}" value="${item.url}" placeholder="${net.placeholder}">
+    `;
+    field.querySelector('.social-rm').addEventListener('click', () => removeSocial(idx));
+    grid.appendChild(field);
+  });
+  updatePickerState();
+}
+
+function removeSocial(idx) {
+  socialItems.splice(idx, 1);
+  renderSocialGrid();
+}
+
+function toggleSocialPicker(e) {
+  e.stopPropagation();
+  document.getElementById('social-picker').classList.toggle('open');
+}
+
+function addSocial(id) {
+  if (socialItems.find(i => i.id === id)) return;
+  socialItems.push({ id, url: '' });
+  document.getElementById('social-picker').classList.remove('open');
+  renderSocialGrid();
+}
+
+function renderPickerGrid() {
+  const pg = document.getElementById('social-picker-grid');
+  pg.innerHTML = '';
+  NETWORKS.forEach(net => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'social-picker-item';
+    btn.dataset.id = net.id;
+    btn.onclick = () => addSocial(net.id);
+    btn.innerHTML = `<div class="social-ico ${net.cls}">${net.icon}</div><span>${net.name}</span>`;
+    pg.appendChild(btn);
+  });
+}
+
+function updatePickerState() {
+  const added = socialItems.map(i => i.id);
+  document.querySelectorAll('.social-picker-item').forEach(btn => {
+    btn.classList.toggle('added', added.includes(btn.dataset.id));
+  });
+}
+
+function initSocials() {
+  const s = _D.social || {};
+  const keyMap = ['facebook','instagram','linkedin','youtube','twitter','tiktok','pinterest','threads','snapchat'];
+  socialItems = keyMap.filter(k => s[k]).map(k => ({ id: k, url: s[k] }));
+  renderPickerGrid();
+  renderSocialGrid();
+}
+
+function getSocials() {
+  const result = {};
+  document.querySelectorAll('#social-grid input[data-social-id]').forEach(inp => {
+    result[inp.dataset.socialId] = inp.value.trim();
+  });
+  return result;
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('social-picker').classList.remove('open');
+});
+
 /* ── Init ────────────────────────────────────── */
 initWA();
 initSchedule();
+initSocials();
 document.addEventListener('DOMContentLoaded', initMap);
 </script>
 

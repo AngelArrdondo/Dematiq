@@ -454,9 +454,14 @@
 
 /* Responsive */
 @media (max-width: 480px) {
-  .soluciones-grid.soluciones-grid--featured { grid-template-columns: 1fr; }
+  .soluciones-grid.soluciones-grid--featured { grid-template-columns: repeat(2, 1fr); }
   .soluciones-grid.soluciones-grid--machines { grid-template-columns: repeat(2, 1fr); }
   #soluciones .solucion-icon-card { min-height: 150px; }
+
+  /* Primera card del featured ocupa todo el ancho */
+  .soluciones-grid--featured .custom-card-link:first-child {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ── Tablet ── */
