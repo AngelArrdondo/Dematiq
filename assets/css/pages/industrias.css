@@ -183,3 +183,59 @@ body {
 .ind-explorer .svc-content-wrap {
   padding: clamp(36px, 5vw, 64px) clamp(20px, 4vw, 56px) clamp(56px, 8vw, 110px);
 }
+
+/* ── Pills mobile ── */
+.ind-pills-wrap {
+  display: none;
+  background: #000028;
+  padding: 12px 0 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.ind-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-right: 16px;
+}
+
+.ind-pills::-webkit-scrollbar { display: none; }
+
+.ind-pill {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+  border: 1.5px solid rgba(255,255,255,0.14);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ind-pill:active {
+  transform: scale(0.95);
+}
+
+.ind-pill.active {
+  background: rgba(0,255,185,0.12);
+  color: #00ffb9;
+  border-color: #00ffb9;
+}
+
+/* ── Responsive ── */
+@media (max-width: 880px) {
+  .ind-pills-wrap { display: block; }
+  .ind-explorer .svc-optionlist { display: none; }
+  .ind-explorer .svc-content-wrap { padding: 24px 20px 48px; }
+}
+
+@media (max-width: 480px) {
+  .info-industria h3 { font-size: 1.1rem; }
+  .info-industria .c2-track img { height: clamp(180px, 55vw, 260px); }
+}

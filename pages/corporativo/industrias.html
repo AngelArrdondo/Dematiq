@@ -23,6 +23,21 @@
 </section>
 
 <!-- ═══════════ INDUSTRIAS ═══════════ -->
+
+<!-- Pills solo visibles en mobile -->
+<div class="ind-pills-wrap">
+  <div class="ind-pills">
+    <button class="ind-pill active" onclick="mostrarIndustriaPill('automotriz', this)">Automotriz</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('farmaceutica', this)">Farmacéutica</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('alimenticia', this)">Alimenticia</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('manufactura', this)">Manufactura</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('electronica', this)">Electrónica</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('electrodomesticos', this)">Electrodomésticos</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('alimentos', this)">Alimentos y Bebidas</button>
+    <button class="ind-pill" onclick="mostrarIndustriaPill('aeroespacial', this)">Aeroespacial</button>
+  </div>
+</div>
+
 <section class="svc-explorer ind-explorer">
   <aside class="svc-optionlist">
     <div class="svc-optionlist-sticky">
@@ -148,14 +163,16 @@
   function mostrarIndustria(id, item) {
     document.querySelectorAll('.info-industria').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.svc-optionlist .svc-option').forEach(b => b.classList.remove('active'));
-
     document.getElementById(id).style.display = 'block';
     item.classList.add('active');
+  }
 
-    /* En móvil, hacer scroll suave hasta el panel de contenido */
-    if (window.innerWidth < 769) {
-      document.getElementById('infoContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  function mostrarIndustriaPill(id, pill) {
+    document.querySelectorAll('.info-industria').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.ind-pill').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).style.display = 'block';
+    pill.classList.add('active');
+    pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
 </script>
 <script>
