@@ -201,6 +201,90 @@ const CM = {
   }
 };
 
+// ── Admin Lightbox ────────────────────────────────────────────────────
+(function () {
+  const style = document.createElement('style');
+  style.textContent = `
+    .admin-lb { position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center; }
+    .admin-lb.open { display:flex; }
+    .admin-lb-bd { position:absolute;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(5px); }
+    .admin-lb-frame { position:relative;z-index:1;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center;animation:alb-in .18s ease; }
+    @keyframes alb-in { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:scale(1)} }
+    .admin-lb-img { max-width:88vw;max-height:88vh;object-fit:contain;border-radius:10px;box-shadow:0 24px 64px rgba(0,0,0,.7);display:block; }
+    .admin-lb-close { position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;background:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;color:#222;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.3);transition:background .15s,transform .15s; }
+    .admin-lb-close:hover { background:#e53;color:#fff;transform:scale(1.12); }
+    .admin-lb-caption { position:absolute;bottom:-34px;left:0;right:0;text-align:center;color:rgba(255,255,255,.7);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .img-thumb img, .slide-img-preview img, img.img-preview { cursor:zoom-in;transition:opacity .15s; }
+    .img-thumb:hover img, .slide-img-preview:hover img { opacity:.82; }
+    img.img-preview:hover { opacity:.82; }
+    .img-thumb { position:relative; }
+    .slide-img-preview { position:relative; }
+    .alb-zoom-icon { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .18s; }
+    .alb-zoom-icon svg { width:36px;height:36px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+    .img-thumb:hover .alb-zoom-icon, .slide-img-preview:hover .alb-zoom-icon { opacity:1; }
+  `;
+  document.head.appendChild(style);
+
+  const lb = document.createElement('div');
+  lb.className = 'admin-lb';
+  lb.innerHTML = `<div class="admin-lb-bd"></div><div class="admin-lb-frame"><button class="admin-lb-close" aria-label="Cerrar">&#10005;</button><img class="admin-lb-img" src="" alt=""><div class="admin-lb-caption"></div></div>`;
+  document.body.appendChild(lb);
+
+  const lbImg     = lb.querySelector('.admin-lb-img');
+  const lbCaption = lb.querySelector('.admin-lb-caption');
+
+  function open(src, caption) {
+    lbImg.src = src;
+    lbCaption.textContent = caption || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+
+  lb.querySelector('.admin-lb-bd').addEventListener('click', close);
+  lb.querySelector('.admin-lb-close').addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+  const zoomSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`;
+
+  function addHint(container) {
+    if (!container || container.querySelector('.alb-zoom-icon')) return;
+    const hint = document.createElement('div');
+    hint.className = 'alb-zoom-icon';
+    hint.innerHTML = zoomSVG;
+    container.appendChild(hint);
+  }
+
+  // Delegated click — handles dynamically rendered images
+  document.addEventListener('click', e => {
+    const img = e.target.closest('img');
+    if (!img || !img.src || img.src.startsWith('data:')) return;
+
+    const inThumb    = img.closest('.img-thumb');
+    const inSlide    = img.closest('.slide-img-preview');
+    const isGridImg  = img.classList.contains('img-preview');
+
+    if (inThumb || inSlide || isGridImg) {
+      e.preventDefault();
+      open(img.src, img.alt || img.getAttribute('title') || '');
+    }
+  });
+
+  // Delegated hover — add zoom hint icon dynamically to containers
+  document.addEventListener('mouseover', e => {
+    const thumb = e.target.closest('.img-thumb');
+    const slide = e.target.closest('.slide-img-preview');
+    if (thumb && thumb.querySelector('img')) addHint(thumb);
+    if (slide && slide.querySelector('img')) addHint(slide);
+  }, { passive: true });
+
+  // imagenes.php grid: add zoom cursor & lightbox via parent wrapper
+  document.addEventListener('mouseover', e => {
+    const img = e.target.closest('img.img-preview');
+    if (img) img.title = img.title || 'Click para ampliar';
+  }, { passive: true });
+})();
+
 // ── Toast ──────────────────────────────────────────────────────────────
 function showToast(msg, type = 'success') {
   let t = document.getElementById('admin-toast');
