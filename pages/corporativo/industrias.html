@@ -223,19 +223,19 @@
       });
 
       // Rebuild info panels
-      infoContainer.innerHTML = data.map((ind, i) =>
-        `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
+      function ap(p) { return p && !p.startsWith('/') && !p.startsWith('http') ? '/' + p : p || ''; }
+      infoContainer.innerHTML = data.map((ind, i) => {
+        const img = ap(ind.imagen) || '../../assets/images/general/img1.webp';
+        return `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
           <h3>${ind.nombre}</h3>
           <p>${ind.descripcion}</p>
           <div class="carousel2" data-idx="0">
             <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="${ind.nombre}">
-              <img src="../../assets/images/general/img2.webp" alt="${ind.nombre}">
+              <img src="${img}" alt="${ind.nombre}" onerror="this.style.display='none'">
             </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
-        </div>`
-      ).join('');
+        </div>`;
+      }).join('');
 
       initCarousels();
     } catch (e) { /* fallo silencioso — contenido estático queda intacto */ }

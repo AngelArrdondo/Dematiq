@@ -53,14 +53,14 @@ const DEFAULT_CONTENT = {
     ]
   },
   industrias: [
-    { id: 'automotriz',       nombre: 'Automotriz',              descripcion: 'Colaboramos en proyectos de automatización, control de calidad y desarrollo de maquinaria para procesos de ensamblaje y pruebas.' },
-    { id: 'farmaceutica',     nombre: 'Farmacéutica',            descripcion: 'Desarrollamos sistemas de control ambiental, monitoreo de producción y soluciones de trazabilidad para laboratorios y plantas farmacéuticas.' },
-    { id: 'alimenticia',      nombre: 'Alimenticia',             descripcion: 'Implementamos soluciones de automatización y control de calidad para la producción de alimentos y bebidas.' },
-    { id: 'manufactura',      nombre: 'Manufactura',             descripcion: 'Colaboramos en la optimización de procesos, implementación de sistemas de control y desarrollo de maquinaria especializada.' },
-    { id: 'electronica',      nombre: 'Electrónica y Eléctrica', descripcion: 'Implementamos soluciones de automatización y control de calidad para la producción de dispositivos electrónicos.' },
-    { id: 'electrodomesticos',nombre: 'Electrodomésticos',       descripcion: 'Desarrollamos soluciones de automatización y control de calidad para la producción de electrodomésticos.' },
-    { id: 'alimentos',        nombre: 'Alimentos y Bebidas',     descripcion: 'Soluciones de envasado, etiquetado y control de procesos para líneas de producción de alimentos y bebidas.' },
-    { id: 'aeroespacial',     nombre: 'Aeroespacial',            descripcion: 'Desarrollamos soluciones de automatización y control de calidad para la producción de componentes aeroespaciales.' }
+    { id: 'automotriz',       nombre: 'Automotriz',              imagen: 'assets/images/general/img1.webp', descripcion: 'Colaboramos en proyectos de automatización, control de calidad y desarrollo de maquinaria para procesos de ensamblaje y pruebas.' },
+    { id: 'farmaceutica',     nombre: 'Farmacéutica',            imagen: 'assets/images/general/img2.webp', descripcion: 'Desarrollamos sistemas de control ambiental, monitoreo de producción y soluciones de trazabilidad para laboratorios y plantas farmacéuticas.' },
+    { id: 'alimenticia',      nombre: 'Alimenticia',             imagen: 'assets/images/general/img3.webp', descripcion: 'Implementamos soluciones de automatización y control de calidad para la producción de alimentos y bebidas.' },
+    { id: 'manufactura',      nombre: 'Manufactura',             imagen: 'assets/images/general/img1.webp', descripcion: 'Colaboramos en la optimización de procesos, implementación de sistemas de control y desarrollo de maquinaria especializada.' },
+    { id: 'electronica',      nombre: 'Electrónica y Eléctrica', imagen: 'assets/images/general/img2.webp', descripcion: 'Implementamos soluciones de automatización y control de calidad para la producción de dispositivos electrónicos.' },
+    { id: 'electrodomesticos',nombre: 'Electrodomésticos',       imagen: 'assets/images/general/img3.webp', descripcion: 'Desarrollamos soluciones de automatización y control de calidad para la producción de electrodomésticos.' },
+    { id: 'alimentos',        nombre: 'Alimentos y Bebidas',     imagen: 'assets/images/general/img1.webp', descripcion: 'Soluciones de envasado, etiquetado y control de procesos para líneas de producción de alimentos y bebidas.' },
+    { id: 'aeroespacial',     nombre: 'Aeroespacial',            imagen: 'assets/images/general/img2.webp', descripcion: 'Desarrollamos soluciones de automatización y control de calidad para la producción de componentes aeroespaciales.' }
   ],
   servicios: [
     { id: 'plc',           nombre: 'Programación de PLC',                    image: 'assets/images/general/img1.webp', desc: 'Automatización de procesos y líneas de producción mediante lógica de control robusta. Optimizamos secuencias complejas, garantizamos la continuidad operativa y facilitamos diagnósticos rápidos para minimizar los tiempos muertos en planta.' },
