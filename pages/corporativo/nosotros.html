@@ -6,7 +6,7 @@
   <title>Sobre Nosotros | DEMATIQ</title>
   <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css?v=16">
   <link rel="stylesheet" href="../../assets/css/pages/nosotros.css">
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
@@ -18,9 +18,9 @@
 <!-- ═══════════ HERO ═══════════ -->
 <section class="page-hero">
   <div class="page-hero-inner">
-    <p class="page-hero-tag" id="nos-hero-tag">Conócenos</p>
-    <h1 id="nos-hero-h1">Sobre Nosotros</h1>
-    <p id="nos-hero-sub">Empresa mexicana especializada en automatización y ensamble industrial con más de 10 años de experiencia.</p>
+    <p class="page-hero-tag">Conócenos</p>
+    <h1>Sobre Nosotros</h1>
+    <p>Empresa mexicana especializada en automatización y ensamble industrial con más de 10 años de experiencia.</p>
   </div>
 </section>
 
@@ -29,20 +29,25 @@
   <div class="quienes-wrap">
     <div class="quienes-text">
       <h2 class="section-title" style="text-align:left;">¿Quiénes Somos?</h2>
-      <p id="nos-p1">En <strong>DEMATIQ</strong> somos una empresa especializada en soluciones tecnológicas e industriales enfocadas en optimizar los procesos de manufactura, automatización y desarrollo sostenible.</p>
-      <p id="nos-p2">Trabajamos de la mano con nuestros clientes y socios estratégicos para ofrecer innovación, eficiencia y calidad en cada uno de nuestros proyectos.</p>
+      <p>En <strong>DEMATIQ</strong> somos una empresa especializada en soluciones tecnológicas e industriales enfocadas en optimizar los procesos de manufactura, automatización y desarrollo sostenible.</p>
+      <p>Trabajamos de la mano con nuestros clientes y socios estratégicos para ofrecer innovación, eficiencia y calidad en cada uno de nuestros proyectos.</p>
 
       <ul class="quienes-list">
         <li>Automatización y ensamble a la medida de cada proceso</li>
-        <li>Ingeniería y diseño propios, de principio a fin</li>
         <li>Soporte y mantenimiento posterior a la instalación</li>
         <li>Más de 10 años de experiencia en la industria</li>
       </ul>
 
-      <a href="../servicios/servicios.html" class="quienes-cta">Conoce nuestros servicios →</a>
+      <a href="../servicios/servicios.html" class="quienes-cta">Conoce nuestros servicios</a>
     </div>
     <div class="quienes-img-wrap">
       <img src="../../assets/images/general/img3.webp" alt="DEMATIQ equipo" class="quienes-img">
+      <div class="quienes-img-scrim"></div>
+      <div class="quienes-img-fade"></div>
+      <div class="svc-rotator" aria-live="polite">
+        <span class="svc-rotator-label">Servicios de ingeniería</span>
+        <span class="svc-rotator-text" id="svcRotatorText">Programación de PLC</span>
+      </div>
     </div>
   </div>
 </section>
@@ -55,19 +60,19 @@
       <div class="col-12 col-md-4">
         <div class="filosofia-card">
           <h3>Misión</h3>
-          <p id="nos-mision">Brindar soluciones integrales en automatización y desarrollo tecnológico que impulsen la productividad y competitividad de nuestros clientes.</p>
+          <p>Brindar soluciones integrales en automatización y desarrollo tecnológico que impulsen la productividad y competitividad de nuestros clientes.</p>
         </div>
       </div>
       <div class="col-12 col-md-4">
         <div class="filosofia-card">
           <h3>Visión</h3>
-          <p id="nos-vision">Ser líderes en innovación tecnológica y un referente en la transformación industrial a nivel nacional e internacional.</p>
+          <p>Ser líderes en innovación tecnológica y un referente en la transformación industrial a nivel nacional e internacional.</p>
         </div>
       </div>
       <div class="col-12 col-md-4">
         <div class="filosofia-card">
           <h3>Valores</h3>
-          <p id="nos-valores">Compromiso, innovación, calidad, trabajo en equipo y responsabilidad social empresarial.</p>
+          <p>Compromiso, innovación, calidad, trabajo en equipo y responsabilidad social empresarial.</p>
         </div>
       </div>
     </div>
@@ -78,7 +83,7 @@
 <section id="empresas">
   <h2 class="section-title" style="padding-top:20px; margin-bottom:16px;">Empresas Asociadas</h2>
   <div class="marquee-wrapper">
-    <div class="marquee-track" id="partners-track">
+    <div class="marquee-track">
       <div class="marquee-item"><img src="../../assets/images/partners/Danfoss.webp" alt="Danfoss"></div>
       <div class="marquee-item"><img src="../../assets/images/partners/Eaton.webp" alt="Eaton"></div>
       <div class="marquee-item"><img src="../../assets/images/partners/METECNO.webp" alt="Metecno"></div>
@@ -112,40 +117,32 @@
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/components/header.js"></script>
 <script src="../../assets/js/components/footer.js"></script>
-
 <script>
-async function loadNosotrosContent() {
-  try {
-    const [nosotros, partners] = await Promise.all([
-      fetch('/api/contenido.php?clave=nosotros').then(r => r.json()),
-      fetch('/api/contenido.php?clave=partners').then(r => r.json())
-    ]);
-    const set = (id, txt) => { const el = document.getElementById(id); if (el && txt != null) el.textContent = txt; };
-    if (nosotros) {
-      if (nosotros.hero) {
-        set('nos-hero-tag', nosotros.hero.tag);
-        set('nos-hero-h1',  nosotros.hero.h1);
-        set('nos-hero-sub', nosotros.hero.subtitle);
-      }
-      set('nos-p1',     nosotros.p1);
-      set('nos-p2',     nosotros.p2);
-      set('nos-mision', nosotros.mision);
-      set('nos-vision', nosotros.vision);
-      set('nos-valores',nosotros.valores);
-    }
-    if (Array.isArray(partners) && partners.length) {
-      const track = document.getElementById('partners-track');
-      if (track) {
-        const items = partners.map(p =>
-          `<div class="marquee-item"><a href="${p.url || '#'}" target="_blank" rel="noopener"><img src="/${p.logo}" alt="${p.nombre || ''}"></a></div>`
-        ).join('');
-        track.innerHTML = items + items;
-      }
-    }
-  } catch (e) { console.warn('[content-loader] nosotros unavailable'); }
-}
-loadNosotrosContent();
-try { const _bc = new BroadcastChannel('dematiq-live'); _bc.onmessage = e => { if (e.data.section === 'nosotros' || e.data.section === 'partners') loadNosotrosContent(); }; } catch {}
+  (function () {
+    const el = document.getElementById('svcRotatorText');
+    if (!el) return;
+    const servicios = [
+      'Programación de PLC',
+      'Programación de HMI, SCADA',
+      'Sistemas de Visión',
+      'Programación de Servomotores',
+      'Diseño de Diagramas Eléctricos',
+      'Diseño de Tableros de Control',
+      'Modernización de Maquinaria',
+      'Instalaciones Eléctricas',
+      'Ingeniería Básica y de Detalle',
+      'Variadores de Frecuencia'
+    ];
+    let i = 0;
+    setInterval(function () {
+      i = (i + 1) % servicios.length;
+      el.classList.add('is-out');
+      setTimeout(function () {
+        el.textContent = servicios[i];
+        el.classList.remove('is-out');
+      }, 320);
+    }, 2600);
+  })();
 </script>
 </body>
 </html>

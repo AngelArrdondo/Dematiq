@@ -80,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: 2px solid rgba(13, 33, 85, 0.35);
 }
 
 .marquee-item img {
@@ -95,6 +95,14 @@
 .marquee-item img:hover {
   filter: grayscale(0%);
   opacity: 1;
+}
+
+/* Placeholder mientras no se cargan las 17 marcas (marca-01.webp … marca-17.webp) */
+.marquee-item--empty::after {
+  content: 'Logo ' attr(data-n);
+  color: rgba(13, 33, 85, 0.38);
+  font: 600 0.82rem 'Roboto', sans-serif;
+  letter-spacing: 0.3px;
 }
 
 /* ===================== PROYECTOS — STAGE CAROUSEL ===================== */
@@ -209,7 +217,11 @@
 .stage-card__info-desc {
   font-size: 0.78rem;
   color: rgba(255,255,255,0.68);
-  line-height: 1.58; margin: 0 0 14px;
+  line-height: 1.5; margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .stage-card__btn {
@@ -390,13 +402,54 @@
 #soluciones .solucion-icon-card {
   min-height: 220px;
 }
+/* ── Destello teal en las 4 orillas de cada card ── */
+#soluciones .solucion-icon-card {
+  border-color: rgba(0, 204, 204, 0.35) !important;
+}
 #soluciones .solucion-icon-card::before {
   height: 2px;
   background: linear-gradient(90deg, transparent, rgba(0, 204, 204, 0.55), transparent);
+  box-shadow: none;
+  z-index: 2;
 }
+/* Glow teal hacia adentro desde los 4 lados */
+#soluciones .solucion-icon-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 204, 204, 0.40),
+    inset 0 0 16px rgba(0, 204, 204, 0.22);
+}
+/* Mantener icono, titulo y texto por encima del glow */
+#soluciones .solucion-icon-wrapper,
+#soluciones .solucion-icon-card .card-title,
+#soluciones .solucion-card-desc { position: relative; z-index: 2; }
+
+/* ── Iconos mas grandes y homogeneos ── */
 #soluciones .solucion-icon-wrapper {
-  width: clamp(88px, 10vw, 140px);
-  height: clamp(88px, 10vw, 140px);
+  width: clamp(120px, 14vw, 180px);
+  height: clamp(120px, 14vw, 180px);
+}
+
+/* ── Titulo en dos lineas, MISMO tamaño: Manufactura / Maquinados industriales ── */
+#soluciones .card-title--split { line-height: 1.3; }
+#soluciones .card-title-line2 {
+  display: block;
+  margin-top: 2px;
+}
+/* Texto descriptivo corto bajo el titulo (ej. Diseño 2D y 3D) */
+#soluciones .solucion-card-desc {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: none;
+  color: rgba(0, 224, 224, 0.85);
 }
 
 /* Responsive */

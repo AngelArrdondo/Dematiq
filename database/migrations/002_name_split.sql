@@ -7,5 +7,4 @@ ALTER TABLE usuarios
   ADD COLUMN apellido_paterno VARCHAR(60)  NOT NULL DEFAULT ''   AFTER segundo_nombre,
   ADD COLUMN apellido_materno VARCHAR(60)           DEFAULT NULL AFTER apellido_paterno,
   ADD COLUMN email_contacto   VARCHAR(150)          DEFAULT NULL AFTER apellido_materno,
-  ADD COLUMN telefono         VARCHAR(30)           DEFAULT NULL AFTER email_contacto,
-  ADD COLUMN foto             VARCHAR(255)          DEFAULT NULL AFTER telefono;
+  ADD COLUMN telefono         VARCHAR(30)           DEFAULT NULL AFTER email_contacto;

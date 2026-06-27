@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proyectos | DEMATIQ</title>
   <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
@@ -17,44 +17,103 @@
 <!-- ═══════════ HERO ═══════════ -->
 <section class="page-hero">
   <div class="page-hero-inner">
-    <p class="page-hero-tag">Lo que hacemos</p>
+    <p class="page-hero-tag">Lo que hemos hecho</p>
     <h1>Proyectos</h1>
     <p>Diseñamos y desarrollamos soluciones de automatización, ensamble y manufactura a la medida de cada cliente.</p>
   </div>
 </section>
 
-<!-- ═══════════ EMPRESAS ASOCIADAS ═══════════ -->
-<section class="page-section">
-  <div class="container">
-    <h2 class="section-title">Empresas Asociadas</h2>
-    <div class="container-logos d-flex flex-wrap justify-content-center">
-      <a href="https://www.proveedores-greenmetals.com" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/TTGREEN.webp" alt="TT Green - Proveedores Green Metals">
-      </a>
-      <a href="https://www.eaton.com/mx/es-mx.html" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/Eaton.webp" alt="Eaton México">
-      </a>
-      <a href="https://www.calidra.com" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/CALIDRA.webp" alt="Calidra">
-      </a>
-      <a href="https://www.danfoss.com/es-mx" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/Danfoss.webp" alt="Danfoss México">
-      </a>
-      <a href="https://metecnomexico.com" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/METECNO.webp" alt="Metecno México">
-      </a>
-      <a href="https://rpk-global.com/es/rpk-mexico" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/RPK.webp" alt="RPK México">
-      </a>
-      <a href="https://www.ampacet.com/spanish" target="_blank" rel="noopener" class="logo-card">
-        <img src="../../assets/images/partners/AMPACET.webp" alt="Ampacet">
-      </a>
+<!-- ═══════════ BANDA DE ESTADÍSTICAS ═══════════ -->
+<div class="proj-stats-band">
+  <div class="proj-stats-inner">
+    <div class="proj-stat">
+      <span class="proj-stat-v" data-target="8">0</span>
+      <span class="proj-stat-l">Proyectos</span>
     </div>
+    <div class="proj-stat">
+      <span class="proj-stat-v" data-target="6">0</span>
+      <span class="proj-stat-l">Tipos de máquina</span>
+    </div>
+    <div class="proj-stat">
+      <span class="proj-stat-v" data-target="10" data-suffix="+">0+</span>
+      <span class="proj-stat-l">Años automatizando</span>
+    </div>
+    <div class="proj-stat">
+      <span class="proj-stat-v" data-target="100" data-suffix="%">0%</span>
+      <span class="proj-stat-l">A medida del cliente</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ BARRA DE FILTROS ═══════════ -->
+<nav class="proj-quicknav" aria-label="Filtrar proyectos">
+  <div class="proj-quicknav-inner">
+    <button class="proj-chip is-active" data-filter="all">Todos</button>
+    <button class="proj-chip" data-filter="torque">Torque</button>
+    <button class="proj-chip" data-filter="inspeccion">Inspección</button>
+    <button class="proj-chip" data-filter="marcado">Marcado</button>
+    <button class="proj-chip" data-filter="robotica">Robótica</button>
+    <button class="proj-chip" data-filter="limpieza">Limpieza</button>
+    <button class="proj-chip" data-filter="fugas">Probado de fugas</button>
+  </div>
+</nav>
+
+<!-- ═══════════ PROYECTOS ═══════════ -->
+<section class="proj-section">
+  <div class="proj-wrap">
+    <div class="proj-grid"></div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA FINAL ═══════════ -->
+<section class="proj-cta">
+  <div class="proj-cta-inner">
+    <span class="proj-cta-tag">¿Tienes un proyecto?</span>
+    <h2>Cuéntanos qué necesitas y lo desarrollamos</h2>
+    <p>Cada proyecto que hacemos empieza con una conversación. Platícanos tu reto de producción y te decimos cómo podemos ayudarte.</p>
+    <a href="../corporativo/Contacto.html" class="proj-cta-btn">
+      Contactar ahora
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
   </div>
 </section>
 
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/components/header.js"></script>
 <script src="../../assets/js/components/footer.js"></script>
+<script src="../../assets/js/components/proyectos-data.js"></script>
+<script src="../../assets/js/components/proyectos.js"></script>
+
+<!-- Contadores animados -->
+<script>
+(function(){
+  var els = document.querySelectorAll('.proj-stat-v[data-target]');
+  if(!els.length) return;
+  var done = false;
+  function runCounters(){
+    if(done) return; done = true;
+    els.forEach(function(el){
+      var target = +el.dataset.target;
+      var suffix = el.dataset.suffix || '';
+      var start = 0;
+      var duration = 1400;
+      var startTime = null;
+      function step(ts){
+        if(!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        var ease = 1 - Math.pow(1 - progress, 3);
+        var val = Math.round(ease * target);
+        el.textContent = val + suffix;
+        if(progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  var observer = new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting) runCounters();
+  }, { threshold: 0.3 });
+  observer.observe(document.querySelector('.proj-stats-band'));
+})();
+</script>
 </body>
 </html>

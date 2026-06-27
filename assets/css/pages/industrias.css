@@ -167,3 +167,19 @@ body {
     page-break-inside: avoid;
   }
 }
+
+/* ── Explorer de industrias: SOLO el menú navy como Servicios ── */
+/* El contenido (título + descripción + carrusel apilado) queda como el original */
+#infoContainer { max-width: 1000px; margin: 0 auto; }
+.info-industria { background: transparent; padding: 0; animation: svcFade 0.3s ease; }
+
+/* Carrusel apilado debajo de la descripción (tamaño original) */
+.info-industria .c2-track img { height: clamp(220px, 30vw, 360px); }
+
+/* El sidebar de industrias hereda el estilo navy de .svc-optionlist */
+.ind-explorer .svc-optionlist { background: #000028; }
+
+/* Padding del contenido */
+.ind-explorer .svc-content-wrap {
+  padding: clamp(36px, 5vw, 64px) clamp(20px, 4vw, 56px) clamp(56px, 8vw, 110px);
+}

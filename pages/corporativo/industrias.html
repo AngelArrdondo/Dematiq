@@ -6,7 +6,7 @@
   <title>Industrias | DEMATIQ</title>
   <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css?v=24">
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
 </head>
@@ -15,177 +15,128 @@
 <!-- Header insertado por JS -->
 
 <!-- ═══════════ HERO ═══════════ -->
-<section class="page-hero">
+<section class="page-hero svc-hero-compact">
   <div class="page-hero-inner">
     <p class="page-hero-tag">Sectores</p>
-    <h1>Industrias</h1>
-    <p>Trabajamos con los principales sectores industriales, aportando tecnología y experiencia en cada proyecto.</p>
+    <h1>Industrias con las que trabajamos</h1>
   </div>
 </section>
 
 <!-- ═══════════ INDUSTRIAS ═══════════ -->
-<section class="page-section">
-  <div class="container">
-    <h2 class="section-title">Industrias con las que trabajamos</h2>
-
-    <div class="industrias-grid">
-
-      <!-- Lista lateral -->
-      <div class="industrias-lista-wrap">
-        <ul class="lista-industrias list-unstyled" id="listaIndustrias">
-          <li onclick="mostrarIndustria('automotriz',this)"     class="active">Automotriz</li>
-          <li onclick="mostrarIndustria('farmaceutica',this)"            >Farmacéutica</li>
-          <li onclick="mostrarIndustria('alimenticia',this)"             >Alimenticia</li>
-          <li onclick="mostrarIndustria('manufactura',this)"             >Manufactura</li>
-          <li onclick="mostrarIndustria('electronica',this)"             >Electrónica y Eléctrica</li>
-          <li onclick="mostrarIndustria('electrodomesticos',this)"       >Electrodomésticos</li>
-          <li onclick="mostrarIndustria('alimentos',this)"               >Alimentos y Bebidas</li>
-          <li onclick="mostrarIndustria('aeroespacial',this)"            >Aeroespacial</li>
-        </ul>
-      </div>
-
-      <!-- Panel de contenido -->
-      <div id="infoContainer">
+<section class="svc-explorer ind-explorer">
+  <aside class="svc-optionlist">
+    <div class="svc-optionlist-sticky">
+      <p class="svc-optionlist-head">Sectores</p>
+        <button class="svc-option active" onclick="mostrarIndustria('automotriz',this)"><span class="svc-option-name">Automotriz</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('farmaceutica',this)"><span class="svc-option-name">Farmacéutica</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('alimenticia',this)"><span class="svc-option-name">Alimenticia</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('manufactura',this)"><span class="svc-option-name">Manufactura</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('electronica',this)"><span class="svc-option-name">Electrónica y Eléctrica</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('electrodomesticos',this)"><span class="svc-option-name">Electrodomésticos</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('alimentos',this)"><span class="svc-option-name">Alimentos y Bebidas</span></button>
+        <button class="svc-option" onclick="mostrarIndustria('aeroespacial',this)"><span class="svc-option-name">Aeroespacial</span></button>
+    </div>
+  </aside>
+  <div class="svc-content-wrap">
+    <div id="infoContainer">
 
         <div id="automotriz" class="info-industria" style="display:block;">
           <h3>Industria Automotriz</h3>
           <p>Colaboramos en proyectos de automatización, control de calidad y desarrollo de maquinaria para procesos de ensamblaje y pruebas.</p>
-          <div id="carouselAutomotriz" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Automotriz 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Automotriz 2"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img3.webp" class="d-block w-100" alt="Automotriz 3"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Automotriz">
+              <img src="../../assets/images/general/img2.webp" alt="Automotriz">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutomotriz" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselAutomotriz" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Siguiente</span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="farmaceutica" class="info-industria">
           <h3>Industria Farmacéutica</h3>
           <p>Desarrollamos sistemas de control ambiental, monitoreo de producción y soluciones de trazabilidad para laboratorios y plantas farmacéuticas.</p>
-          <div id="carouselFarmaceutica" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Farmacéutica 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Farmacéutica 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Farmacéutica">
+              <img src="../../assets/images/general/img2.webp" alt="Farmacéutica">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselFarmaceutica" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselFarmaceutica" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="alimenticia" class="info-industria">
           <h3>Industria Alimenticia</h3>
           <p>Implementamos soluciones de automatización y control de calidad para la producción de alimentos y bebidas.</p>
-          <div id="carouselAlimenticia" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Alimenticia 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Alimenticia 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Alimenticia">
+              <img src="../../assets/images/general/img2.webp" alt="Alimenticia">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAlimenticia" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselAlimenticia" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="manufactura" class="info-industria">
           <h3>Industria de Manufactura</h3>
           <p>Colaboramos en la optimización de procesos, implementación de sistemas de control y desarrollo de maquinaria especializada.</p>
-          <div id="carouselManufactura" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Manufactura 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Manufactura 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Manufactura">
+              <img src="../../assets/images/general/img2.webp" alt="Manufactura">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselManufactura" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselManufactura" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="electronica" class="info-industria">
           <h3>Industria Electrónica y Eléctrica</h3>
           <p>Implementamos soluciones de automatización y control de calidad para la producción de dispositivos electrónicos.</p>
-          <div id="carouselElectronica" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Electrónica 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Electrónica 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Electrónica">
+              <img src="../../assets/images/general/img2.webp" alt="Electrónica">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselElectronica" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselElectronica" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="electrodomesticos" class="info-industria">
           <h3>Industria de Electrodomésticos</h3>
           <p>Desarrollamos soluciones de automatización y control de calidad para la producción de electrodomésticos.</p>
-          <div id="carouselElectrodomesticos" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Electrodomésticos 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Electrodomésticos 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Electrodomésticos">
+              <img src="../../assets/images/general/img2.webp" alt="Electrodomésticos">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselElectrodomesticos" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselElectrodomesticos" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="alimentos" class="info-industria">
           <h3>Industria de Alimentos y Bebidas</h3>
           <p>Soluciones de envasado, etiquetado y control de procesos para líneas de producción de alimentos y bebidas.</p>
-          <div id="carouselAlimentos" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Alimentos 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Alimentos 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Alimentos y Bebidas">
+              <img src="../../assets/images/general/img2.webp" alt="Alimentos y Bebidas">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAlimentos" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselAlimentos" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
         <div id="aeroespacial" class="info-industria">
           <h3>Industria Aeroespacial</h3>
           <p>Desarrollamos soluciones de automatización y control de calidad para la producción de componentes aeroespaciales.</p>
-          <div id="carouselAeroespacial" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="../../assets/images/general/img1.webp" class="d-block w-100" alt="Aeroespacial 1"></div>
-              <div class="carousel-item"><img src="../../assets/images/general/img2.webp" class="d-block w-100" alt="Aeroespacial 2"></div>
+          <div class="carousel2" data-idx="0">
+            <div class="c2-track">
+              <img src="../../assets/images/general/img1.webp" alt="Aeroespacial">
+              <img src="../../assets/images/general/img2.webp" alt="Aeroespacial">
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselAeroespacial" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselAeroespacial" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
+            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
           </div>
         </div>
 
       </div><!-- /infoContainer -->
-    </div><!-- /industrias-grid -->
   </div>
 </section>
 
@@ -196,49 +147,33 @@
 <script>
   function mostrarIndustria(id, item) {
     document.querySelectorAll('.info-industria').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.lista-industrias li').forEach(li => li.classList.remove('active'));
+    document.querySelectorAll('.svc-optionlist .svc-option').forEach(b => b.classList.remove('active'));
+
     document.getElementById(id).style.display = 'block';
     item.classList.add('active');
+
+    /* En móvil, hacer scroll suave hasta el panel de contenido */
     if (window.innerWidth < 769) {
       document.getElementById('infoContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-
-  async function loadIndustriasContent() {
-    try {
-      const data = await fetch('/api/contenido.php?clave=industrias').then(r => r.json());
-      if (!Array.isArray(data) || !data.length) return;
-      const IMGS = [
-        '../../assets/images/general/img1.webp',
-        '../../assets/images/general/img2.webp',
-        '../../assets/images/general/img3.webp'
-      ];
-      document.getElementById('listaIndustrias').innerHTML = data.map((ind, i) =>
-        `<li onclick="mostrarIndustria('ind${i}',this)"${i === 0 ? ' class="active"' : ''}>${ind.nombre}</li>`
-      ).join('');
-      document.getElementById('infoContainer').innerHTML = data.map((ind, i) => `
-        <div id="ind${i}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
-          <h3>${ind.nombre}</h3>
-          <p>${ind.descripcion}</p>
-          <div id="carouselInd${i}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-            <div class="carousel-inner">
-              <div class="carousel-item active"><img src="${IMGS[0]}" class="d-block w-100" alt="${ind.nombre}"></div>
-              <div class="carousel-item"><img src="${IMGS[1]}" class="d-block w-100" alt="${ind.nombre}"></div>
-              <div class="carousel-item"><img src="${IMGS[2]}" class="d-block w-100" alt="${ind.nombre}"></div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselInd${i}" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselInd${i}" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-            </button>
-          </div>
-        </div>`
-      ).join('');
-    } catch (e) { console.warn('[content-loader] industrias unavailable'); }
-  }
-  loadIndustriasContent();
-  try { const _bc = new BroadcastChannel('dematiq-live'); _bc.onmessage = e => { if (e.data.section === 'industrias') loadIndustriasContent(); }; } catch {}
+</script>
+<script>
+  // Inicializa cada carrusel de 2 imágenes (autoplay 3s, pausa al pasar el mouse, solo puntos)
+  document.querySelectorAll('.carousel2').forEach(function(c){
+    var track=c.querySelector('.c2-track'); if(!track) return;
+    var count=track.children.length;
+    var dots=c.querySelectorAll('.c2-dots span');
+    var idx=0, timer=null;
+    function go(i){ idx=(i+count)%count; c.dataset.idx=idx; track.style.transform='translateX(-'+(idx*100)+'%)';
+      dots.forEach(function(d,k){d.classList.toggle('active',k===idx);}); }
+    function stop(){ if(timer){clearInterval(timer); timer=null;} }
+    function start(){ stop(); if(count>1) timer=setInterval(function(){go(idx+1);},3000); }
+    dots.forEach(function(d,k){ d.addEventListener('click',function(){go(k); start();}); });
+    c.addEventListener('mouseenter',stop);
+    c.addEventListener('mouseleave',start);
+    start();
+  });
 </script>
 </body>
 </html>

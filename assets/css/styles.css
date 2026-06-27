@@ -26,6 +26,8 @@
 
 /* Pages */
 @import 'pages/home.css';
-@import 'pages/contact.css';
-@import 'pages/services.css';
-@import "pages/industrias.css";
+@import 'pages/contact.css?v=16';
+@import 'pages/services.css?v=26';
+@import "pages/industrias.css?v=24";
+@import "pages/proyectos.css?v=6";
+@import "pages/proyecto-detalle.css?v=4";
