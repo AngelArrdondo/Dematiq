@@ -42,13 +42,21 @@
     carousel.addEventListener('mouseleave', startAuto);
   }
 
+  function safeImg(el, src, alt) {
+    if (!el) return;
+    el.alt = alt || '';
+    el.onerror = function() { this.style.visibility = 'hidden'; this.onerror = null; };
+    el.onload  = function() { this.style.visibility = ''; this.onerror = null; };
+    if (src) el.src = src; else el.style.visibility = 'hidden';
+  }
+
   function render(opt) {
     if (content) content.style.opacity = 0;
     setTimeout(() => {
       titleEl.textContent = opt.dataset.title || '';
       descEl.textContent  = opt.dataset.desc || '';
-      if (img1) { img1.src = opt.dataset.img || img1.src; img1.alt = opt.dataset.title || ''; }
-      if (img2) { img2.src = opt.dataset.img2 || opt.dataset.img || ''; img2.alt = opt.dataset.title || ''; }
+      safeImg(img1, opt.dataset.img || '', opt.dataset.title);
+      safeImg(img2, opt.dataset.img2 || opt.dataset.img || '', opt.dataset.title);
       slideTo(0);
       if (content) {
         content.style.opacity = 1;

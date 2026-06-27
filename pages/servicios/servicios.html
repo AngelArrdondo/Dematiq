@@ -102,27 +102,34 @@
   <script src="../../assets/js/components/footer.js"></script>
 
   <script>
-    // ── Carga dinámica de servicios desde la base de datos ──
     (async function () {
       try {
         const data = await fetch('/api/contenido.php?clave=servicios').then(r => r.json());
         if (!Array.isArray(data) || data.length === 0) return;
 
-        const options = document.querySelectorAll('.svc-option');
+        // Guardar descripciones estáticas (admin no las almacena)
+        const staticBtns = [...document.querySelectorAll('.svc-option')];
+        const descs = staticBtns.map(b => b.dataset.desc || '');
+        const imgs2 = staticBtns.map(b => b.dataset.img2 || '');
+
+        // Reconstruir botones desde BD (maneja agregar / eliminar / modificar)
+        const sticky = document.querySelector('.svc-optionlist-sticky');
+        staticBtns.forEach(b => b.remove());
+
+        function ap(p) { return p && !p.startsWith('/') && !p.startsWith('http') ? '/' + p : p || ''; }
+
         data.forEach((s, i) => {
-          if (!options[i]) return;
-          if (s.nombre) {
-            options[i].dataset.title = s.nombre;
-            const nameEl = options[i].querySelector('.svc-option-name');
-            if (nameEl) nameEl.textContent = s.nombre;
-          }
-          if (s.image) {
-            options[i].dataset.img = '../../' + s.image;
-          }
+          const btn = document.createElement('button');
+          btn.className = 'svc-option' + (i === 0 ? ' active' : '');
+          btn.dataset.title = s.nombre || '';
+          btn.dataset.img   = s.image ? ap(s.image) : '';
+          btn.dataset.img2  = imgs2[i] || (s.image ? ap(s.image) : '');
+          btn.dataset.desc  = descs[i] || '';
+          btn.innerHTML = `<span class="svc-option-name">${s.nombre || ''}</span>`;
+          if (sticky) sticky.appendChild(btn);
         });
-      } catch (e) { /* fallo silencioso */ }
+      } catch (e) {}
     })().finally(() => {
-      // Inicializar el selector después de actualizar los datos
       const script = document.createElement('script');
       script.src = '../../assets/js/components/solucion-selector.js';
       document.body.appendChild(script);

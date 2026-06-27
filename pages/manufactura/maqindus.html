@@ -84,25 +84,33 @@
     try {
       const data = await fetch('/api/contenido.php?clave=maqindus').then(r => r.json());
       if (!data || !Array.isArray(data.tabs) || !data.tabs.length) return;
+
       if (data.titulo) {
         const h1 = document.querySelector('.page-hero h1');
         if (h1) h1.textContent = data.titulo;
         const head = document.querySelector('.svc-optionlist-head');
         if (head) head.textContent = data.titulo;
       }
-      const buttons = document.querySelectorAll('.svc-option');
+
+      // Guardar descripciones estáticas existentes por índice (admin no las almacena)
+      const staticBtns = [...document.querySelectorAll('.svc-option')];
+      const descs = staticBtns.map(b => b.dataset.desc || '');
+
+      // Reconstruir botones desde BD (maneja agregar / eliminar / modificar)
+      const sticky = document.querySelector('.svc-optionlist-sticky');
+      staticBtns.forEach(b => b.remove());
+
+      function ap(p) { return p && !p.startsWith('/') && !p.startsWith('http') ? '/' + p : p || ''; }
+
       data.tabs.forEach((tab, i) => {
-        const btn = buttons[i];
-        if (!btn) return;
-        if (tab.nombre) {
-          btn.dataset.title = tab.nombre;
-          const nm = btn.querySelector('.svc-option-name');
-          if (nm) nm.textContent = tab.nombre;
-        }
-        if (tab.images) {
-          if (tab.images[0]) btn.dataset.img = tab.images[0];
-          if (tab.images[1]) btn.dataset.img2 = tab.images[1];
-        }
+        const btn = document.createElement('button');
+        btn.className = 'svc-option' + (i === 0 ? ' active' : '');
+        btn.dataset.title = tab.nombre || '';
+        btn.dataset.img   = ap(tab.images && tab.images[0]);
+        btn.dataset.img2  = ap(tab.images && tab.images[1]) || ap(tab.images && tab.images[0]);
+        btn.dataset.desc  = descs[i] || '';
+        btn.innerHTML = `<span class="svc-option-name">${tab.nombre || ''}</span>`;
+        if (sticky) sticky.appendChild(btn);
       });
     } catch {}
   })().finally(() => {
