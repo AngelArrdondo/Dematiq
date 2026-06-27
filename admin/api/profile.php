@@ -1,7 +1,11 @@
 <?php
+ini_set('display_errors', 0);   // evita que warnings contaminen el JSON
+ob_start();                      // captura cualquier salida accidental
+
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/conexion.php';
 
+ob_end_clean();                  // descarta cualquier output de los includes
 header('Content-Type: application/json');
 
 $user = Auth::check();
@@ -62,12 +66,24 @@ if ($action === 'get') {
         echo json_encode(['ok' => false, 'msg' => 'El apellido paterno es requerido']);
         exit;
     }
-    if (mb_strlen($primer_nombre) > 60 || mb_strlen($apellido_paterno) > 60) {
+    if (strlen($primer_nombre) > 60 || strlen($apellido_paterno) > 60) {
         echo json_encode(['ok' => false, 'msg' => 'Nombre demasiado largo (máx 60 caracteres)']);
         exit;
     }
-    if ($email_contacto && !filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
+    if (!$apellido_materno) {
+        echo json_encode(['ok' => false, 'msg' => 'El apellido materno es requerido']);
+        exit;
+    }
+    if (!$email_contacto) {
+        echo json_encode(['ok' => false, 'msg' => 'El email de contacto es requerido']);
+        exit;
+    }
+    if (!filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['ok' => false, 'msg' => 'Email de contacto inválido']);
+        exit;
+    }
+    if (!$telefono) {
+        echo json_encode(['ok' => false, 'msg' => 'El teléfono es requerido']);
         exit;
     }
 

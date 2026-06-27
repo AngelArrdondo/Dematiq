@@ -12,7 +12,7 @@ try {
     $stmtFoto = $pdo->prepare('SELECT foto FROM usuarios WHERE id = ? LIMIT 1');
     $stmtFoto->execute([$user['id']]);
     $fotoRaw  = $stmtFoto->fetchColumn();
-    $fotoPath = $fotoRaw ? htmlspecialchars($fotoRaw) : '';
+    $fotoPath = $fotoRaw ? '../' . htmlspecialchars($fotoRaw) : '';
 } catch (PDOException $e) { /* column not yet migrated — ignore */ }
 ?>
 <!DOCTYPE html>
@@ -183,54 +183,7 @@ try {
   </div>
 </div>
 
-<!-- ── Profile modal ──────────────────────────────────── -->
-<div class="profile-modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
-  <div class="profile-modal-card">
-    <div class="profile-modal-header">
-      <h2 id="profileModalTitle">Mi Perfil</h2>
-      <button class="profile-modal-close" onclick="closeProfileModal()" aria-label="Cerrar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="profile-modal-body">
-      <div class="profile-tabs">
-        <button class="profile-tab active" data-tab="info">Información</button>
-        <button class="profile-tab" data-tab="security">Contraseña</button>
-      </div>
-      <div class="profile-tab-panel active" id="tab-info">
-        <div class="profile-avatar-wrap">
-          <div class="profile-avatar-circle" id="modalAvatarCircle">
-            <?php if ($fotoPath): ?><img src="<?= $fotoPath ?>" alt="Avatar"><?php else: ?><?= $initials ?><?php endif; ?>
-          </div>
-          <button class="profile-avatar-edit-btn" onclick="document.getElementById('avatarInput').click()" title="Cambiar foto" aria-label="Cambiar foto de perfil">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </button>
-          <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadAvatar(this)">
-        </div>
-        <div class="profile-field-row">
-          <div class="profile-field"><label for="profilePrimerNombre">Primer nombre *</label><input type="text" id="profilePrimerNombre" maxlength="60" placeholder="Primer nombre"></div>
-          <div class="profile-field"><label for="profileSegundoNombre">Segundo nombre</label><input type="text" id="profileSegundoNombre" maxlength="60" placeholder="Opcional"></div>
-        </div>
-        <div class="profile-field-row">
-          <div class="profile-field"><label for="profileApellidoPaterno">Apellido paterno *</label><input type="text" id="profileApellidoPaterno" maxlength="60" placeholder="Apellido paterno"></div>
-          <div class="profile-field"><label for="profileApellidoMaterno">Apellido materno</label><input type="text" id="profileApellidoMaterno" maxlength="60" placeholder="Opcional"></div>
-        </div>
-        <div class="profile-field-row">
-          <div class="profile-field"><label for="profileEmail">Email de contacto</label><input type="email" id="profileEmail" maxlength="150" placeholder="tucorreo@ejemplo.com"></div>
-          <div class="profile-field"><label for="profileTelefono">Teléfono</label><input type="tel" id="profileTelefono" maxlength="30" placeholder="+52 55 0000 0000"></div>
-        </div>
-        <div class="profile-field"><label for="profileUsername">Usuario</label><input type="text" id="profileUsername" readonly></div>
-        <button class="profile-save-btn" id="infoSaveBtn" onclick="saveProfileInfo()">Guardar cambios</button>
-      </div>
-      <div class="profile-tab-panel" id="tab-security">
-        <div class="profile-field"><label for="currentPwd">Contraseña actual</label><input type="password" id="currentPwd" placeholder="••••••••"></div>
-        <div class="profile-field"><label for="newPwd">Nueva contraseña</label><input type="password" id="newPwd" placeholder="Mínimo 8 caracteres"></div>
-        <div class="profile-field"><label for="confirmPwd">Confirmar contraseña</label><input type="password" id="confirmPwd" placeholder="Repite la nueva contraseña"></div>
-        <button class="profile-save-btn" id="pwdSaveBtn" onclick="changePassword()">Cambiar contraseña</button>
-      </div>
-    </div>
-  </div>
-</div>
+<?php $profileApiPath = '../api/profile.php'; $fotoPrefix = '../'; require __DIR__ . '/../includes/profile-modal.php'; ?>
 
 <script src="../assets/js/auth.js?v=2"></script>
 <script>
@@ -250,125 +203,6 @@ try {
     if (e.key === 'Escape') this.classList.remove('open');
   });
   document.addEventListener('click', () => userMenuBtn.classList.remove('open'));
-
-  /* ── Profile modal ──────────────────────────────── */
-  let profileData = null;
-
-  function openProfileModal() {
-    userMenuBtn.classList.remove('open');
-    document.getElementById('profileModal').classList.add('open');
-    loadProfile();
-    document.querySelectorAll('.profile-tab').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.profile-tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelector('.profile-tab[data-tab="info"]').classList.add('active');
-    document.getElementById('tab-info').classList.add('active');
-  }
-  function closeProfileModal() { document.getElementById('profileModal').classList.remove('open'); }
-  document.getElementById('profileModal').addEventListener('click', function(e) { if (e.target === this) closeProfileModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProfileModal(); });
-  document.querySelectorAll('.profile-tab').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.profile-tab').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.profile-tab-panel').forEach(p => p.classList.remove('active'));
-      this.classList.add('active');
-      document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-    });
-  });
-
-  async function loadProfile() {
-    try {
-      const res = await fetch('../api/profile.php?action=get');
-      const json = await res.json();
-      if (!json.ok) return;
-      profileData = json.data;
-      document.getElementById('profilePrimerNombre').value    = json.data.primer_nombre    || '';
-      document.getElementById('profileSegundoNombre').value   = json.data.segundo_nombre   || '';
-      document.getElementById('profileApellidoPaterno').value = json.data.apellido_paterno || '';
-      document.getElementById('profileApellidoMaterno').value = json.data.apellido_materno || '';
-      document.getElementById('profileEmail').value           = json.data.email_contacto   || '';
-      document.getElementById('profileTelefono').value        = json.data.telefono         || '';
-      document.getElementById('profileUsername').value        = json.data.username;
-      setModalAvatar(json.data.foto, json.data.primer_nombre || json.data.nombre);
-    } catch { /* silently ignore */ }
-  }
-  function setModalAvatar(foto, nombre) {
-    const el = document.getElementById('modalAvatarCircle');
-    el.innerHTML = foto ? `<img src="${foto}?t=${Date.now()}" alt="Avatar">` : (nombre||'?').charAt(0).toUpperCase();
-  }
-  function setTopbarAvatar(foto, nombre) {
-    const el = document.getElementById('topbarAvatar');
-    el.innerHTML = foto ? `<img src="${foto}?t=${Date.now()}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : (nombre||'?').charAt(0).toUpperCase();
-  }
-  async function saveProfileInfo() {
-    const primerNombre = document.getElementById('profilePrimerNombre').value.trim();
-    const apellidoPaterno = document.getElementById('profileApellidoPaterno').value.trim();
-    if (!primerNombre)    { showToast('El primer nombre es requerido', 'error'); return; }
-    if (!apellidoPaterno) { showToast('El apellido paterno es requerido', 'error'); return; }
-    const btn = document.getElementById('infoSaveBtn');
-    btn.disabled = true; btn.textContent = 'Guardando…';
-    const fd = new FormData();
-    fd.append('action', 'update_info');
-    fd.append('primer_nombre',    primerNombre);
-    fd.append('segundo_nombre',   document.getElementById('profileSegundoNombre').value.trim());
-    fd.append('apellido_paterno', apellidoPaterno);
-    fd.append('apellido_materno', document.getElementById('profileApellidoMaterno').value.trim());
-    fd.append('email_contacto',   document.getElementById('profileEmail').value.trim());
-    fd.append('telefono',         document.getElementById('profileTelefono').value.trim());
-    try {
-      const res = await fetch('../api/profile.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
-      const json = await res.json();
-      if (json.ok) {
-        showToast('Perfil actualizado');
-        document.getElementById('topbarName').textContent = json.nombre;
-        if (!profileData?.foto) setTopbarAvatar(null, primerNombre);
-      } else { showToast(json.msg || 'Error al guardar', 'error'); }
-    } catch { showToast('Error de conexión', 'error'); }
-    finally { btn.disabled = false; btn.textContent = 'Guardar cambios'; }
-  }
-  async function uploadAvatar(input) {
-    if (!input.files[0]) return;
-    if (input.files[0].size > 2 * 1024 * 1024) { showToast('Máximo 2 MB', 'error'); input.value = ''; return; }
-    const fd = new FormData();
-    fd.append('action', 'upload_avatar');
-    fd.append('avatar', input.files[0]);
-    const editBtn = document.querySelector('.profile-avatar-edit-btn');
-    editBtn.style.opacity = '.4';
-    try {
-      const res = await fetch('../api/profile.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
-      const json = await res.json();
-      if (json.ok) {
-        showToast('Foto actualizada');
-        if (profileData) profileData.foto = json.path;
-        setModalAvatar(json.path, profileData?.nombre);
-        setTopbarAvatar(json.path, profileData?.nombre);
-      } else { showToast(json.msg || 'Error al subir', 'error'); }
-    } catch { showToast('Error de conexión', 'error'); }
-    finally { editBtn.style.opacity = '1'; input.value = ''; }
-  }
-  async function changePassword() {
-    const current = document.getElementById('currentPwd').value;
-    const newPwd  = document.getElementById('newPwd').value;
-    const confirm = document.getElementById('confirmPwd').value;
-    if (!current || !newPwd || !confirm) { showToast('Todos los campos son requeridos', 'error'); return; }
-    if (newPwd !== confirm) { showToast('Las contraseñas no coinciden', 'error'); return; }
-    if (newPwd.length < 8) { showToast('Mínimo 8 caracteres', 'error'); return; }
-    const btn = document.getElementById('pwdSaveBtn');
-    btn.disabled = true; btn.textContent = 'Cambiando…';
-    const fd = new FormData();
-    fd.append('action', 'change_password');
-    fd.append('current_password', current);
-    fd.append('new_password',     newPwd);
-    fd.append('confirm_password', confirm);
-    try {
-      const res = await fetch('../api/profile.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
-      const json = await res.json();
-      if (json.ok) {
-        showToast('Contraseña cambiada correctamente');
-        ['currentPwd','newPwd','confirmPwd'].forEach(id => document.getElementById(id).value = '');
-      } else { showToast(json.msg || 'Error', 'error'); }
-    } catch { showToast('Error de conexión', 'error'); }
-    finally { btn.disabled = false; btn.textContent = 'Cambiar contraseña'; }
-  }
 
   let partners = (CM.get('partners') || []).map(p => Object.assign({}, p));
 

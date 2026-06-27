@@ -131,14 +131,37 @@ class Auth {
     }
 
     // ── Requerir login (redirige si no hay sesión) ─────────────────────
-    public static function require(string $redirect = '/pages/corporativo/login.php'): array {
+    public static function require(string $redirect = '/pages/corporativo/login.php', bool $checkProfile = true): array {
         $user = self::check();
         if (!$user) {
             header('Location: ' . $redirect);
             exit;
         }
         self::csrfToken(); // asegura que la cookie CSRF exista para el JS
+        if ($checkProfile && !self::isProfileComplete($user['id'])) {
+            header('Location: /admin/complete-profile.php');
+            exit;
+        }
         return $user;
+    }
+
+    // ── Verificar si el perfil del usuario está completo ───────────────
+    public static function isProfileComplete(int $userId): bool {
+        global $pdo;
+        try {
+            $stmt = $pdo->prepare(
+                'SELECT primer_nombre, apellido_paterno, apellido_materno, email_contacto, telefono
+                 FROM usuarios WHERE id = ? LIMIT 1'
+            );
+            $stmt->execute([$userId]);
+            $row = $stmt->fetch();
+            if (!$row) return false;
+            return $row['primer_nombre'] !== '' && $row['apellido_paterno'] !== ''
+                && !empty($row['apellido_materno']) && !empty($row['email_contacto'])
+                && !empty($row['telefono']);
+        } catch (PDOException $e) {
+            return true; // columnas no migradas aún — no bloquear el login
+        }
     }
 
     // ── Cerrar sesión ──────────────────────────────────────────────────
