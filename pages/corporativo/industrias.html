@@ -6,7 +6,7 @@
   <title>Industrias | DEMATIQ</title>
   <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/css/styles.css?v=24">
+  <link rel="stylesheet" href="../../assets/css/styles.css?v=28">
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
 </head>
@@ -24,221 +24,163 @@
 
 <!-- ═══════════ INDUSTRIAS ═══════════ -->
 
-<!-- Pills solo visibles en mobile -->
+<!-- Pills solo visibles en mobile (las llena el JS) -->
 <div class="ind-pills-wrap">
-  <div class="ind-pills">
-    <button class="ind-pill active" onclick="mostrarIndustriaPill('automotriz', this)">Automotriz</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('farmaceutica', this)">Farmacéutica</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('alimenticia', this)">Alimenticia</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('manufactura', this)">Manufactura</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('electronica', this)">Electrónica</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('electrodomesticos', this)">Electrodomésticos</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('alimentos', this)">Alimentos y Bebidas</button>
-    <button class="ind-pill" onclick="mostrarIndustriaPill('aeroespacial', this)">Aeroespacial</button>
-  </div>
+  <div class="ind-pills"></div>
 </div>
 
 <section class="svc-explorer ind-explorer">
   <aside class="svc-optionlist">
     <div class="svc-optionlist-sticky">
       <p class="svc-optionlist-head">Sectores</p>
-        <button class="svc-option active" onclick="mostrarIndustria('automotriz',this)"><span class="svc-option-name">Automotriz</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('farmaceutica',this)"><span class="svc-option-name">Farmacéutica</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('alimenticia',this)"><span class="svc-option-name">Alimenticia</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('manufactura',this)"><span class="svc-option-name">Manufactura</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('electronica',this)"><span class="svc-option-name">Electrónica y Eléctrica</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('electrodomesticos',this)"><span class="svc-option-name">Electrodomésticos</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('alimentos',this)"><span class="svc-option-name">Alimentos y Bebidas</span></button>
-        <button class="svc-option" onclick="mostrarIndustria('aeroespacial',this)"><span class="svc-option-name">Aeroespacial</span></button>
+      <!-- Botones de sectores: los llena el JS -->
     </div>
   </aside>
   <div class="svc-content-wrap">
-    <div id="infoContainer">
-
-        <div id="automotriz" class="info-industria" style="display:block;">
-          <h3>Industria Automotriz</h3>
-          <p>Colaboramos en proyectos de automatización, control de calidad y desarrollo de maquinaria para procesos de ensamblaje y pruebas.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Automotriz">
-              <img src="../../assets/images/general/img2.webp" alt="Automotriz">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="farmaceutica" class="info-industria">
-          <h3>Industria Farmacéutica</h3>
-          <p>Desarrollamos sistemas de control ambiental, monitoreo de producción y soluciones de trazabilidad para laboratorios y plantas farmacéuticas.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Farmacéutica">
-              <img src="../../assets/images/general/img2.webp" alt="Farmacéutica">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="alimenticia" class="info-industria">
-          <h3>Industria Alimenticia</h3>
-          <p>Implementamos soluciones de automatización y control de calidad para la producción de alimentos y bebidas.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Alimenticia">
-              <img src="../../assets/images/general/img2.webp" alt="Alimenticia">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="manufactura" class="info-industria">
-          <h3>Industria de Manufactura</h3>
-          <p>Colaboramos en la optimización de procesos, implementación de sistemas de control y desarrollo de maquinaria especializada.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Manufactura">
-              <img src="../../assets/images/general/img2.webp" alt="Manufactura">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="electronica" class="info-industria">
-          <h3>Industria Electrónica y Eléctrica</h3>
-          <p>Implementamos soluciones de automatización y control de calidad para la producción de dispositivos electrónicos.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Electrónica">
-              <img src="../../assets/images/general/img2.webp" alt="Electrónica">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="electrodomesticos" class="info-industria">
-          <h3>Industria de Electrodomésticos</h3>
-          <p>Desarrollamos soluciones de automatización y control de calidad para la producción de electrodomésticos.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Electrodomésticos">
-              <img src="../../assets/images/general/img2.webp" alt="Electrodomésticos">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="alimentos" class="info-industria">
-          <h3>Industria de Alimentos y Bebidas</h3>
-          <p>Soluciones de envasado, etiquetado y control de procesos para líneas de producción de alimentos y bebidas.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Alimentos y Bebidas">
-              <img src="../../assets/images/general/img2.webp" alt="Alimentos y Bebidas">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-        <div id="aeroespacial" class="info-industria">
-          <h3>Industria Aeroespacial</h3>
-          <p>Desarrollamos soluciones de automatización y control de calidad para la producción de componentes aeroespaciales.</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="Aeroespacial">
-              <img src="../../assets/images/general/img2.webp" alt="Aeroespacial">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
-          </div>
-        </div>
-
-      </div><!-- /infoContainer -->
+    <!-- Paneles de industria: los llena el JS -->
+    <div id="infoContainer"></div>
   </div>
 </section>
 
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/components/header.js"></script>
 <script src="../../assets/js/components/footer.js"></script>
+<script src="../../assets/js/components/industrias-data.js"></script>
 
 <script>
+  // Cambiar de sector desde el sidebar
   function mostrarIndustria(id, item) {
     document.querySelectorAll('.info-industria').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.svc-optionlist .svc-option').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).style.display = 'block';
-    item.classList.add('active');
+    const panel = document.getElementById(id);
+    if (panel) panel.style.display = 'block';
+    if (item) item.classList.add('active');
   }
 
+  // Cambiar de sector desde los pills (mobile)
   function mostrarIndustriaPill(id, pill) {
     document.querySelectorAll('.info-industria').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.ind-pill').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).style.display = 'block';
-    pill.classList.add('active');
-    pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    const panel = document.getElementById(id);
+    if (panel) panel.style.display = 'block';
+    if (pill) { pill.classList.add('active'); pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
   }
 
-  function initCarousels() {
-    document.querySelectorAll('.carousel2').forEach(function(c){
-      var track=c.querySelector('.c2-track'); if(!track) return;
-      var count=track.children.length;
-      var dots=c.querySelectorAll('.c2-dots span');
-      var idx=0, timer=null;
-      function go(i){ idx=(i+count)%count; c.dataset.idx=idx; track.style.transform='translateX(-'+(idx*100)+'%)';
-        dots.forEach(function(d,k){d.classList.toggle('active',k===idx);}); }
-      function stop(){ if(timer){clearInterval(timer); timer=null;} }
-      function start(){ stop(); if(count>1) timer=setInterval(function(){go(idx+1);},3000); }
-      dots.forEach(function(d,k){ d.addEventListener('click',function(){go(k); start();}); });
-      c.addEventListener('mouseenter',stop);
-      c.addEventListener('mouseleave',start);
-      start();
-    });
-  }
+  (function () {
+    const DATA      = (window.DEMATIQ_INDUSTRIAS || []).slice();
+    const pillsWrap = document.querySelector('.ind-pills');
+    const sidebar   = document.querySelector('.svc-optionlist-sticky');
+    const container = document.getElementById('infoContainer');
+    const txt = s => (s == null ? '' : String(s));
 
-  initCarousels();
+    // Un subtema = nombre + descripción que se revela al pasar el mouse o dar clic
+    function subItem(item) {
+      return `<div class="ind-sub">
+        <button class="ind-sub-head" type="button" aria-expanded="false">
+          <span class="ind-sub-name">${txt(item.n)}</span>
+          <span class="ind-sub-ico" aria-hidden="true"></span>
+        </button>
+        <div class="ind-sub-body"><div><p>${txt(item.d)}</p></div></div>
+      </div>`;
+    }
 
-  // ── Carga dinámica desde la base de datos ──
-  (async function () {
-    try {
-      const data = await fetch('/api/contenido.php?clave=industrias').then(r => r.json());
-      if (!Array.isArray(data) || data.length === 0) return;
-
-      const pillsWrap     = document.querySelector('.ind-pills');
-      const sidebarSticky = document.querySelector('.svc-optionlist-sticky');
-      const infoContainer = document.getElementById('infoContainer');
-      if (!pillsWrap || !sidebarSticky || !infoContainer) return;
-
-      // Rebuild pills
-      pillsWrap.innerHTML = data.map((ind, i) =>
-        `<button class="ind-pill${i === 0 ? ' active' : ''}" onclick="mostrarIndustriaPill('${ind.id}',this)">${ind.nombre}</button>`
-      ).join('');
-
-      // Rebuild sidebar
-      const head = sidebarSticky.querySelector('.svc-optionlist-head');
-      sidebarSticky.innerHTML = '';
-      if (head) sidebarSticky.appendChild(head);
-      data.forEach((ind, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'svc-option' + (i === 0 ? ' active' : '');
-        btn.onclick = function() { mostrarIndustria(ind.id, this); };
-        btn.innerHTML = `<span class="svc-option-name">${ind.nombre}</span>`;
-        sidebarSticky.appendChild(btn);
-      });
-
-      // Rebuild info panels
-      infoContainer.innerHTML = data.map((ind, i) =>
-        `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
-          <h3>${ind.nombre}</h3>
-          <p>${ind.descripcion}</p>
-          <div class="carousel2" data-idx="0">
-            <div class="c2-track">
-              <img src="../../assets/images/general/img1.webp" alt="${ind.nombre}">
-              <img src="../../assets/images/general/img2.webp" alt="${ind.nombre}">
-            </div>
-            <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
+    function panelHTML(ind, i) {
+      const areas = (ind.areas || []).map(subItem).join('');
+      const temas = (ind.temas || []).map(subItem).join('');
+      return `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
+        <h3>${txt(ind.nombre)}</h3>
+        <p class="ind-intro">${txt(ind.intro)}</p>
+        <div class="ind-groups">
+          <div class="ind-group">
+            <h4 class="ind-group-title">Áreas de planta</h4>
+            <div class="ind-sub-list">${areas}</div>
           </div>
-        </div>`
-      ).join('');
+          <div class="ind-group">
+            <h4 class="ind-group-title">Temas técnicos</h4>
+            <div class="ind-sub-list">${temas}</div>
+          </div>
+        </div>
+        <div class="carousel2" data-idx="0">
+          <div class="c2-track">
+            <img src="../../assets/images/general/img1.webp" alt="${txt(ind.nombre)}">
+            <img src="../../assets/images/general/img2.webp" alt="${txt(ind.nombre)}">
+          </div>
+          <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
+        </div>
+      </div>`;
+    }
 
+    function initCarousels() {
+      document.querySelectorAll('.info-industria .carousel2').forEach(function (c) {
+        var track = c.querySelector('.c2-track'); if (!track) return;
+        var count = track.children.length;
+        var dots = c.querySelectorAll('.c2-dots span');
+        var idx = 0, timer = null;
+        function go(i) { idx = (i + count) % count; c.dataset.idx = idx; track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+          dots.forEach(function (d, k) { d.classList.toggle('active', k === idx); }); }
+        function stop() { if (timer) { clearInterval(timer); timer = null; } }
+        function start() { stop(); if (count > 1) timer = setInterval(function () { go(idx + 1); }, 3000); }
+        dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); start(); }); });
+        c.addEventListener('mouseenter', stop);
+        c.addEventListener('mouseleave', start);
+        start();
+      });
+    }
+
+    function renderAll(list) {
+      if (pillsWrap) {
+        pillsWrap.innerHTML = list.map((ind, i) =>
+          `<button class="ind-pill${i === 0 ? ' active' : ''}" onclick="mostrarIndustriaPill('${ind.id}',this)">${txt(ind.nombre)}</button>`
+        ).join('');
+      }
+      if (sidebar) {
+        const head = sidebar.querySelector('.svc-optionlist-head');
+        sidebar.innerHTML = '';
+        if (head) sidebar.appendChild(head);
+        list.forEach((ind, i) => {
+          const b = document.createElement('button');
+          b.className = 'svc-option' + (i === 0 ? ' active' : '');
+          b.onclick = function () { mostrarIndustria(ind.id, this); };
+          b.innerHTML = `<span class="svc-option-name">${txt(ind.nombre)}</span>`;
+          sidebar.appendChild(b);
+        });
+      }
+      if (container) container.innerHTML = list.map(panelHTML).join('');
       initCarousels();
-    } catch (e) { /* fallo silencioso — contenido estático queda intacto */ }
+    }
+
+    // Clic en un subtema: lo abre/cierra (además del hover en desktop)
+    if (container) {
+      container.addEventListener('click', e => {
+        const head = e.target.closest('.ind-sub-head');
+        if (!head) return;
+        const sub = head.closest('.ind-sub');
+        const open = sub.classList.toggle('open');
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+
+    renderAll(DATA);
+
+    // Sincroniza nombre/intro desde la BD si existe, conservando áreas y temas locales
+    (async function () {
+      try {
+        const db = await fetch('/api/contenido.php?clave=industrias').then(r => r.json());
+        if (!Array.isArray(db) || !db.length) return;
+        const byId = Object.fromEntries(DATA.map(d => [d.id, d]));
+        const merged = db.map(row => {
+          const local = byId[row.id] || { areas: [], temas: [] };
+          return {
+            id: row.id,
+            nombre: row.nombre || local.nombre || '',
+            intro: row.descripcion || local.intro || '',
+            areas: local.areas || [],
+            temas: local.temas || []
+          };
+        });
+        renderAll(merged);
+      } catch (e) { /* fallo silencioso — queda el contenido local */ }
+    })();
   })();
 </script>
 </body>

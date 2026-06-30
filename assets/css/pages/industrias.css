@@ -239,3 +239,105 @@ body {
   .info-industria h3 { font-size: 1.1rem; }
   .info-industria .c2-track img { height: clamp(180px, 55vw, 260px); }
 }
+
+/* ════════════ Industrias: intro + subtemas (áreas / temas técnicos) ════════════ */
+/* Por defecto solo se ve el nombre del subtema; la descripción se revela al pasar
+   el mouse o al dar clic (clic agrega .open para que quede fijo en táctil). */
+
+.ind-intro {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #2c3447;
+  max-width: 860px;
+  margin: 0 0 clamp(28px, 4vw, 40px);
+}
+
+.ind-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+.ind-group-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #000028;
+  margin: 0 0 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e9ef;
+}
+
+.ind-sub { border-bottom: 1px solid #eef1f6; }
+
+.ind-sub-head {
+  width: 100%;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 14px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: var(--brand-dark, #000028);
+  font-weight: 600;
+  font-size: 0.97rem;
+  line-height: 1.35;
+  transition: color 0.18s ease;
+}
+.ind-sub-head:hover,
+.ind-sub.open .ind-sub-head { color: #00a3a3; }
+
+/* Indicador + / − */
+.ind-sub-ico {
+  position: relative;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #00a3a3;
+}
+.ind-sub-ico::before,
+.ind-sub-ico::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+.ind-sub-ico::before { width: 11px; height: 2px; }
+.ind-sub-ico::after  { width: 2px; height: 11px; transition: transform 0.25s ease; }
+.ind-sub:hover .ind-sub-ico::after,
+.ind-sub.open .ind-sub-ico::after { transform: translate(-50%, -50%) scaleY(0); }
+
+/* Cuerpo colapsable (auto-altura con grid 0fr → 1fr) */
+.ind-sub-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+}
+.ind-sub-body > div { overflow: hidden; }
+.ind-sub:hover .ind-sub-body,
+.ind-sub.open .ind-sub-body { grid-template-rows: 1fr; }
+
+.ind-sub-body p {
+  margin: 0;
+  padding: 0 2px 16px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: #5a6473;
+}
+
+@media (max-width: 880px) {
+  .ind-groups { grid-template-columns: 1fr; gap: 26px; }
+  .ind-intro { font-size: 1rem; }
+}
+
+/* Carrusel restaurado al final del panel de industria */
+.info-industria .carousel2 { margin-top: clamp(32px, 5vw, 56px); }
