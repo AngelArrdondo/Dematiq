@@ -40,7 +40,7 @@
   <section id="empresas">
     <h2>Marcas Asociadas</h2>
         <div class="marquee-wrapper">
-      <div class="marquee-track">
+      <div class="marquee-track" id="partners-track">
         <div class="marquee-item" data-n="1"><img src="assets/images/partners/Siemens.svg" alt="Siemens" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="2"><img src="assets/images/partners/Rockwell_Automation.svg" alt="Rockwell Automation" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="3"><img src="assets/images/partners/Keyence.svg" alt="Keyence" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
@@ -87,7 +87,7 @@
   <section id="soluciones">
     <h2>Nuestras Soluciones Y Servicios</h2>
 
-    <div class="soluciones-grid soluciones-grid--featured">
+    <div class="soluciones-grid soluciones-grid--featured" id="solucionesFeatured">
 
       <a href="pages/servicios/servicios.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
@@ -113,7 +113,7 @@
 
     </div>
 
-    <div class="soluciones-grid soluciones-grid--machines">
+    <div class="soluciones-grid soluciones-grid--machines" id="solucionesMachines">
       <a href="pages/maquinas/maqcontrol.html" class="custom-card-link">
         <div class="card custom-card solucion-icon-card">
           <div class="solucion-icon-wrapper"><img src="assets/images/general/maquinas de control de torque.webp" class="solucion-icon" alt="Torque"></div>
@@ -206,7 +206,6 @@
   <!-- Componentes -->
   <script src="assets/js/components/header.js"></script>
   <script src="assets/js/components/footer.js"></script>
-  <script src="assets/js/components/proyectos-data.js"></script>
   <script src="assets/js/components/stage-carousel.js"></script>
 
   <!-- Contenido dinámico desde DB -->
@@ -218,7 +217,7 @@
         fetch('/api/contenido.php?clave=partners').then(r => r.json())
       ]);
 
-      // Hero video
+      // Hero
       if (home && home.hero && !Array.isArray(home.hero)) {
         const heroVideo  = document.querySelector('.hero-video');
         const heroSource = heroVideo?.querySelector('source');
@@ -230,12 +229,33 @@
 
       // Partners marquee (duplicado para loop continuo)
       const track = document.getElementById('partners-track');
-      if (partners && partners.length) {
+      if (track && Array.isArray(partners) && partners.length) {
         const items = partners.map(p =>
-          `<div class="marquee-item"><a href="${p.url}" target="_blank" rel="noopener"><img src="${p.logo}" alt="${p.nombre}"></a></div>`
+          `<div class="marquee-item"><a href="${p.url}" target="_blank" rel="noopener"><img src="${p.logo}" alt="${p.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a></div>`
         ).join('');
         track.innerHTML = items + items;
       }
+
+      // Soluciones
+      if (home && home.soluciones) {
+        const sol = home.soluciones;
+        if (sol.titulo) {
+          const h2 = document.querySelector('#soluciones h2');
+          if (h2) h2.textContent = sol.titulo;
+        }
+        function solCard(c) {
+          const title = c.subtitulo
+            ? `<h5 class="card-title card-title--split">${c.titulo}<span class="card-title-line2">${c.subtitulo}</span></h5>`
+            : `<h5 class="card-title">${c.titulo}</h5>`;
+          const desc = c.descripcion ? `<span class="solucion-card-desc">${c.descripcion}</span>` : '';
+          return `<a href="${c.href}" class="custom-card-link"><div class="card custom-card solucion-icon-card"><div class="solucion-icon-wrapper"><img src="${c.imagen}" class="solucion-icon" alt="${c.titulo}" onerror="this.src='assets/images/general/img1.webp'"></div>${title}${desc}</div></a>`;
+        }
+        const feat = document.getElementById('solucionesFeatured');
+        if (feat && Array.isArray(sol.featured)) feat.innerHTML = sol.featured.map(solCard).join('');
+        const mach = document.getElementById('solucionesMachines');
+        if (mach && Array.isArray(sol.machines)) mach.innerHTML = sol.machines.map(solCard).join('');
+      }
+
     } catch(e) { console.warn('Content API unavailable, using static fallback'); }
   })();
   </script>

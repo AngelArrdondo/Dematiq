@@ -424,6 +424,88 @@ try {
       .poster-layout { grid-template-columns: 1fr; }
       .sc-body { padding: 16px 18px; }
     }
+
+    /* ══ SOLUCIONES CARDS ADMIN ════════════════════════════ */
+    .sol-group-label {
+      font-size: .7rem; font-weight: 700; color: var(--text-lt);
+      text-transform: uppercase; letter-spacing: .5px;
+      margin: 0 0 10px 0; display: flex; align-items: center; gap: 7px;
+    }
+    .sol-group-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .sol-cards-admin-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; margin-bottom: 22px;
+    }
+    .sol-card-admin {
+      border: 1.5px solid var(--border); border-radius: 12px;
+      overflow: hidden; background: #fafcff; transition: border-color .18s, box-shadow .18s;
+    }
+    .sol-card-admin:focus-within { border-color:var(--accent-lt); box-shadow:0 0 0 3px rgba(46,107,207,.07); }
+    .sol-card-admin-img {
+      aspect-ratio: 16/9; overflow: hidden; position: relative;
+      background: #e8eef8; cursor: pointer;
+    }
+    .sol-card-admin-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .sol-card-admin-hint {
+      position:absolute; inset:0; background:rgba(26,74,158,.52);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:.62rem; font-weight:700; gap:5px;
+      opacity:0; transition:opacity .16s;
+    }
+    .sol-card-admin-hint svg { width:13px; height:13px; }
+    .sol-card-admin-img:hover .sol-card-admin-hint { opacity:1; }
+    .sol-card-admin-body { padding:9px 11px; }
+    .sol-card-admin-body input {
+      width:100%; box-sizing:border-box; padding:6px 9px;
+      border:1.5px solid var(--border); border-radius:7px;
+      font-size:.78rem; font-family:inherit; color:var(--text);
+      background:#fff; outline:none; transition:border-color .14s, box-shadow .14s;
+    }
+    .sol-card-admin-body input:focus { border-color:var(--accent-lt); box-shadow:0 0 0 3px rgba(46,107,207,.09); }
+    .sol-card-link-hint { font-size:.58rem; color:#b0b8cc; margin-top:5px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    @media (max-width: 680px) { .sol-cards-admin-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 440px) { .sol-cards-admin-grid { grid-template-columns: 1fr; } }
+
+    /* ══ PARTNERS LIST ════════════════════════════════════ */
+    .partner-row {
+      display: grid; grid-template-columns: 58px 1fr 1fr auto;
+      gap: 10px; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .partner-row:last-child { border-bottom: none; }
+    .partner-logo-thumb {
+      width:58px; height:38px; border-radius:8px;
+      border:1.5px solid var(--border); overflow:hidden;
+      background:#f0f4ff; display:flex; align-items:center;
+      justify-content:center; cursor:pointer; position:relative;
+      transition:border-color .16s;
+    }
+    .partner-logo-thumb:hover { border-color:var(--accent-lt); }
+    .partner-logo-thumb img { max-width:100%; max-height:100%; object-fit:contain; }
+    .plth-hint {
+      position:absolute; inset:0; background:rgba(26,74,158,.5);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:.52rem; font-weight:700; text-align:center;
+      opacity:0; transition:opacity .16s;
+    }
+    .partner-logo-thumb:hover .plth-hint { opacity:1; }
+    .partner-del-btn {
+      width:32px; height:32px; border:none; cursor:pointer; flex-shrink:0;
+      background:#fff1f0; color:#dc2626; border-radius:8px;
+      display:flex; align-items:center; justify-content:center; transition:background .14s;
+    }
+    .partner-del-btn:hover { background:#fee2e2; }
+    .partner-del-btn svg { width:14px; height:14px; }
+    .partners-empty { text-align:center; padding:28px 16px; color:var(--text-lt); font-size:.82rem; }
+    .add-partner-btn {
+      display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px;
+      border:2px dashed #c7d5f0; background:#f5f8ff; color:var(--accent);
+      font-size:.8rem; font-weight:700; cursor:pointer; width:100%; margin-top:12px;
+      transition:all .15s;
+    }
+    .add-partner-btn:hover { border-color:var(--accent-lt); background:#eef3ff; }
+    .partners-save-bar { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+    @media (max-width: 560px) { .partner-row { grid-template-columns: 46px 1fr auto; } }
   </style>
 </head>
 <body>
@@ -702,6 +784,62 @@ try {
       </div>
     </div>
 
+    <!-- ── 4. TARJETAS DE SOLUCIONES ─────────────────────── -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:linear-gradient(135deg,#065f46,#059669)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="sc-head-text">
+          <h3>Tarjetas de soluciones</h3>
+          <p>Imágenes y títulos de las tarjetas en la sección "Soluciones" del inicio</p>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="field">
+          <div class="field-top"><label>Título de la sección</label></div>
+          <input type="text" id="solTitulo" class="fi" placeholder="Nuestras Soluciones Y Servicios"
+            oninput="checkDirty()" onblur="onFieldBlur()">
+        </div>
+        <p class="sol-group-label">Fila principal</p>
+        <div class="sol-cards-admin-grid" id="solFeaturedGrid"></div>
+        <p class="sol-group-label">Máquinas</p>
+        <div class="sol-cards-admin-grid" id="solMachinesGrid"></div>
+      </div>
+    </div>
+    <input type="file" id="solFileInput" accept="image/*" style="display:none">
+
+    <!-- ── 5. MARCAS ASOCIADAS ──────────────────────────── -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:linear-gradient(135deg,#92400e,#d97706)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="sc-head-text">
+          <h3>Marcas Asociadas</h3>
+          <p>Logos que aparecen en el carrusel de marcas de la portada</p>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div id="partnersList"></div>
+        <button class="add-partner-btn" onclick="addPartner()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar marca
+        </button>
+      </div>
+      <div class="partners-save-bar">
+        <button class="btn-admin btn-outline-admin" onclick="cancelPartners()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Descartar
+        </button>
+        <button class="btn-admin btn-primary-admin" onclick="savePartners()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+          Guardar marcas
+        </button>
+      </div>
+    </div>
+    <input type="file" id="partnerFileInput" accept="image/*" style="display:none">
+
     <!-- save bar sticky -->
     <div class="save-bar-sticky" style="justify-content:flex-end">
       <a href="/index.html" target="_blank" class="btn-admin btn-outline-admin">
@@ -802,10 +940,12 @@ try {
   }
   function checkDirty() {
     const cur = getValues();
-    const changed = cur.badge !== original.badge
-                 || cur.poster !== original.poster
-                 || cur.video  !== original.video;
-    changed ? markDirty() : clearDirty();
+    const heroChanged = cur.badge !== original.badge
+                     || cur.poster !== original.poster
+                     || cur.video  !== original.video;
+    const solChanged = typeof solOriginal !== 'undefined'
+      && JSON.stringify(getSolValues()) !== JSON.stringify(solOriginal);
+    heroChanged || solChanged ? markDirty() : clearDirty();
   }
   function markDirty() {
     dirty = true;
@@ -1214,7 +1354,6 @@ try {
     onBadgeChange(original.badge  || '');
     setPosterPreview(original.poster || '');
     onVideoChange(original.video  || '');
-    /* reset video preview */
     const player = document.getElementById('videoPlayer');
     player.pause(); player.src = original.video ? '../../' + original.video : '';
     if (original.video) {
@@ -1226,6 +1365,13 @@ try {
     }
     document.getElementById('videoAnalysis').classList.remove('visible');
     document.getElementById('videoProg').classList.remove('visible', 'done');
+    /* reset soluciones */
+    if (typeof solOriginal !== 'undefined') {
+      solData = JSON.parse(JSON.stringify(solOriginal));
+      document.getElementById('solTitulo').value = solData.titulo;
+      renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
+      renderSolGrid('solMachinesGrid', solData.machines, 'machines');
+    }
     clearDirty();
     showToast('Cambios descartados');
   }
@@ -1239,10 +1385,14 @@ try {
       poster: document.getElementById('posterPath').value.trim(),
       video:  document.getElementById('heroVideo').value.trim()
     };
+    if (typeof solData !== 'undefined') {
+      home.soluciones = getSolValues();
+    }
     try {
       const res = await CM.set('home', home);
       if (res && res.ok) {
         original = Object.assign({}, home.hero);
+        if (typeof solData !== 'undefined') solOriginal = JSON.parse(JSON.stringify(home.soluciones));
         clearDirty();
         showToast('Cambios guardados correctamente');
         viewPublic('/index.html');
@@ -1252,6 +1402,181 @@ try {
     } catch {
       showToast('Error de conexión', 'error');
     }
+  }
+
+  /* ════════════════════════════════════════════════
+     SOLUCIONES
+     ════════════════════════════════════════════════ */
+  const SOL_DEFAULTS = {
+    titulo: 'Nuestras Soluciones Y Servicios',
+    featured: [
+      {titulo:'Servicios de ingeniería',imagen:'assets/images/general/servicios.webp',href:'pages/servicios/servicios.html'},
+      {titulo:'Manufactura',subtitulo:'Maquinados industriales',descripcion:'Diseño 2D y 3D',imagen:'assets/images/general/manufactura.png',href:'pages/manufactura/maqindus.html'},
+      {titulo:'Ensamble',imagen:'assets/images/general/ensamble.png',href:'pages/ensamble/ensamble.html'}
+    ],
+    machines: [
+      {titulo:'Máquinas de control de torque',imagen:'assets/images/general/maquinas de control de torque.webp',href:'pages/maquinas/maqcontrol.html'},
+      {titulo:'Máquinas probadoras de fuga',imagen:'assets/images/general/maquinas probadoras de fuga.webp',href:'pages/maquinas/maqprob.html'},
+      {titulo:'Máquinas de inspección',imagen:'assets/images/general/maquinas de inspeccion.webp',href:'pages/maquinas/maqinspe.html'},
+      {titulo:'Máquinas de limpieza',imagen:'assets/images/general/maquina de limpieza.png',href:'pages/maquinas/maclim.html'},
+      {titulo:'Máquinas de marcado',imagen:'assets/images/general/maquinas de marcado.webp',href:'pages/maquinas/maqmar.html'},
+      {titulo:'Celdas robóticas',imagen:'assets/images/general/celdas roboticas.webp',href:'pages/maquinas/macrobot.html'}
+    ]
+  };
+
+  const _rawSol = (CM.get('home') || {}).soluciones;
+  let solData = {
+    titulo:   _rawSol?.titulo   ?? SOL_DEFAULTS.titulo,
+    featured: _rawSol?.featured ? JSON.parse(JSON.stringify(_rawSol.featured)) : JSON.parse(JSON.stringify(SOL_DEFAULTS.featured)),
+    machines: _rawSol?.machines ? JSON.parse(JSON.stringify(_rawSol.machines)) : JSON.parse(JSON.stringify(SOL_DEFAULTS.machines))
+  };
+  let solOriginal = JSON.parse(JSON.stringify(solData));
+
+  document.getElementById('solTitulo').value = solData.titulo;
+
+  function getSolValues() {
+    return {
+      titulo:   document.getElementById('solTitulo').value,
+      featured: JSON.parse(JSON.stringify(solData.featured)),
+      machines: JSON.parse(JSON.stringify(solData.machines))
+    };
+  }
+
+  function renderSolGrid(gridId, cards, prefix) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    grid.innerHTML = cards.map((card, i) => `
+      <div class="sol-card-admin">
+        <div class="sol-card-admin-img" onclick="pickSolImage('${prefix}',${i})" title="Cambiar imagen">
+          <img id="solImg_${prefix}_${i}" src="../../${card.imagen}" alt="${card.titulo}"
+            onerror="this.style.display='none'">
+          <div class="sol-card-admin-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Cambiar
+          </div>
+        </div>
+        <div class="sol-card-admin-body">
+          <input type="text" value="${card.titulo.replace(/"/g,'&quot;')}"
+            oninput="solData.${prefix}[${i}].titulo=this.value;checkDirty()" onblur="onFieldBlur()">
+          <span class="sol-card-link-hint">${card.href}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
+  renderSolGrid('solMachinesGrid', solData.machines, 'machines');
+
+  let _solTarget = null;
+  document.getElementById('solFileInput').onchange = async function() {
+    if (!_solTarget || !this.files[0]) return;
+    const { prefix, i } = _solTarget;
+    const file = this.files[0];
+    this.value = '';
+    if (!file.type.startsWith('image/')) { showToast('Solo imágenes', 'error'); return; }
+    if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB', 'error'); return; }
+    const fd = new FormData();
+    fd.append('image', file);
+    try {
+      const res  = await fetch('../api/contenido.php', { method:'POST', headers:{'X-CSRF-Token':CSRF_TOKEN}, body:fd });
+      const json = await res.json();
+      if (json.ok) {
+        solData[prefix][i].imagen = json.path;
+        const img = document.getElementById('solImg_' + prefix + '_' + i);
+        if (img) { img.src = '../../' + json.path; img.style.display = ''; }
+        checkDirty();
+        showToast('Imagen actualizada');
+      } else { showToast(json.error || 'Error al subir', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
+  };
+
+  function pickSolImage(prefix, i) {
+    _solTarget = { prefix, i };
+    document.getElementById('solFileInput').click();
+  }
+
+  /* ════════════════════════════════════════════════
+     PARTNERS
+     ════════════════════════════════════════════════ */
+  let partners = JSON.parse(JSON.stringify(CM.get('partners') || []));
+  let partnersOriginal = JSON.parse(JSON.stringify(partners));
+
+  function renderPartners() {
+    const list = document.getElementById('partnersList');
+    if (!partners.length) {
+      list.innerHTML = '<div class="partners-empty">No hay marcas configuradas. Agrega la primera usando el botón de abajo.</div>';
+      return;
+    }
+    list.innerHTML = partners.map((p, i) => `
+      <div class="partner-row">
+        <div class="partner-logo-thumb" onclick="pickPartnerLogo(${i})" title="Cambiar logo">
+          ${p.logo
+            ? `<img src="../../${p.logo}" alt="${p.nombre || ''}" onerror="this.style.display='none'">`
+            : `<svg class="partner-logo-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>`}
+          <div class="plth-hint">Cambiar</div>
+        </div>
+        <input type="text" class="fi" placeholder="Nombre de la marca" value="${(p.nombre||'').replace(/"/g,'&quot;')}"
+          oninput="partners[${i}].nombre=this.value">
+        <input type="text" class="fi" placeholder="https://..." value="${(p.url||'').replace(/"/g,'&quot;')}"
+          oninput="partners[${i}].url=this.value">
+        <button class="partner-del-btn" onclick="removePartner(${i})" title="Eliminar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>`).join('');
+  }
+
+  renderPartners();
+
+  let _partnerTarget = null;
+  document.getElementById('partnerFileInput').onchange = async function() {
+    if (_partnerTarget === null || !this.files[0]) return;
+    const i = _partnerTarget;
+    const file = this.files[0];
+    this.value = '';
+    if (!file.type.startsWith('image/')) { showToast('Solo imágenes', 'error'); return; }
+    if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB', 'error'); return; }
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('folder', 'partners');
+    try {
+      const res  = await fetch('../api/contenido.php', { method:'POST', headers:{'X-CSRF-Token':CSRF_TOKEN}, body:fd });
+      const json = await res.json();
+      if (json.ok) {
+        partners[i].logo = json.path;
+        renderPartners();
+        showToast('Logo actualizado');
+      } else { showToast(json.error || 'Error al subir', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
+  };
+
+  function pickPartnerLogo(i) {
+    _partnerTarget = i;
+    document.getElementById('partnerFileInput').click();
+  }
+
+  function addPartner() {
+    partners.push({ nombre:'', logo:'', url:'' });
+    renderPartners();
+  }
+
+  function removePartner(i) {
+    partners.splice(i, 1);
+    renderPartners();
+  }
+
+  function cancelPartners() {
+    partners = JSON.parse(JSON.stringify(partnersOriginal));
+    renderPartners();
+    showToast('Cambios descartados');
+  }
+
+  async function savePartners() {
+    try {
+      const res = await CM.set('partners', partners);
+      if (res && res.ok) {
+        partnersOriginal = JSON.parse(JSON.stringify(partners));
+        showToast('Marcas guardadas correctamente');
+      } else { showToast(res?.error || 'Error al guardar', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
   }
 </script>
 
