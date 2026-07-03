@@ -43,11 +43,11 @@ INSERT INTO contenido (clave, valor) VALUES
   {"nombre":"Ampacet",    "logo":"assets/images/partners/AMPACET.png",  "url":"https://www.ampacet.com/spanish"}
 ]'),
 ('home', '{
-  "hero": [
-    {"title":"Bienvenido a DEMATIQ", "subtitle":"Soluciones inteligentes para la industria moderna",     "image":"assets/images/general/index.jpg"},
-    {"title":"Innovación",           "subtitle":"Experiencia en proyectos de Automatización y Ensamble", "image":"assets/images/general/img2.png"},
-    {"title":"Confianza",            "subtitle":"Más de 10 años de Experiencia",                        "image":"assets/images/general/img3.png"}
-  ]
+  "hero": {
+    "video":  "assets/videos/hero.mp4",
+    "poster": "assets/images/general/index.webp",
+    "badge":  "Bienvenido"
+  }
 }'),
 ('industrias', '[
   {"id":"automotriz",        "nombre":"Automotriz",              "descripcion":"Colaboramos en proyectos de automatización, control de calidad y desarrollo de maquinaria para procesos de ensamblaje y pruebas."},

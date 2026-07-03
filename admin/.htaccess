@@ -2,8 +2,10 @@
 Options -Indexes
 
 # ── Subida de archivos ────────────────────────────────────────
-php_value upload_max_filesize 5M
-php_value post_max_size 10M
+php_value upload_max_filesize 200M
+php_value post_max_size       210M
+php_value max_execution_time  300
+php_value max_input_time      300
 
 # ── Forzar HTTPS ─────────────────────────────────────────────
 <IfModule mod_rewrite.c>
@@ -29,7 +31,7 @@ php_value post_max_size 10M
 
   # Deshabilitar características del navegador que no se usan
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
 </IfModule>
 
 # Bloquear acceso directo a archivos sensibles del admin
