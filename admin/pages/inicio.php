@@ -506,6 +506,27 @@ try {
     .add-partner-btn:hover { border-color:var(--accent-lt); background:#eef3ff; }
     .partners-save-bar { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
     @media (max-width: 560px) { .partner-row { grid-template-columns: 46px 1fr auto; } }
+
+    /* ══ CTA BUTTONS SECTION ══════════════════════════════ */
+    .cta-pair { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    @media (max-width: 640px) { .cta-pair { grid-template-columns:1fr; } }
+    .cta-group-label { font-size:.7rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.6px; margin-bottom:4px; display:block; }
+    .cta-preview-bar {
+      margin-top:22px; background:linear-gradient(160deg, #071740, #0d2155);
+      border-radius:12px; padding:18px 20px;
+      display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    }
+    .cta-preview-btn {
+      font-size:.72rem; font-weight:700; padding:7px 16px; border-radius:6px;
+      color:#fff; background:linear-gradient(135deg,#1a4a9e,#2e6bcf); pointer-events:none;
+    }
+    .cta-preview-btn.ghost { background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.35); }
+
+    /* ══ SECTION TITLES ═══════════════════════════════════ */
+    .titles-pair { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+    @media (max-width: 640px) { .titles-pair { grid-template-columns:1fr; } }
+    .si-orange { background:linear-gradient(135deg,#c2410c,#ea580c); }
+    .si-indigo { background:linear-gradient(135deg,#3730a3,#6366f1); }
   </style>
 </head>
 <body>
@@ -809,6 +830,80 @@ try {
     </div>
     <input type="file" id="solFileInput" accept="image/*" style="display:none">
 
+    <!-- ── 5. BOTONES DE ACCIÓN ──────────────────────────── -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon si-orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13,17 18,12 13,7"/><polyline points="6,17 11,12 6,7"/></svg>
+        </div>
+        <div class="sc-head-text">
+          <h3>Botones de acción (CTA)</h3>
+          <p>Texto y destino de los dos botones principales del hero</p>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="cta-pair">
+          <div>
+            <span class="cta-group-label">Botón 1 — Principal</span>
+            <div class="field" style="margin-bottom:10px">
+              <div class="field-top"><label>Texto</label></div>
+              <input type="text" id="cta1Text" class="fi" placeholder="Cotiza tu proyecto"
+                oninput="onCtaChange()" onblur="onFieldBlur()">
+            </div>
+            <div class="field">
+              <div class="field-top"><label>Enlace</label></div>
+              <input type="text" id="cta1Href" class="fi" placeholder="pages/corporativo/Contacto.html"
+                oninput="onCtaChange()" onblur="onFieldBlur()">
+            </div>
+          </div>
+          <div>
+            <span class="cta-group-label">Botón 2 — Secundario</span>
+            <div class="field" style="margin-bottom:10px">
+              <div class="field-top"><label>Texto</label></div>
+              <input type="text" id="cta2Text" class="fi" placeholder="Nuestros servicios"
+                oninput="onCtaChange()" onblur="onFieldBlur()">
+            </div>
+            <div class="field">
+              <div class="field-top"><label>Enlace</label></div>
+              <input type="text" id="cta2Href" class="fi" placeholder="#soluciones"
+                oninput="onCtaChange()" onblur="onFieldBlur()">
+            </div>
+          </div>
+        </div>
+        <div class="cta-preview-bar">
+          <div class="cta-preview-btn" id="ctaPreview1">Cotiza tu proyecto</div>
+          <div class="cta-preview-btn ghost" id="ctaPreview2">Nuestros servicios</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 6. TÍTULOS DE SECCIÓN ─────────────────────────── -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon si-indigo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h8m-8 6h16"/></svg>
+        </div>
+        <div class="sc-head-text">
+          <h3>Títulos de sección</h3>
+          <p>Encabezados de "Marcas Asociadas" y "Proyectos destacados" en la portada</p>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="titles-pair">
+          <div class="field">
+            <div class="field-top"><label>Sección de Marcas</label></div>
+            <input type="text" id="tituloEmpresas" class="fi" placeholder="Marcas Asociadas"
+              oninput="checkDirty()" onblur="onFieldBlur()">
+          </div>
+          <div class="field">
+            <div class="field-top"><label>Sección de Proyectos</label></div>
+            <input type="text" id="tituloProyectos" class="fi" placeholder="Proyectos destacados"
+              oninput="checkDirty()" onblur="onFieldBlur()">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- save bar sticky -->
     <div class="save-bar-sticky" style="justify-content:flex-end">
       <a href="/index.html" target="_blank" class="btn-admin btn-outline-admin">
@@ -898,6 +993,8 @@ try {
 
   let original = Object.assign({}, hero);
   let dirty = false;
+  let originalCta = undefined;
+  let originalTitulos = undefined;
 
   /* ── Dirty tracking ──────────────────────────── */
   function getValues() {
@@ -914,7 +1011,11 @@ try {
                      || cur.video  !== original.video;
     const solChanged = typeof solOriginal !== 'undefined'
       && JSON.stringify(getSolValues()) !== JSON.stringify(solOriginal);
-    heroChanged || solChanged ? markDirty() : clearDirty();
+    const ctaChanged = typeof originalCta !== 'undefined'
+      && JSON.stringify(getCtaValues()) !== JSON.stringify(originalCta);
+    const titulosChanged = typeof originalTitulos !== 'undefined'
+      && JSON.stringify(getTitulosValues()) !== JSON.stringify(originalTitulos);
+    heroChanged || solChanged || ctaChanged || titulosChanged ? markDirty() : clearDirty();
   }
   function markDirty() {
     dirty = true;
@@ -1341,6 +1442,20 @@ try {
       renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
       renderSolGrid('solMachinesGrid', solData.machines, 'machines');
     }
+    /* reset CTA */
+    if (typeof originalCta !== 'undefined') {
+      document.getElementById('cta1Text').value = originalCta.btn1Text;
+      document.getElementById('cta1Href').value = originalCta.btn1Href;
+      document.getElementById('cta2Text').value = originalCta.btn2Text;
+      document.getElementById('cta2Href').value = originalCta.btn2Href;
+      document.getElementById('ctaPreview1').textContent = originalCta.btn1Text;
+      document.getElementById('ctaPreview2').textContent = originalCta.btn2Text;
+    }
+    /* reset títulos */
+    if (typeof originalTitulos !== 'undefined') {
+      document.getElementById('tituloEmpresas').value  = originalTitulos.empresas;
+      document.getElementById('tituloProyectos').value = originalTitulos.proyectos;
+    }
     clearDirty();
     showToast('Cambios descartados');
   }
@@ -1349,19 +1464,24 @@ try {
 
   async function saveInicio() {
     const home = CM.get('home') || {};
+    const ctaVals = getCtaValues();
     home.hero = {
       badge:  document.getElementById('heroBadge').value.trim(),
       poster: document.getElementById('posterPath').value.trim(),
-      video:  document.getElementById('heroVideo').value.trim()
+      video:  document.getElementById('heroVideo').value.trim(),
+      cta: ctaVals,
     };
     if (typeof solData !== 'undefined') {
       home.soluciones = getSolValues();
     }
+    home.titulos = getTitulosValues();
     try {
       const res = await CM.set('home', home);
       if (res && res.ok) {
         original = Object.assign({}, home.hero);
         if (typeof solData !== 'undefined') solOriginal = JSON.parse(JSON.stringify(home.soluciones));
+        originalCta     = Object.assign({}, ctaVals);
+        originalTitulos = Object.assign({}, home.titulos);
         clearDirty();
         showToast('Cambios guardados correctamente');
         viewPublic('/index.html');
@@ -1408,6 +1528,55 @@ try {
       titulo:   document.getElementById('solTitulo').value,
       featured: JSON.parse(JSON.stringify(solData.featured)),
       machines: JSON.parse(JSON.stringify(solData.machines))
+    };
+  }
+
+  /* ── CTA Buttons ─────────────────────────────── */
+  const _rawCta      = (CM.get('home') || {})?.hero?.cta || {};
+  const _rawTitulos  = (CM.get('home') || {})?.titulos   || {};
+
+  let ctaData = {
+    btn1Text: _rawCta.btn1Text || 'Cotiza tu proyecto',
+    btn1Href: _rawCta.btn1Href || 'pages/corporativo/Contacto.html',
+    btn2Text: _rawCta.btn2Text || 'Nuestros servicios',
+    btn2Href: _rawCta.btn2Href || '#soluciones',
+  };
+  originalCta = Object.assign({}, ctaData);
+
+  let titulosData = {
+    empresas:  _rawTitulos.empresas  || 'Marcas Asociadas',
+    proyectos: _rawTitulos.proyectos || 'Proyectos destacados',
+  };
+  originalTitulos = Object.assign({}, titulosData);
+
+  document.getElementById('cta1Text').value      = ctaData.btn1Text;
+  document.getElementById('cta1Href').value      = ctaData.btn1Href;
+  document.getElementById('cta2Text').value      = ctaData.btn2Text;
+  document.getElementById('cta2Href').value      = ctaData.btn2Href;
+  document.getElementById('tituloEmpresas').value  = titulosData.empresas;
+  document.getElementById('tituloProyectos').value = titulosData.proyectos;
+  document.getElementById('ctaPreview1').textContent = ctaData.btn1Text;
+  document.getElementById('ctaPreview2').textContent = ctaData.btn2Text;
+
+  function onCtaChange() {
+    document.getElementById('ctaPreview1').textContent = document.getElementById('cta1Text').value || 'Cotiza tu proyecto';
+    document.getElementById('ctaPreview2').textContent = document.getElementById('cta2Text').value || 'Nuestros servicios';
+    checkDirty();
+  }
+
+  function getCtaValues() {
+    return {
+      btn1Text: document.getElementById('cta1Text').value.trim(),
+      btn1Href: document.getElementById('cta1Href').value.trim(),
+      btn2Text: document.getElementById('cta2Text').value.trim(),
+      btn2Href: document.getElementById('cta2Href').value.trim(),
+    };
+  }
+
+  function getTitulosValues() {
+    return {
+      empresas:  document.getElementById('tituloEmpresas').value.trim(),
+      proyectos: document.getElementById('tituloProyectos').value.trim(),
     };
   }
 

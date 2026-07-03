@@ -28,8 +28,8 @@
           <img src="assets/images/logos/logo1.webp" class="hero-logo" alt="DEMATIQ">
         </div>
         <div class="hero-cta-group">
-          <a href="pages/corporativo/Contacto.html" class="hero-cta hero-cta--primary">Cotiza tu proyecto</a>
-          <a href="#soluciones" class="hero-cta hero-cta--ghost">Nuestros servicios</a>
+          <a href="pages/corporativo/Contacto.html" id="heroCta1" class="hero-cta hero-cta--primary">Cotiza tu proyecto</a>
+          <a href="#soluciones" id="heroCta2" class="hero-cta hero-cta--ghost">Nuestros servicios</a>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@
 
   <!-- ===================== EMPRESAS ===================== -->
   <section id="empresas">
-    <h2>Marcas Asociadas</h2>
+    <h2 id="empresasTitulo">Marcas Asociadas</h2>
         <div class="marquee-wrapper">
       <div class="marquee-track" id="partners-track">
         <div class="marquee-item" data-n="1"><img src="assets/images/partners/Siemens.svg" alt="Siemens" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
@@ -162,7 +162,7 @@
 
   <!-- ===================== PROYECTOS DESTACADOS ===================== -->
   <section id="proyectos">
-    <h2>Proyectos destacados</h2>
+    <h2 id="proyectosTitulo">Proyectos destacados</h2>
 
     <div class="stage-carousel" id="stageCarousel">
 
@@ -257,6 +257,28 @@
         if (feat && Array.isArray(sol.featured)) feat.innerHTML = sol.featured.map(solCard).join('');
         const mach = document.getElementById('solucionesMachines');
         if (mach && Array.isArray(sol.machines)) mach.innerHTML = sol.machines.map(solCard).join('');
+      }
+
+      // Títulos de sección
+      if (home && home.titulos) {
+        const t = home.titulos;
+        if (t.empresas) { const el = document.getElementById('empresasTitulo'); if (el) el.textContent = t.empresas; }
+        if (t.proyectos) { const el = document.getElementById('proyectosTitulo'); if (el) el.textContent = t.proyectos; }
+      }
+
+      // Botones CTA del hero
+      if (home && home.hero && home.hero.cta) {
+        const cta = home.hero.cta;
+        const btn1 = document.getElementById('heroCta1');
+        const btn2 = document.getElementById('heroCta2');
+        if (btn1) {
+          if (cta.btn1Text) btn1.textContent = cta.btn1Text;
+          if (cta.btn1Href) btn1.href = cta.btn1Href;
+        }
+        if (btn2) {
+          if (cta.btn2Text) btn2.textContent = cta.btn2Text;
+          if (cta.btn2Href) btn2.href = cta.btn2Href;
+        }
       }
 
     } catch(e) { console.warn('Content API unavailable, using static fallback'); }
