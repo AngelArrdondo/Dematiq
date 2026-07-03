@@ -337,7 +337,8 @@ const AdminSidebar = {
       { href: `${bp}pages/nosotros.php`,    icon: 'users',    text: 'Nosotros',   key: 'nosotros' },
       { href: `${bp}pages/industrias.php`,  icon: 'layers',   text: 'Industrias', key: 'industrias' },
       { href: `${bp}pages/contacto.php`,    icon: 'phone',    text: 'Contacto',   key: 'contacto' },
-      { href: `${bp}pages/partners.php`,    icon: 'star',     text: 'Socios',     key: 'partners' },
+      { href: `${bp}pages/marcas.php`,       icon: 'star',     text: 'Marcas',     key: 'marcas' },
+      { href: `${bp}pages/partners.php`,    icon: 'users',    text: 'Socios',     key: 'partners' },
       { href: `${bp}pages/servicios.php`,   icon: 'tool',     text: 'Servicios',  key: 'servicios' },
       { href: `${bp}pages/proyectos.php`,   icon: 'projects', text: 'Proyectos',  key: 'proyectos' }
     ];

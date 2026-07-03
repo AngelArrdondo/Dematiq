@@ -212,9 +212,9 @@
   <script>
   (async function() {
     try {
-      const [home, partners] = await Promise.all([
+      const [home, marcas] = await Promise.all([
         fetch('/api/contenido.php?clave=home').then(r => r.json()),
-        fetch('/api/contenido.php?clave=partners').then(r => r.json())
+        fetch('/api/contenido.php?clave=marcas').then(r => r.json())
       ]);
 
       // Hero
@@ -227,12 +227,15 @@
         if (home.hero.badge  && heroBadge)  heroBadge.textContent = home.hero.badge;
       }
 
-      // Partners marquee (duplicado para loop continuo)
+      // Marcas Asociadas — marquee (duplicado para loop continuo)
       const track = document.getElementById('partners-track');
-      if (track && Array.isArray(partners) && partners.length) {
-        const items = partners.map(p =>
-          `<div class="marquee-item"><a href="${p.url}" target="_blank" rel="noopener"><img src="${p.logo}" alt="${p.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a></div>`
-        ).join('');
+      if (track && Array.isArray(marcas) && marcas.length) {
+        const items = marcas.map(m => {
+          const inner = m.url
+            ? `<a href="${m.url}" target="_blank" rel="noopener"><img src="${m.logo}" alt="${m.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a>`
+            : `<img src="${m.logo}" alt="${m.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')">`;
+          return `<div class="marquee-item">${inner}</div>`;
+        }).join('');
         track.innerHTML = items + items;
       }
 

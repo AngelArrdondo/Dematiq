@@ -809,37 +809,6 @@ try {
     </div>
     <input type="file" id="solFileInput" accept="image/*" style="display:none">
 
-    <!-- ── 5. MARCAS ASOCIADAS ──────────────────────────── -->
-    <div class="section-card">
-      <div class="sc-head">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#92400e,#d97706)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <div class="sc-head-text">
-          <h3>Marcas Asociadas</h3>
-          <p>Logos que aparecen en el carrusel de marcas de la portada</p>
-        </div>
-      </div>
-      <div class="sc-body">
-        <div id="partnersList"></div>
-        <button class="add-partner-btn" onclick="addPartner()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Agregar marca
-        </button>
-      </div>
-      <div class="partners-save-bar">
-        <button class="btn-admin btn-outline-admin" onclick="cancelPartners()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          Descartar
-        </button>
-        <button class="btn-admin btn-primary-admin" onclick="savePartners()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-          Guardar marcas
-        </button>
-      </div>
-    </div>
-    <input type="file" id="partnerFileInput" accept="image/*" style="display:none">
-
     <!-- save bar sticky -->
     <div class="save-bar-sticky" style="justify-content:flex-end">
       <a href="/index.html" target="_blank" class="btn-admin btn-outline-admin">
@@ -1494,90 +1463,7 @@ try {
     document.getElementById('solFileInput').click();
   }
 
-  /* ════════════════════════════════════════════════
-     PARTNERS
-     ════════════════════════════════════════════════ */
-  let partners = JSON.parse(JSON.stringify(CM.get('partners') || []));
-  let partnersOriginal = JSON.parse(JSON.stringify(partners));
 
-  function renderPartners() {
-    const list = document.getElementById('partnersList');
-    if (!partners.length) {
-      list.innerHTML = '<div class="partners-empty">No hay marcas configuradas. Agrega la primera usando el botón de abajo.</div>';
-      return;
-    }
-    list.innerHTML = partners.map((p, i) => `
-      <div class="partner-row">
-        <div class="partner-logo-thumb" onclick="pickPartnerLogo(${i})" title="Cambiar logo">
-          ${p.logo
-            ? `<img src="../../${p.logo}" alt="${p.nombre || ''}" onerror="this.style.display='none'">`
-            : `<svg class="partner-logo-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>`}
-          <div class="plth-hint">Cambiar</div>
-        </div>
-        <input type="text" class="fi" placeholder="Nombre de la marca" value="${(p.nombre||'').replace(/"/g,'&quot;')}"
-          oninput="partners[${i}].nombre=this.value">
-        <input type="text" class="fi" placeholder="https://..." value="${(p.url||'').replace(/"/g,'&quot;')}"
-          oninput="partners[${i}].url=this.value">
-        <button class="partner-del-btn" onclick="removePartner(${i})" title="Eliminar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>`).join('');
-  }
-
-  renderPartners();
-
-  let _partnerTarget = null;
-  document.getElementById('partnerFileInput').onchange = async function() {
-    if (_partnerTarget === null || !this.files[0]) return;
-    const i = _partnerTarget;
-    const file = this.files[0];
-    this.value = '';
-    if (!file.type.startsWith('image/')) { showToast('Solo imágenes', 'error'); return; }
-    if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB', 'error'); return; }
-    const fd = new FormData();
-    fd.append('image', file);
-    fd.append('folder', 'partners');
-    try {
-      const res  = await fetch('../api/contenido.php', { method:'POST', headers:{'X-CSRF-Token':CSRF_TOKEN}, body:fd });
-      const json = await res.json();
-      if (json.ok) {
-        partners[i].logo = json.path;
-        renderPartners();
-        showToast('Logo actualizado');
-      } else { showToast(json.error || 'Error al subir', 'error'); }
-    } catch { showToast('Error de conexión', 'error'); }
-  };
-
-  function pickPartnerLogo(i) {
-    _partnerTarget = i;
-    document.getElementById('partnerFileInput').click();
-  }
-
-  function addPartner() {
-    partners.push({ nombre:'', logo:'', url:'' });
-    renderPartners();
-  }
-
-  function removePartner(i) {
-    partners.splice(i, 1);
-    renderPartners();
-  }
-
-  function cancelPartners() {
-    partners = JSON.parse(JSON.stringify(partnersOriginal));
-    renderPartners();
-    showToast('Cambios descartados');
-  }
-
-  async function savePartners() {
-    try {
-      const res = await CM.set('partners', partners);
-      if (res && res.ok) {
-        partnersOriginal = JSON.parse(JSON.stringify(partners));
-        showToast('Marcas guardadas correctamente');
-      } else { showToast(res?.error || 'Error al guardar', 'error'); }
-    } catch { showToast('Error de conexión', 'error'); }
-  }
 </script>
 
 <!-- stubs para JS legacy — nunca visibles al usuario -->
