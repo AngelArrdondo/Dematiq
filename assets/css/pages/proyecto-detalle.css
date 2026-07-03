@@ -381,7 +381,7 @@
   .pd-about-inner { grid-template-columns: 1fr; }
   .pd-about-media-col { order: -1; }
   .pd-about-media-sticky { position: static; }
-  .pd-about-figure { max-width: 520px; }
+  .pd-about-figure { max-width: 520px; margin-left: auto; margin-right: auto; }
   .pd-about-figure img { aspect-ratio: 16 / 10; }
 }
 @media (max-width: 480px) {
