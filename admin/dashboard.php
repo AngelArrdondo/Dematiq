@@ -13,6 +13,14 @@ try {
     $fotoRaw  = $stmtFoto->fetchColumn();
     $fotoPath = $fotoRaw ? htmlspecialchars($fotoRaw) : '';
 } catch (PDOException $e) { /* column not yet migrated — ignore */ }
+
+$visitasDiarias = [];
+try {
+    $stmt = $pdo->query('SELECT fecha, total FROM visitas_diarias');
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        $visitasDiarias[$row['fecha']] = (int) $row['total'];
+    }
+} catch (PDOException $e) { /* tabla no migrada aún — ignore */ }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -49,6 +57,15 @@ try {
     .chart-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
     .chart-title  { font-size: .95rem; font-weight: 700; color: var(--text); }
     .chart-range  { font-size: .78rem; color: var(--text-lt); margin-top: 2px; }
+    .chart-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .period-tabs  { display: flex; background: #f1f4fa; border-radius: 8px; padding: 3px; gap: 2px; }
+    .period-tab   {
+      border: none; background: none; padding: 6px 13px; border-radius: 6px;
+      font-size: .76rem; font-weight: 700; color: var(--text-lt);
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .period-tab:hover:not(.active) { color: var(--text); }
+    .period-tab.active { background: #fff; color: var(--accent); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
     .chart-nav    { display: flex; align-items: center; gap: 8px; }
     .chart-nav-btn {
       background: none; border: 1px solid var(--border); border-radius: 8px;
@@ -83,6 +100,8 @@ try {
       .summary-row { grid-template-columns: 1fr; }
       .summary-row .scard:last-child { grid-column: unset; }
       .chart-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .chart-controls { width: 100%; flex-direction: column; align-items: stretch; }
+      .period-tabs { justify-content: center; }
       .chart-nav { width: 100%; justify-content: space-between; }
       .chart-week-btn { flex: 1; text-align: center; }
       .chart-body { height: 190px; }
@@ -90,6 +109,8 @@ try {
   </style>
 </head>
 <body>
+
+<script>window.__VISITS_DAILY = <?= json_encode($visitasDiarias, JSON_UNESCAPED_UNICODE) ?>;</script>
 
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside class="admin-sidebar" aria-label="Navegación del panel"></aside>
@@ -140,7 +161,7 @@ try {
   <main class="admin-content">
     <div class="summary-row">
       <div class="scard blue">
-        <span class="scard-label">Esta semana</span>
+        <span class="scard-label" id="sum-period-label">Esta semana</span>
         <span class="scard-value" id="sum-week">—</span>
         <span class="scard-sub">visitas totales</span>
       </div>
@@ -150,7 +171,7 @@ try {
         <span class="scard-sub" id="sum-today-label">—</span>
       </div>
       <div class="scard purple">
-        <span class="scard-label">Mejor día</span>
+        <span class="scard-label" id="sum-best-title">Mejor día</span>
         <span class="scard-value" id="sum-best">—</span>
         <span class="scard-sub" id="sum-best-label">esta semana</span>
       </div>
@@ -159,17 +180,24 @@ try {
     <div class="chart-card">
       <div class="chart-header">
         <div>
-          <div class="chart-title">Visitas por día</div>
+          <div class="chart-title">Visitas</div>
           <div class="chart-range" id="chart-range"></div>
         </div>
-        <div class="chart-nav">
-          <button class="chart-nav-btn" id="btn-prev" onclick="weekNav(-1)" aria-label="Semana anterior">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
-          </button>
-          <button class="chart-week-btn" onclick="weekNav(0)">Esta semana</button>
-          <button class="chart-nav-btn" id="btn-next" onclick="weekNav(1)" aria-label="Semana siguiente" disabled>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,18 15,12 9,6"/></svg>
-          </button>
+        <div class="chart-controls">
+          <div class="period-tabs" id="periodTabs">
+            <button class="period-tab active" data-period="week"  onclick="setPeriod('week')">Semana</button>
+            <button class="period-tab"        data-period="month" onclick="setPeriod('month')">Mes</button>
+            <button class="period-tab"        data-period="year"  onclick="setPeriod('year')">Año</button>
+          </div>
+          <div class="chart-nav">
+            <button class="chart-nav-btn" id="btn-prev" onclick="periodNav(-1)" aria-label="Periodo anterior">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+            </button>
+            <button class="chart-week-btn" id="btn-current" onclick="periodNav(0)">Esta semana</button>
+            <button class="chart-nav-btn" id="btn-next" onclick="periodNav(1)" aria-label="Periodo siguiente" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,18 15,12 9,6"/></svg>
+            </button>
+          </div>
         </div>
       </div>
       <div class="chart-body">
@@ -209,10 +237,17 @@ try {
 
   /* ── Visits chart ───────────────────────────────── */
   (function () {
-    const daily  = JSON.parse(localStorage.getItem('dematiq_visits_daily') || '{}');
-    const DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    const MONTHS = ['enero','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    let offset = 0, chart = null;
+    const daily  = window.__VISITS_DAILY || {};
+    const DAYS         = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const MONTHS       = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const MONTHS_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const JUMP_LABEL   = { week: 'Esta semana', month: 'Este mes', year: 'Este año' };
+    const PERIOD_LABEL = { week: 'Esta semana', month: 'Este mes', year: 'Este año' };
+    const BEST_TITLE   = { week: 'Mejor día', month: 'Mejor día', year: 'Mejor mes' };
+
+    let period  = 'week';
+    let offsets = { week: 0, month: 0, year: 0 };
+    let chart   = null;
 
     function iso(d) {
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -225,39 +260,88 @@ try {
       return Array.from({length:7}, (_,i) => { const d = new Date(mon); d.setDate(mon.getDate()+i); return d; });
     }
 
-    function fmtRange(dates) {
-      const s = dates[0], e = dates[6];
-      return s.getMonth() === e.getMonth()
-        ? `${s.getDate()} – ${e.getDate()} de ${MONTHS[s.getMonth()]} ${s.getFullYear()}`
-        : `${s.getDate()} ${MONTHS[s.getMonth()]} – ${e.getDate()} ${MONTHS[e.getMonth()]} ${e.getFullYear()}`;
+    function getMonthDays(off) {
+      const now  = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + off;
+      const base = new Date(year, month, 1);
+      const daysInMonth = new Date(base.getFullYear(), base.getMonth()+1, 0).getDate();
+      return Array.from({length: daysInMonth}, (_,i) => new Date(base.getFullYear(), base.getMonth(), i+1));
     }
 
-    function render(off) {
-      const dates    = getWeek(off);
-      const data     = dates.map(d => daily[iso(d)] || 0);
+    function getYearMonths(off) {
+      const year = new Date().getFullYear() + off;
+      return Array.from({length: 12}, (_,i) => new Date(year, i, 1));
+    }
+
+    function sumMonth(d) {
+      const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+      let total = 0;
+      for (let i = 1; i <= days; i++) total += daily[iso(new Date(d.getFullYear(), d.getMonth(), i))] || 0;
+      return total;
+    }
+
+    function fmtRange(dates) {
+      if (period === 'week') {
+        const s = dates[0], e = dates[6];
+        return s.getMonth() === e.getMonth()
+          ? `${s.getDate()} – ${e.getDate()} de ${MONTHS[s.getMonth()]} ${s.getFullYear()}`
+          : `${s.getDate()} ${MONTHS[s.getMonth()]} – ${e.getDate()} ${MONTHS[e.getMonth()]} ${e.getFullYear()}`;
+      }
+      if (period === 'month') {
+        const d = dates[0];
+        return `${MONTHS[d.getMonth()][0].toUpperCase()}${MONTHS[d.getMonth()].slice(1)} ${d.getFullYear()}`;
+      }
+      return `${dates[0].getFullYear()}`;
+    }
+
+    function render() {
+      const off = offsets[period];
+      let dates, data, labels;
+
+      if (period === 'week') {
+        dates  = getWeek(off);
+        data   = dates.map(d => daily[iso(d)] || 0);
+        labels = dates.map(d => `${DAYS[d.getDay()]}\n${d.getDate()}/${d.getMonth()+1}`);
+      } else if (period === 'month') {
+        dates  = getMonthDays(off);
+        data   = dates.map(d => daily[iso(d)] || 0);
+        labels = dates.map(d => `${d.getDate()}`);
+      } else {
+        dates  = getYearMonths(off);
+        data   = dates.map(sumMonth);
+        labels = dates.map(d => MONTHS_SHORT[d.getMonth()]);
+      }
+
       const total    = data.reduce((a,b) => a+b, 0);
       const best     = Math.max(...data);
       const bestIdx  = data.indexOf(best);
       const todayIso = iso(new Date());
       const now      = new Date();
 
+      document.getElementById('sum-period-label').textContent = PERIOD_LABEL[period];
       document.getElementById('sum-week').textContent       = total.toLocaleString('es-MX');
       document.getElementById('sum-today').textContent      = (daily[todayIso]||0).toLocaleString('es-MX');
       document.getElementById('sum-today-label').textContent = `${DAYS[now.getDay()]} ${now.getDate()} de ${MONTHS[now.getMonth()]}`;
+      document.getElementById('sum-best-title').textContent = BEST_TITLE[period];
       document.getElementById('sum-best').textContent       = best > 0 ? best.toLocaleString('es-MX') : '—';
-      document.getElementById('sum-best-label').textContent = best > 0
-        ? `${DAYS[dates[bestIdx].getDay()]} ${dates[bestIdx].getDate()}/${dates[bestIdx].getMonth()+1}`
-        : 'sin datos';
+      document.getElementById('sum-best-label').textContent = best <= 0
+        ? 'sin datos'
+        : period === 'year'
+          ? `${MONTHS[dates[bestIdx].getMonth()]} ${dates[bestIdx].getFullYear()}`
+          : `${DAYS[dates[bestIdx].getDay()]} ${dates[bestIdx].getDate()}/${dates[bestIdx].getMonth()+1}`;
 
       document.getElementById('chart-range').textContent  = fmtRange(dates);
+      document.getElementById('btn-current').textContent  = JUMP_LABEL[period];
       document.getElementById('btn-next').disabled        = (off >= 0);
       document.getElementById('chart-empty').style.display = total === 0 ? 'flex' : 'none';
 
-      const labels   = dates.map(d => `${DAYS[d.getDay()]}\n${d.getDate()}/${d.getMonth()+1}`);
       const accent   = '#2e6bcf';
-      const todayIdx = dates.findIndex(d => iso(d) === todayIso);
-      const bg       = data.map((_,i) => i === todayIdx ? accent : accent+'55');
-      const bdColor  = data.map((_,i) => i === todayIdx ? accent : accent+'99');
+      const hlIdx    = period === 'year'
+        ? dates.findIndex(d => d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth())
+        : dates.findIndex(d => iso(d) === todayIso);
+      const bg       = data.map((_,i) => i === hlIdx ? accent : accent+'55');
+      const bdColor  = data.map((_,i) => i === hlIdx ? accent : accent+'99');
 
       if (chart) {
         chart.data.labels = labels;
@@ -281,26 +365,37 @@ try {
             legend: { display: false },
             tooltip: {
               callbacks: {
-                title: items => items[0].label.replace('\n', ' '),
-                label: item  => `  ${item.raw} visita${item.raw !== 1 ? 's' : ''}`,
+                title: items => {
+                  const raw = items[0].label;
+                  if (period === 'week')  return raw.replace('\n', ' ');
+                  if (period === 'month') return `Día ${raw}`;
+                  return raw;
+                },
+                label: item => `  ${item.raw} visita${item.raw !== 1 ? 's' : ''}`,
               },
               backgroundColor: '#0d2155', titleColor: '#fff', bodyColor: '#a8bce0', padding: 10, cornerRadius: 8,
             }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#6b7a99', maxRotation: 0 } },
-            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0, font: { size: 11 }, color: '#6b7a99' }, grid: { color: '#e8edf8' } }
+            x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#6b7a99', maxRotation: 0, autoSkip: true } },
+            y: { beginAtZero: true, ticks: { precision: 0, font: { size: 11 }, color: '#6b7a99' }, grid: { color: '#e8edf8' } }
           }
         }
       });
     }
 
-    window.weekNav = function(dir) {
-      offset = dir === 0 ? 0 : Math.min(0, offset + dir);
-      render(offset);
+    window.periodNav = function(dir) {
+      offsets[period] = dir === 0 ? 0 : Math.min(0, offsets[period] + dir);
+      render();
     };
 
-    render(0);
+    window.setPeriod = function(p) {
+      period = p;
+      document.querySelectorAll('.period-tab').forEach(t => t.classList.toggle('active', t.dataset.period === p));
+      render();
+    };
+
+    render();
   })();
 </script>
 

@@ -41,7 +41,7 @@
       <a href="../servicios/servicios.html" class="quienes-cta">Conoce nuestros servicios</a>
     </div>
     <div class="quienes-img-wrap">
-      <img src="../../assets/images/general/img3.webp" alt="DEMATIQ equipo" class="quienes-img">
+      <img src="../../assets/images/general/img3.webp" alt="DEMATIQ equipo" class="quienes-img" id="quienesImgTag">
       <div class="quienes-img-scrim"></div>
       <div class="quienes-img-fade"></div>
       <div class="svc-rotator" aria-live="polite">
@@ -83,7 +83,7 @@
 <section id="empresas">
   <h2 class="section-title" style="padding-top:20px; margin-bottom:16px;">Empresas Asociadas</h2>
   <div class="marquee-wrapper">
-    <div class="marquee-track">
+    <div class="marquee-track" id="partners-track">
       <div class="marquee-item"><img src="../../assets/images/partners/Danfoss.webp" alt="Danfoss"></div>
       <div class="marquee-item"><img src="../../assets/images/partners/Eaton.webp" alt="Eaton"></div>
       <div class="marquee-item"><img src="../../assets/images/partners/METECNO.webp" alt="Metecno"></div>
@@ -105,11 +105,11 @@
 <!-- ═══════════ CTA FINAL ═══════════ -->
 <section class="nosotros-cta">
   <div class="nosotros-cta-inner">
-    <h2>¿Listo para automatizar tu proceso?</h2>
-    <p>Cuéntanos tu proyecto y te ayudamos a encontrar la solución a la medida de tu empresa.</p>
+    <h2 id="ctaTitulo">¿Listo para automatizar tu proceso?</h2>
+    <p id="ctaSubtitulo">Cuéntanos tu proyecto y te ayudamos a encontrar la solución a la medida de tu empresa.</p>
     <div class="nosotros-cta-actions">
-      <a href="Contacto.html" class="ncta-btn ncta-btn--primary">Contáctanos</a>
-      <a href="soluciones.html" class="ncta-btn ncta-btn--ghost">Ver proyectos</a>
+      <a href="Contacto.html" id="ctaBtn1" class="ncta-btn ncta-btn--primary">Contáctanos</a>
+      <a href="soluciones.html" id="ctaBtn2" class="ncta-btn ncta-btn--ghost">Ver proyectos</a>
     </div>
   </div>
 </section>
@@ -122,7 +122,10 @@
   // ── Carga dinámica desde la base de datos ──
   (async function () {
     try {
-      const data = await fetch('/api/contenido.php?clave=nosotros').then(r => r.json());
+      const [data, marcas] = await Promise.all([
+        fetch('/api/contenido.php?clave=nosotros').then(r => r.json()),
+        fetch('/api/contenido.php?clave=marcas').then(r => r.json())
+      ]);
       if (!data || typeof data !== 'object') return;
 
       if (data.hero) {
@@ -136,10 +139,37 @@
       if (data.p1 && qParas[0]) qParas[0].textContent = data.p1;
       if (data.p2 && qParas[1]) qParas[1].textContent = data.p2;
 
+      if (data.quienesImg) {
+        const img = document.getElementById('quienesImgTag');
+        if (img) img.src = '../../' + data.quienesImg;
+      }
+
       const filosofia = document.querySelectorAll('.filosofia-card');
       if (data.mision  && filosofia[0]) { const p = filosofia[0].querySelector('p'); if (p) p.textContent = data.mision; }
       if (data.vision  && filosofia[1]) { const p = filosofia[1].querySelector('p'); if (p) p.textContent = data.vision; }
       if (data.valores && filosofia[2]) { const p = filosofia[2].querySelector('p'); if (p) p.textContent = data.valores; }
+
+      // Empresas Asociadas — marquee (duplicado para loop continuo)
+      const track = document.getElementById('partners-track');
+      if (track && Array.isArray(marcas) && marcas.length) {
+        const items = marcas.map(m => {
+          const inner = m.url
+            ? `<a href="${m.url}" target="_blank" rel="noopener"><img src="../../${m.logo}" alt="${m.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a>`
+            : `<img src="../../${m.logo}" alt="${m.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')">`;
+          return `<div class="marquee-item">${inner}</div>`;
+        }).join('');
+        track.innerHTML = items + items;
+      }
+
+      if (data.cta) {
+        const c = data.cta;
+        if (c.titulo)    { const el = document.getElementById('ctaTitulo');    if (el) el.textContent = c.titulo; }
+        if (c.subtitulo) { const el = document.getElementById('ctaSubtitulo'); if (el) el.textContent = c.subtitulo; }
+        const btn1 = document.getElementById('ctaBtn1');
+        const btn2 = document.getElementById('ctaBtn2');
+        if (btn1) { if (c.btn1Text) btn1.textContent = c.btn1Text; if (c.btn1Href) btn1.href = c.btn1Href; }
+        if (btn2) { if (c.btn2Text) btn2.textContent = c.btn2Text; if (c.btn2Href) btn2.href = c.btn2Href; }
+      }
     } catch (e) { /* fallo silencioso */ }
   })();
 </script>

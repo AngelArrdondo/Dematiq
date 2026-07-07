@@ -1,6 +1,6 @@
 <?php
 // Shared profile modal — include after setting $profileApiPath, $fotoPrefix, $fotoPath, $initials
-// $fotoPrefix: '' for dashboard, '../' for pages in /admin/pages/
+// $fotoPrefix: '' for dashboard, '../../' for pages in /admin/pages/<nombre>/
 // $fotoPath must already have $fotoPrefix applied (it's rendered by the topbar before this include)
 $_pApi       = $profileApiPath ?? 'api/profile.php';
 $_fotoPrefix = $fotoPrefix ?? '';

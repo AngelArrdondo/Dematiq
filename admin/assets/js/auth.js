@@ -333,22 +333,20 @@ const AdminSidebar = {
 
     const pages = [
       { href: `${bp}dashboard.php`,         icon: 'home',     text: 'Dashboard',  key: 'dashboard' },
-      { href: `${bp}pages/inicio.php`,      icon: 'monitor',  text: 'Inicio',     key: 'inicio' },
-      { href: `${bp}pages/nosotros.php`,    icon: 'users',    text: 'Nosotros',   key: 'nosotros' },
-      { href: `${bp}pages/industrias.php`,  icon: 'layers',   text: 'Industrias', key: 'industrias' },
-      { href: `${bp}pages/contacto.php`,    icon: 'phone',    text: 'Contacto',   key: 'contacto' },
-      { href: `${bp}pages/marcas.php`,       icon: 'star',     text: 'Marcas',     key: 'marcas' },
-      { href: `${bp}pages/partners.php`,    icon: 'users',    text: 'Socios',     key: 'partners' },
-      { href: `${bp}pages/servicios.php`,   icon: 'tool',     text: 'Servicios',  key: 'servicios' },
-      { href: `${bp}pages/proyectos.php`,   icon: 'projects', text: 'Proyectos',  key: 'proyectos' }
+      { href: `${bp}pages/inicio/inicio.php`,           icon: 'monitor',  text: 'Inicio',     key: 'inicio' },
+      { href: `${bp}pages/nosotros/nosotros.php`,       icon: 'users',    text: 'Nosotros',   key: 'nosotros' },
+      { href: `${bp}pages/industrias/industrias.php`,   icon: 'layers',   text: 'Industrias', key: 'industrias' },
+      { href: `${bp}pages/contacto/contacto.php`,       icon: 'phone',    text: 'Contacto',   key: 'contacto' },
+      { href: `${bp}pages/marcas/marcas.php`,           icon: 'star',     text: 'Marcas',     key: 'marcas' },
+      { href: `${bp}pages/partners/partners.php`,       icon: 'users',    text: 'Socios',     key: 'partners' },
+      { href: `${bp}pages/servicios/servicios.php`,     icon: 'tool',     text: 'Servicios',  key: 'servicios' },
+      { href: `${bp}pages/proyectos/proyectos.php`,     icon: 'projects', text: 'Proyectos',  key: 'proyectos' }
     ];
     const maquinas = [
-      { href: `${bp}pages/maquinas.php`,    icon: 'gear',     text: 'Máquinas',   key: 'maquinas' }
+      { href: `${bp}pages/maquinas/maquinas.php`,       icon: 'gear',     text: 'Máquinas',   key: 'maquinas' }
     ];
     const tools = [
-      { href: `${bp}pages/usuarios.php`,    icon: 'users',    text: 'Usuarios',   key: 'usuarios' },
-      { href: `${bp}pages/accesos.php`,     icon: 'shield',   text: 'Accesos',    key: 'accesos' },
-      { href: `${bp}pages/imagenes.php`,    icon: 'image',    text: 'Imágenes',   key: 'imagenes' }
+      { href: `${bp}pages/imagenes/imagenes.php`,       icon: 'image',    text: 'Imágenes',   key: 'imagenes' }
     ];
 
     const link = (n) => {
