@@ -522,47 +522,6 @@
     @media (max-width: 680px) { .sol-cards-admin-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 440px) { .sol-cards-admin-grid { grid-template-columns: 1fr; } }
 
-    /* ══ PARTNERS LIST ════════════════════════════════════ */
-    .partner-row {
-      display: grid; grid-template-columns: 58px 1fr 1fr auto;
-      gap: 10px; align-items: center;
-      padding: 10px 0; border-bottom: 1px solid var(--border);
-    }
-    .partner-row:last-child { border-bottom: none; }
-    .partner-logo-thumb {
-      width:58px; height:38px; border-radius:8px;
-      border:1.5px solid var(--border); overflow:hidden;
-      background:#f0f4ff; display:flex; align-items:center;
-      justify-content:center; cursor:pointer; position:relative;
-      transition:border-color .16s;
-    }
-    .partner-logo-thumb:hover { border-color:var(--accent-lt); }
-    .partner-logo-thumb img { max-width:100%; max-height:100%; object-fit:contain; }
-    .plth-hint {
-      position:absolute; inset:0; background:rgba(26,74,158,.5);
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; font-size:.52rem; font-weight:700; text-align:center;
-      opacity:0; transition:opacity .16s;
-    }
-    .partner-logo-thumb:hover .plth-hint { opacity:1; }
-    .partner-del-btn {
-      width:32px; height:32px; border:none; cursor:pointer; flex-shrink:0;
-      background:#fff1f0; color:#dc2626; border-radius:8px;
-      display:flex; align-items:center; justify-content:center; transition:background .14s;
-    }
-    .partner-del-btn:hover { background:#fee2e2; }
-    .partner-del-btn svg { width:14px; height:14px; }
-    .partners-empty { text-align:center; padding:28px 16px; color:var(--text-lt); font-size:.82rem; }
-    .add-partner-btn {
-      display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px;
-      border:2px dashed #c7d5f0; background:#f5f8ff; color:var(--accent);
-      font-size:.8rem; font-weight:700; cursor:pointer; width:100%; margin-top:12px;
-      transition:all .15s;
-    }
-    .add-partner-btn:hover { border-color:var(--accent-lt); background:#eef3ff; }
-    .partners-save-bar { padding:14px 24px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
-    @media (max-width: 560px) { .partner-row { grid-template-columns: 46px 1fr auto; } }
-
     /* ══ CTA BUTTONS SECTION ══════════════════════════════ */
     .cta-pair { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
     @media (max-width: 640px) { .cta-pair { grid-template-columns:1fr; } }
@@ -670,6 +629,6 @@
     input.fi, textarea.fi { transition: border-color .15s, box-shadow .15s, background .15s, transform .1s; }
     input.fi:focus, textarea.fi:focus { transform: translateY(-1px); }
 
-    .sol-card-admin, .partner-row { transition: transform .18s ease, box-shadow .18s ease; }
+    .sol-card-admin { transition: transform .18s ease, box-shadow .18s ease; }
     .sol-card-admin:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20,40,90,.1); }
   
