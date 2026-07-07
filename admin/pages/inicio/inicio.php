@@ -145,7 +145,7 @@ try {
         <span>Guarda para que se reflejen en la página pública</span>
       </div>
       <button class="un-discard" onclick="cancelInicio()">No guardar</button>
-      <button class="un-save" onclick="saveInicio()">
+      <button class="un-save" id="mainSaveBtn" onclick="saveInicio()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
         Guardar ahora
       </button>
@@ -243,6 +243,7 @@ try {
               <input type="text" class="fi" id="posterPath" style="font-family:monospace;font-size:.78rem"
                 oninput="setPosterPreview(this.value)" onblur="onFieldBlur()"
                 placeholder="assets/images/general/index.webp">
+              <p class="field-hint">Se recorta automáticamente para llenar el hero (recorte tipo "cover"), sin dimensión mínima obligatoria — pero para que se vea bien sin recortes raros, usa una imagen horizontal panorámica (16:9 o más ancha).</p>
             </div>
           </div>
         </div>
@@ -321,6 +322,7 @@ try {
               <input type="text" class="fi" id="heroVideo" style="font-family:monospace;font-size:.78rem"
                 placeholder="assets/videos/hero.mp4"
                 oninput="onVideoChange(this.value)" onblur="onFieldBlur()">
+              <p class="field-hint">Se recorta automáticamente para llenar el hero (recorte tipo "cover"), sin dimensión mínima obligatoria — pero para que se vea bien, usa un video horizontal panorámico (16:9), 1080p o menos y de corta duración (≤30 seg) para el loop.</p>
               <p class="field-hint">También puedes subir el archivo directamente a <code style="background:#eef2ff;color:var(--accent);padding:1px 5px;border-radius:3px;font-size:.7rem">assets/videos/</code> en el servidor y escribir la ruta arriba.</p>
             </div>
           </div>
@@ -434,14 +436,6 @@ try {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         Ver sitio
       </a>
-      <button class="btn-admin btn-outline-admin" onclick="cancelInicio()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Descartar
-      </button>
-      <button class="btn-admin btn-primary-admin" id="mainSaveBtn" onclick="saveInicio()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-        Guardar cambios
-      </button>
     </div>
 
   </div>

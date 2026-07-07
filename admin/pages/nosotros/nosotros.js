@@ -311,10 +311,11 @@
         /* actualizar snapshot para que los valores guardados sean el nuevo "original" */
         Object.assign(orig, getValues());
         clearDirty();
-        showToast('Cambios guardados correctamente');
+        showToast('Cambios guardados correctamente — recargando…');
         const btn = document.getElementById('mainSaveBtn');
         if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
         viewPublic('/pages/corporativo/nosotros.html');
+        setTimeout(() => location.reload(), 1100);
       }
       else showToast(res?.error || 'Error al guardar', 'error');
     } catch { showToast('Error de conexión', 'error'); }

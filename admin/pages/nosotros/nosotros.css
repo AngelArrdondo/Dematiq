@@ -431,7 +431,7 @@
       70%  { box-shadow: 0 0 0 14px rgba(16,185,129,0); }
       100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
     }
-    .btn-admin.btn-primary-admin.saved { animation: saveFlash .8s ease-out; background: linear-gradient(135deg,#059669,#10b981) !important; }
+    .btn-admin.btn-primary-admin.saved, .un-save.saved { animation: saveFlash .8s ease-out; background: linear-gradient(135deg,#059669,#10b981) !important; }
 
     input.fi, textarea.fi, textarea { transition: border-color .15s, box-shadow .15s, background .15s, transform .1s; }
     input.fi:focus, textarea.fi:focus, textarea:focus { transform: translateY(-1px); }

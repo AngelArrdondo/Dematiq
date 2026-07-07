@@ -373,8 +373,8 @@
       showToast('Solo se permiten videos MP4, WebM u OGG', 'error'); return;
     }
     const sizeMB = file.size / 1024 / 1024;
-    if (file.size > 200 * 1024 * 1024) {
-      showToast(`El video pesa ${sizeMB.toFixed(1)} MB — el máximo permitido es 200 MB`, 'error'); return;
+    if (file.size > 80 * 1024 * 1024) {
+      showToast(`El video pesa ${sizeMB.toFixed(1)} MB — el máximo permitido es 80 MB`, 'error'); return;
     }
 
     const zone       = document.getElementById('videoUploadZone');
@@ -394,7 +394,6 @@
     const kbps = meta && dur > 0 ? Math.round(file.size * 8 / dur / 1000) : 0;
 
     const blockers = [];
-    if (sizeMB > 80) blockers.push(`pesa ${sizeMB.toFixed(1)} MB (máximo recomendado: 80 MB)`);
     if (w && h && (w > 2560 || h > 1440)) blockers.push(`resolución ${w}×${h} demasiado alta (máximo recomendado: 1920×1080 Full HD)`);
     if (kbps > 12000) blockers.push(`bitrate de ${kbps.toLocaleString()} kbps demasiado alto (máximo recomendado: 5000 kbps)`);
 
