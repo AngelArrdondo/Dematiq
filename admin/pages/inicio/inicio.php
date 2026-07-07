@@ -343,6 +343,9 @@ try {
         </div>
       </div>
       <div class="sc-body">
+        <p class="field-hint" style="font-size:.72rem;font-style:normal;margin-bottom:14px">
+          El color de la imagen no importa: el sitio la vuelve blanca automáticamente. Usa un <strong>PNG o WebP con fondo transparente</strong> (una silueta tipo ícono, no una foto). La vista previa de cada tarjeta ya aplica ese mismo efecto — si ves un bloque blanco sólido en vez de un ícono, significa que tu imagen no tiene transparencia y necesitas cambiarla.
+        </p>
         <div class="field">
           <div class="field-top"><label>Título de la sección</label></div>
           <input type="text" id="solTitulo" class="fi" placeholder="Nuestras Soluciones Y Servicios"

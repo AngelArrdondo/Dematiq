@@ -123,8 +123,8 @@
   (async function () {
     try {
       const [data, marcas] = await Promise.all([
-        fetch('/api/contenido.php?clave=nosotros').then(r => r.json()),
-        fetch('/api/contenido.php?clave=marcas').then(r => r.json())
+        fetch('/api/contenido.php?clave=nosotros', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/contenido.php?clave=marcas', { cache: 'no-store' }).then(r => r.json())
       ]);
       if (!data || typeof data !== 'object') return;
 

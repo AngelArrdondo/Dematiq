@@ -289,6 +289,7 @@ try {
                 value="<?= htmlspecialchars($d['quienesImg'] ?? '') ?>"
                 oninput="setImgPreview(this.value)" onblur="onFieldBlur()"
                 placeholder="assets/images/general/img3.webp">
+              <p class="field-hint">Se recorta automáticamente para llenar el espacio (recorte tipo "cover"). Usa una foto <strong>vertical</strong> de al menos 800×1000px — si es más horizontal que 1.3:1 (ancho/alto) o más pequeña, se rechaza al subirla.</p>
             </div>
           </div>
         </div>

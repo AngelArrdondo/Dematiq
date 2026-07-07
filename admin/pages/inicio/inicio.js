@@ -762,6 +762,33 @@
   renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
   renderSolGrid('solMachinesGrid', solData.machines, 'machines');
 
+  /* la imagen se pinta de blanco vía CSS (brightness(0) invert(1)); sin
+     transparencia, todo el rectángulo se ve como un bloque blanco sólido */
+  function probeImageTransparency(file) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        try {
+          const size = 32;
+          const c = document.createElement('canvas');
+          c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          let hasTransparency = false;
+          for (let p = 3; p < data.length; p += 4) {
+            if (data[p] < 250) { hasTransparency = true; break; }
+          }
+          resolve(hasTransparency);
+        } catch { resolve(true); }
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(true); };
+      img.src = url;
+    });
+  }
+
   let _solTarget = null;
   document.getElementById('solFileInput').onchange = async function() {
     if (!_solTarget || !this.files[0]) return;
@@ -772,6 +799,11 @@
     if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (JPG, PNG, WebP)', 'error'); return; }
     if (file.size > 5 * 1024 * 1024) {
       showToast(`La imagen pesa ${sizeMB.toFixed(1)} MB — el máximo permitido es 5 MB`, 'error'); return;
+    }
+    const hasTransparency = await probeImageTransparency(file);
+    if (!hasTransparency) {
+      showToast('Imagen rechazada — no tiene fondo transparente y en el sitio se vería como un bloque blanco sólido en vez de un ícono. Usa un PNG o WebP con transparencia.', 'error');
+      return;
     }
     const hint = document.getElementById('solHint_' + prefix + '_' + i);
     const hintOriginal = hint ? hint.innerHTML : '';
