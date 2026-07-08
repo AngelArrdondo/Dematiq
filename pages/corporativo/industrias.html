@@ -73,14 +73,11 @@
     const container = document.getElementById('infoContainer');
     const txt = s => (s == null ? '' : String(s));
 
-    // Un subtema = nombre + descripción que se revela al pasar el mouse o dar clic
+    // Un subtema = nombre + descripción, siempre visible (sin abrir/cerrar)
     function subItem(item) {
       return `<div class="ind-sub">
-        <button class="ind-sub-head" type="button" aria-expanded="false">
-          <span class="ind-sub-name">${txt(item.n)}</span>
-          <span class="ind-sub-ico" aria-hidden="true"></span>
-        </button>
-        <div class="ind-sub-body"><div><p>${txt(item.d)}</p></div></div>
+        <h5 class="ind-sub-name">${txt(item.n)}</h5>
+        <p class="ind-sub-desc">${txt(item.d)}</p>
       </div>`;
     }
 
@@ -90,6 +87,13 @@
       return `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
         <h3>${txt(ind.nombre)}</h3>
         <p class="ind-intro">${txt(ind.intro)}</p>
+        <div class="carousel2" data-idx="0">
+          <div class="c2-track">
+            <img src="../../assets/images/general/img1.webp" alt="${txt(ind.nombre)}">
+            <img src="../../assets/images/general/img2.webp" alt="${txt(ind.nombre)}">
+          </div>
+          <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
+        </div>
         <div class="ind-groups">
           <div class="ind-group">
             <h4 class="ind-group-title">Áreas de planta</h4>
@@ -99,13 +103,6 @@
             <h4 class="ind-group-title">Temas técnicos</h4>
             <div class="ind-sub-list">${temas}</div>
           </div>
-        </div>
-        <div class="carousel2" data-idx="0">
-          <div class="c2-track">
-            <img src="../../assets/images/general/img1.webp" alt="${txt(ind.nombre)}">
-            <img src="../../assets/images/general/img2.webp" alt="${txt(ind.nombre)}">
-          </div>
-          <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
         </div>
       </div>`;
     }
@@ -147,17 +144,6 @@
       }
       if (container) container.innerHTML = list.map(panelHTML).join('');
       initCarousels();
-    }
-
-    // Clic en un subtema: lo abre/cierra (además del hover en desktop)
-    if (container) {
-      container.addEventListener('click', e => {
-        const head = e.target.closest('.ind-sub-head');
-        if (!head) return;
-        const sub = head.closest('.ind-sub');
-        const open = sub.classList.toggle('open');
-        head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      });
     }
 
     renderAll(DATA);

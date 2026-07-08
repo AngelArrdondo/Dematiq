@@ -101,6 +101,39 @@
   border-top-color: var(--brand-light);
 }
 
+/* ── Ícono estilo admin (Feather) al mismo nivel que el título ── */
+.filosofia-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.filosofia-head h3 {
+  margin: 0;
+}
+.filosofia-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 204, 204, 0.10);
+  border: 1px solid rgba(0, 204, 204, 0.35);
+  border-radius: 4px;
+  color: #00a3a3;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.filosofia-ico svg {
+  width: 24px;
+  height: 24px;
+}
+.filosofia-card:hover .filosofia-ico {
+  background: #00cccc;
+  border-color: #00cccc;
+  color: #ffffff;
+}
+
 /* #7 — Llamado a la acción final */
 .nosotros-cta {
   background: #000028;

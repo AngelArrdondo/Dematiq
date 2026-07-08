@@ -22,6 +22,16 @@
         <source src="assets/videos/hero.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
+      <div class="hero-ticker">
+        <div class="hero-ticker-track">
+          <span class="hero-ticker-item"><strong>¿Tienes un proyecto?</strong><span class="ht-a">Cuéntanos qué necesitas y lo desarrollamos</span></span>
+          <span class="hero-ticker-item"><strong>¿Tienes un proyecto?</strong><span class="ht-a">Cuéntanos qué necesitas y lo desarrollamos</span></span>
+          <span class="hero-ticker-item"><strong>¿Tienes un proyecto?</strong><span class="ht-a">Cuéntanos qué necesitas y lo desarrollamos</span></span>
+          <span class="hero-ticker-item"><strong>¿Tienes un proyecto?</strong><span class="ht-a">Cuéntanos qué necesitas y lo desarrollamos</span></span>
+          <span class="hero-ticker-item"><strong>¿Tienes un proyecto?</strong><span class="ht-a">Cuéntanos qué necesitas y lo desarrollamos</span></span>
+          <span class="hero-ticker-item"><strong>¿Tienes un proyecto?</strong><span class="ht-a">Cuéntanos qué necesitas y lo desarrollamos</span></span>
+        </div>
+      </div>
       <div class="carousel-caption hero-caption-static">
         <div class="hero-brand">
           <h5>Bienvenido</h5>
@@ -41,7 +51,7 @@
     <h2 id="empresasTitulo">Marcas Asociadas</h2>
         <div class="marquee-wrapper">
       <div class="marquee-track" id="partners-track">
-        <div class="marquee-item" data-n="1"><img src="assets/images/partners/Siemens.svg" alt="Siemens" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
+        <div class="marquee-item" data-n="1"><img src="assets/images/partners/siemens.png" alt="Siemens" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="2"><img src="assets/images/partners/Rockwell_Automation.svg" alt="Rockwell Automation" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="3"><img src="assets/images/partners/Keyence.svg" alt="Keyence" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="4"><img src="assets/images/partners/Omron.svg" alt="Omron" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
@@ -60,7 +70,7 @@
         <div class="marquee-item" data-n="17"><img src="assets/images/partners/SICK.svg" alt="SICK" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="18"><img src="assets/images/partners/Pepperl+Fuchs.svg" alt="Pepperl+Fuchs" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <!-- Duplicados para loop continuo -->
-        <div class="marquee-item" data-n="1"><img src="assets/images/partners/Siemens.svg" alt="Siemens" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
+        <div class="marquee-item" data-n="1"><img src="assets/images/partners/siemens.png" alt="Siemens" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="2"><img src="assets/images/partners/Rockwell_Automation.svg" alt="Rockwell Automation" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="3"><img src="assets/images/partners/Keyence.svg" alt="Keyence" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="4"><img src="assets/images/partners/Omron.svg" alt="Omron" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
@@ -75,7 +85,7 @@
         <div class="marquee-item" data-n="13"><img src="assets/images/partners/banner_engg.webp" alt="Banner Engineering" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="14"><img src="assets/images/partners/ifm.svg" alt="IFM" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="15"><img src="assets/images/partners/Balluff.svg" alt="Balluff" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
-        <div class="marquee-item" data-n="16"><img src="assets/images/partners/turck.svg" alt="Turck" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
+        <div class="marquee-item" data-n="16"><img src="assets/images/partners/OIP.jpg" alt="Turck" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="17"><img src="assets/images/partners/SICK.svg" alt="SICK" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
         <div class="marquee-item" data-n="18"><img src="assets/images/partners/Pepperl+Fuchs.svg" alt="Pepperl+Fuchs" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></div>
       </div>
@@ -213,8 +223,8 @@
   (async function() {
     try {
       const [home, marcas] = await Promise.all([
-        fetch('/api/contenido.php?clave=home', { cache: 'no-store' }).then(r => r.json()),
-        fetch('/api/contenido.php?clave=marcas', { cache: 'no-store' }).then(r => r.json())
+        fetch('/api/contenido.php?clave=home').then(r => r.json()),
+        fetch('/api/contenido.php?clave=marcas').then(r => r.json())
       ]);
 
       // Hero
@@ -292,7 +302,11 @@
       const n   = (parseInt(localStorage.getItem(KEY) || '0', 10)) + 1;
       localStorage.setItem(KEY, n);
 
-      fetch('api/visita.php', { method: 'POST', keepalive: true }).catch(() => {});
+      const _d   = new Date();
+      const _iso = `${_d.getFullYear()}-${String(_d.getMonth()+1).padStart(2,'0')}-${String(_d.getDate()).padStart(2,'0')}`;
+      const _daily = JSON.parse(localStorage.getItem('dematiq_visits_daily') || '{}');
+      _daily[_iso] = (_daily[_iso] || 0) + 1;
+      localStorage.setItem('dematiq_visits_daily', JSON.stringify(_daily));
 
       if (new URLSearchParams(window.location.search).has('admin')) {
         document.getElementById('admin-counter').style.display = 'block';

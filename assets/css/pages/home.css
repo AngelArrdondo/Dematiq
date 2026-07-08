@@ -402,17 +402,17 @@
 #soluciones .solucion-icon-card {
   min-height: 220px;
 }
-/* ── Destello teal en las 4 orillas de cada card ── */
+/* ── Destello teal en las 4 orillas de cada card (más llamativo) ── */
 #soluciones .solucion-icon-card {
-  border-color: rgba(0, 204, 204, 0.35) !important;
+  border-color: rgba(0, 204, 204, 0.85) !important;
 }
 #soluciones .solucion-icon-card::before {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0, 204, 204, 0.55), transparent);
-  box-shadow: none;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(0, 224, 224, 1), transparent);
+  box-shadow: 0 0 10px rgba(0, 204, 204, 0.7);
   z-index: 2;
 }
-/* Glow teal hacia adentro desde los 4 lados */
+/* Glow teal hacia adentro desde los 4 lados + halo exterior */
 #soluciones .solucion-icon-card::after {
   content: '';
   position: absolute;
@@ -421,8 +421,10 @@
   pointer-events: none;
   z-index: 1;
   box-shadow:
-    inset 0 0 0 1px rgba(0, 204, 204, 0.40),
-    inset 0 0 16px rgba(0, 204, 204, 0.22);
+    inset 0 0 0 1.5px rgba(0, 204, 204, 0.75),
+    inset 0 0 22px rgba(0, 204, 204, 0.35),
+    0 0 0 1px rgba(0, 204, 204, 0.30),
+    0 0 18px rgba(0, 204, 204, 0.22);
 }
 /* Mantener icono, titulo y texto por encima del glow */
 #soluciones .solucion-icon-wrapper,
@@ -588,4 +590,49 @@
   filter: brightness(0) invert(1) opacity(1)
           drop-shadow(0 0 5px rgba(0, 255, 185, 0.8))
           drop-shadow(0 0 14px rgba(0, 255, 185, 0.35)) !important;
+}
+
+/* ═══════════ Ticker / marquee arriba del hero ═══════════ */
+#hero .hero-ticker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  overflow: hidden;
+  padding: 11px 0;
+  background: rgba(0, 0, 28, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-bottom: 1px solid rgba(0, 204, 204, 0.5);
+}
+#hero .hero-ticker-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  will-change: transform;
+  animation: hero-ticker-scroll 30s linear infinite;
+}
+#hero .hero-ticker:hover .hero-ticker-track { animation-play-state: paused; }
+#hero .hero-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 80px;
+  font-size: 0.95rem;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+}
+#hero .hero-ticker-item strong {
+  color: #00ffb9;
+  font-weight: 700;
+}
+#hero .hero-ticker-item .ht-a { color: rgba(255, 255, 255, 0.92); }
+@keyframes hero-ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (max-width: 768px) {
+  #hero .hero-ticker { padding: 9px 0; }
+  #hero .hero-ticker-item { font-size: 0.85rem; padding: 0 48px; gap: 12px; }
 }
