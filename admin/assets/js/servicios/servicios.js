@@ -91,9 +91,49 @@
   async function modalSaveAndGo() { await saveServicios(); if (pendingNavUrl) window.location.href = pendingNavUrl; }
   function modalDiscardAndGo()    { dirty = false; if (pendingNavUrl) window.location.href = pendingNavUrl; }
   function modalCancel()          { pendingNavUrl = null; document.getElementById('navModal').classList.remove('show'); }
+
+  /* ─── lightbox (vista previa grande) ─────────────── */
+  function openLightboxImage(src, caption) {
+    if (!src) { showToast('Todavía no hay imagen para mostrar', 'error'); return; }
+    const modal = document.getElementById('lightboxModal');
+    const img   = document.getElementById('lightboxImg');
+    const video = document.getElementById('lightboxVideo');
+    video.pause(); video.style.display = 'none'; video.removeAttribute('src');
+    img.src = src; img.style.display = 'block';
+    document.getElementById('lightboxCaption').textContent = caption || '';
+    modal.classList.add('show');
+  }
+  function closeLightbox() {
+    const modal = document.getElementById('lightboxModal');
+    const video = document.getElementById('lightboxVideo');
+    modal.classList.remove('show');
+    video.pause();
+  }
+
+  /* ─── carrusel admin (Imagen 1 / Imagen 2) ───────── */
+  function indCarGoTo(i, idx) {
+    const car   = document.getElementById(`indCar${i}`);
+    const track = document.getElementById(`icaTrack${i}`);
+    if (!car || !track) return;
+    car.dataset.idx = idx;
+    track.style.transform = `translateX(-${idx * 50}%)`;
+    car.querySelectorAll('.ica-dot').forEach((d, k) => d.classList.toggle('active', k === idx));
+    const label = car.querySelector('.ica-current');
+    if (label) label.textContent = `Imagen ${idx + 1}`;
+  }
+  function indCarGo(i, dir) {
+    const car = document.getElementById(`indCar${i}`);
+    if (!car) return;
+    const idx = ((parseInt(car.dataset.idx || '0', 10) + dir) + 2) % 2;
+    indCarGoTo(i, idx);
+  }
+
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveServicios(); return; }
-    if (e.key === 'Escape') modalCancel();
+    if (e.key === 'Escape') {
+      if (document.getElementById('lightboxModal').classList.contains('show')) { closeLightbox(); return; }
+      modalCancel();
+    }
   });
   window.addEventListener('beforeunload', function(e) {
     if (dirty) { e.preventDefault(); e.returnValue = '¿Salir sin guardar los cambios?'; return e.returnValue; }
@@ -101,21 +141,41 @@
 
   /* ─── preview imagen ─────────────────────────────── */
   function setPreview(i, slot, src) {
-    const box = document.getElementById(`imgPreview${i}_${slot}`);
+    const box  = document.getElementById(`imgPreview${i}_${slot}`);
     if (!box) return;
-    const img = box.querySelector('img');
-    const ph  = box.querySelector('.img-placeholder');
+    const img  = box.querySelector('img');
+    const ph   = box.querySelector('.img-placeholder');
+    const zoom = document.getElementById(`imgZoom${i}_${slot}`);
     if (!src) {
-      if (img) img.style.display = 'none';
-      if (ph)  ph.style.display  = '';
+      if (img)  img.style.display  = 'none';
+      if (ph)   ph.style.display   = '';
+      if (zoom) zoom.style.display = 'none';
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; };
-      if (ph) ph.style.display = 'none';
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; };
+      if (ph)   ph.style.display   = 'none';
+      if (zoom) zoom.style.display = 'flex';
     }
+  }
+
+  /* ─── validación de dimensiones ──────────────────── */
+  /* La página pública (pages/servicios/servicios.html) recorta estas imágenes
+     a un carrusel horizontal de hasta 440px de alto (object-fit: cover) —
+     por eso se piden fotos horizontales y con suficiente resolución. */
+  const SVC_MIN_W     = 1000;
+  const SVC_MIN_H     = 560;
+  const SVC_MIN_RATIO = 1.3; /* ancho/alto — por debajo de esto es demasiado vertical/cuadrada */
+
+  function probeImageDimensions(url) {
+    return new Promise(resolve => {
+      const probe = new Image();
+      probe.onload  = () => resolve({ w: probe.naturalWidth, h: probe.naturalHeight });
+      probe.onerror = () => resolve({ w: 0, h: 0 });
+      probe.src = url;
+    });
   }
 
   /* ─── upload imagen ──────────────────────────────── */
@@ -123,6 +183,21 @@
     if (!input.files[0]) return;
     const file = input.files[0];
     if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB por imagen', 'error'); input.value = ''; return; }
+    if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (JPG, PNG, WebP)', 'error'); input.value = ''; return; }
+
+    const localURL = URL.createObjectURL(file);
+    const { w, h } = await probeImageDimensions(localURL);
+    if (w && h) {
+      if (w < SVC_MIN_W || h < SVC_MIN_H) {
+        showToast(`Imagen no subida: ${w}×${h}px es muy pequeña — se necesita mínimo ${SVC_MIN_W}×${SVC_MIN_H}px para que no se vea borrosa`, 'error');
+        URL.revokeObjectURL(localURL); input.value = ''; return;
+      }
+      if (w / h < SVC_MIN_RATIO) {
+        showToast(`Imagen no subida: ${w}×${h}px es demasiado vertical — esta foto se recorta en un carrusel horizontal, usa una imagen horizontal (16:9 o más ancha)`, 'error');
+        URL.revokeObjectURL(localURL); input.value = ''; return;
+      }
+    }
+    URL.revokeObjectURL(localURL);
 
     const box = document.getElementById(`imgPreview${i}_${slot}`);
     const img = box?.querySelector('img');
@@ -136,6 +211,7 @@
     const fd = new FormData();
     fd.append('image', file);
     fd.append('folder', 'general');
+    fd.append('oldPath', servicios[i][`image${slot}`] || '');
     try {
       const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();
@@ -173,6 +249,10 @@
         <div class="img-preview-box" id="imgPreview${i}_${slot}"
           onclick="document.getElementById('imgFile${i}_${slot}').click()" title="Clic para cambiar imagen">
           <img src="" alt="" style="display:none">
+          <button type="button" class="preview-zoom-btn" style="display:none" id="imgZoom${i}_${slot}" title="Ver en grande"
+            onclick="event.stopPropagation(); openLightboxImage(document.getElementById('imgPreview${i}_${slot}').querySelector('img').src, 'Imagen ${slot}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
           <div class="img-placeholder">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
             <span>Sin imagen</span>
@@ -227,10 +307,26 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
               Imágenes del carrusel
             </div>
-            <div class="dual-preview">
-              ${imgSlot(i, 1, s.image1)}
-              ${imgSlot(i, 2, s.image2)}
+            <div class="ind-carousel-admin" id="indCar${i}" data-idx="0">
+              <div class="ica-nav">
+                <button type="button" class="ica-arrow" onclick="indCarGo(${i},-1)" title="Imagen anterior" aria-label="Imagen anterior">‹</button>
+                <div class="ica-nav-label">
+                  <span><span class="ica-current">Imagen 1</span> de 2</span>
+                  <div class="ica-dots">
+                    <span class="ica-dot active" onclick="indCarGoTo(${i},0)"></span>
+                    <span class="ica-dot" onclick="indCarGoTo(${i},1)"></span>
+                  </div>
+                </div>
+                <button type="button" class="ica-arrow" onclick="indCarGo(${i},1)" title="Siguiente imagen" aria-label="Siguiente imagen">›</button>
+              </div>
+              <div class="ica-viewport">
+                <div class="ica-track" id="icaTrack${i}">
+                  <div class="ica-slide">${imgSlot(i, 1, s.image1)}</div>
+                  <div class="ica-slide">${imgSlot(i, 2, s.image2)}</div>
+                </div>
+              </div>
             </div>
+            <p class="field-hint ica-dim-hint">Dimensión recomendada: mínimo <strong>1000×560px</strong>, horizontal (16:9 o más ancha) para que no se vea recortada ni borrosa.</p>
           </div>
 
           <div class="slide-fields-col">
@@ -265,7 +361,9 @@
     updateBanner();
   }
 
+  const MAX_SERVICIOS = 20;
   function addServicio() {
+    if (servicios.length >= MAX_SERVICIOS) { showToast(`Máximo ${MAX_SERVICIOS} servicios permitidos`, 'error'); return; }
     servicios.push({ id: '', nombre: '', desc: '', image1: '', image2: '' });
     renderServicios();
     markDirty();
@@ -291,7 +389,14 @@
   async function saveServicios() {
     try {
       const res = await CM.set('servicios', servicios);
-      if (res && res.ok) { clearDirty(); showToast('Cambios guardados correctamente'); viewPublic('/pages/servicios/servicios.html'); }
+      if (res && res.ok) {
+        clearDirty();
+        showToast('Cambios guardados correctamente — recargando…');
+        const btn = document.getElementById('mainSaveBtn');
+        if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
+        viewPublic('/pages/servicios/servicios.html');
+        setTimeout(() => location.reload(), 1100);
+      }
       else showToast(res?.error || 'Error al guardar', 'error');
     } catch { showToast('Error de conexión', 'error'); }
   }

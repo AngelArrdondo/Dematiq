@@ -18,9 +18,42 @@
   /* ── Data ─────────────────────────────────────── */
   let marcas = (CM.get('marcas') || []).map(m => Object.assign({}, m));
   let original = JSON.parse(JSON.stringify(marcas));
+  let dirty = false;
+
+  /* ── Dirty state ──────────────────────────────── */
+  function markDirty() {
+    dirty = true;
+    document.getElementById('unsavedNotice').classList.remove('hidden');
+  }
+  function clearDirty() {
+    dirty = false;
+    original = JSON.parse(JSON.stringify(marcas));
+    document.getElementById('unsavedNotice').classList.add('hidden');
+  }
+  function checkDirty() {
+    JSON.stringify(marcas) !== JSON.stringify(original) ? markDirty() : clearDirty();
+  }
+  window.addEventListener('beforeunload', function(e) {
+    if (dirty) { e.preventDefault(); e.returnValue = '¿Salir sin guardar los cambios?'; return e.returnValue; }
+  });
+
+  /* ── Lightbox (vista previa grande) ───────────── */
+  function openLightboxImage(src, caption) {
+    if (!src) { showToast('Todavía no hay logo para mostrar', 'error'); return; }
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxImg').style.display = 'block';
+    document.getElementById('lightboxCaption').textContent = caption || '';
+    document.getElementById('lightboxModal').classList.add('show');
+  }
+  function closeLightbox() {
+    document.getElementById('lightboxModal').classList.remove('show');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('lightboxModal').classList.contains('show')) closeLightbox();
+  });
 
   /* ── Helpers ──────────────────────────────────── */
-  const esc = str => String(str || '').replace(/"/g, '&quot;');
+  const esc = str => String(str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
   const pickIcon  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
   const trashIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/></svg>`;
@@ -51,9 +84,12 @@
     const prev = document.getElementById('brandPreview' + i);
     if (!prev) return;
     const hint = prev.querySelector('.brand-img-hint');
+    const zoom = prev.querySelector('.preview-zoom-btn');
+    if (zoom) zoom.style.display = src ? 'flex' : 'none';
     if (!src) {
       prev.innerHTML = `<div class="img-placeholder"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span>Sin logo</span></div>`;
       if (hint) prev.appendChild(hint);
+      if (zoom) prev.appendChild(zoom);
       return;
     }
     const img = document.createElement('img');
@@ -61,6 +97,7 @@
     img.onerror = () => {
       prev.innerHTML = `<div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span>Sin vista previa</span></div>`;
       if (hint) prev.appendChild(hint);
+      if (zoom) { zoom.style.display = 'none'; prev.appendChild(zoom); }
     };
     prev.innerHTML = '';
     prev.appendChild(img);
@@ -71,6 +108,36 @@
       h.innerHTML = `${pickIcon} Cambiar`;
       prev.appendChild(h);
     }
+    if (zoom) prev.appendChild(zoom);
+  }
+
+  /* ── Validación de transparencia ──────────────── */
+  /* El logo se pinta de blanco vía CSS (brightness(0) invert(1)) en el
+     marquee del Inicio; sin transparencia se ve como un bloque blanco sólido. */
+  function probeImageTransparency(file) {
+    return new Promise((resolve) => {
+      if (file.type === 'image/svg+xml') { resolve(true); return; } /* SVG: se asume vectorial/transparente */
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        try {
+          const size = 32;
+          const c = document.createElement('canvas');
+          c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          let hasTransparency = false;
+          for (let p = 3; p < data.length; p += 4) {
+            if (data[p] < 250) { hasTransparency = true; break; }
+          }
+          resolve(hasTransparency);
+        } catch { resolve(true); }
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(true); };
+      img.src = url;
+    });
   }
 
   /* ── Upload ───────────────────────────────────── */
@@ -81,6 +148,13 @@
     const file = this.files[0];
     this.value = '';
     if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB', 'error'); return; }
+    if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (PNG, WebP, SVG)', 'error'); return; }
+
+    const hasTransparency = await probeImageTransparency(file);
+    if (!hasTransparency) {
+      showToast('Logo rechazado — no tiene fondo transparente y se vería como un bloque blanco sólido en el carrusel. Usa un PNG, WebP o SVG con transparencia.', 'error');
+      return;
+    }
 
     const localURL = URL.createObjectURL(file);
     setPreview(i, localURL);
@@ -96,6 +170,7 @@
     const fd = new FormData();
     fd.append('image', file);
     fd.append('folder', 'partners');
+    fd.append('oldPath', marcas[i].logo || '');
 
     try {
       const xhr = new XMLHttpRequest();
@@ -112,7 +187,7 @@
           setPreview(i, '../../../' + json.path);
           const pi = document.getElementById('imgPath' + i);
           if (pi) pi.value = json.path;
-          updatePreview(); updateStats();
+          updatePreview(); updateStats(); markDirty();
           showToast('Logo subido correctamente');
         } else {
           showToast(json.error || 'Error al subir', 'error');
@@ -145,6 +220,7 @@
     if (j < 0 || j >= marcas.length) return;
     [marcas[i], marcas[j]] = [marcas[j], marcas[i]];
     renderMarcas();
+    checkDirty();
   }
 
   /* ── Render ───────────────────────────────────── */
@@ -152,6 +228,8 @@
     const c = document.getElementById('marcasContainer');
     updateStats();
     updatePreview();
+    const addBtn = document.getElementById('addMarcaBtn');
+    if (addBtn) addBtn.disabled = marcas.length >= MAX_MARCAS;
 
     if (!marcas.length) {
       c.innerHTML = `<div class="brands-empty">
@@ -190,31 +268,46 @@
             </div>
             <input type="text" class="brand-path-input" id="imgPath${i}" value="${esc(m.logo)}"
               placeholder="assets/images/partners/logo.svg"
-              oninput="marcas[${i}].logo=this.value;setPreview(${i},this.value?'../../../'+this.value:'');updatePreview();updateStats()">
+              oninput="marcas[${i}].logo=this.value;setPreview(${i},this.value?'../../../'+this.value:'');updatePreview();updateStats();checkDirty()">
           </div>
           <div class="brand-fields-col">
             <div class="form-group">
               <label>Nombre de la marca</label>
               <input type="text" value="${esc(m.nombre)}" placeholder="Ej. Siemens"
-                oninput="marcas[${i}].nombre=this.value;const el=document.getElementById('headerName${i}');el.textContent=this.value||'Nueva marca';el.className='brand-header-name'+(this.value?'':' empty')">
+                oninput="marcas[${i}].nombre=this.value;const el=document.getElementById('headerName${i}');el.textContent=this.value||'Nueva marca';el.className='brand-header-name'+(this.value?'':' empty');checkDirty()">
             </div>
             <div class="form-group">
               <label>URL del sitio web <span style="font-weight:400;color:var(--text-lt)">(opcional)</span></label>
               <input type="url" value="${esc(m.url || '')}" placeholder="https://www.siemens.com"
-                oninput="marcas[${i}].url=this.value">
+                oninput="marcas[${i}].url=this.value;checkDirty()">
               <p class="field-hint">Si se ingresa, el logo será clickeable en el carrusel.</p>
             </div>
           </div>
         </div>`;
       c.appendChild(div);
       setPreview(i, m.logo ? '../../../' + m.logo : '');
+      const zoomBtn = document.createElement('button');
+      zoomBtn.type = 'button';
+      zoomBtn.className = 'preview-zoom-btn';
+      zoomBtn.title = 'Ver en grande';
+      zoomBtn.style.display = m.logo ? 'flex' : 'none';
+      zoomBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`;
+      zoomBtn.onclick = (e) => {
+        e.stopPropagation();
+        const img = document.getElementById('brandPreview' + i)?.querySelector('img');
+        openLightboxImage(img ? img.src : '', m.nombre || `Marca ${i + 1}`);
+      };
+      document.getElementById('brandPreview' + i).appendChild(zoomBtn);
     });
   }
 
   /* ── CRUD ─────────────────────────────────────── */
+  const MAX_MARCAS = 20;
   function addMarca() {
+    if (marcas.length >= MAX_MARCAS) { showToast(`Máximo ${MAX_MARCAS} marcas permitidas`, 'error'); return; }
     marcas.push({ nombre:'', logo:'', url:'' });
     renderMarcas();
+    markDirty();
     setTimeout(() => {
       const cards = document.querySelectorAll('.brand-card');
       if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior:'smooth', block:'center' });
@@ -224,11 +317,13 @@
   function removeMarca(i) {
     marcas.splice(i, 1);
     renderMarcas();
+    checkDirty();
   }
 
   function cancelMarcas() {
     marcas = JSON.parse(JSON.stringify(original));
     renderMarcas();
+    clearDirty();
     showToast('Cambios descartados');
   }
 
@@ -236,8 +331,11 @@
     try {
       const res = await CM.set('marcas', marcas);
       if (res && res.ok) {
-        original = JSON.parse(JSON.stringify(marcas));
-        showToast('Cambios guardados correctamente');
+        clearDirty();
+        showToast('Cambios guardados correctamente — recargando…');
+        const btn = document.getElementById('mainSaveBtn');
+        if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
+        setTimeout(() => location.reload(), 1100);
       } else {
         showToast(res?.error || 'Error al guardar', 'error');
       }

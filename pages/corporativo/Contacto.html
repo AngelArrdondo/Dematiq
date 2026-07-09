@@ -56,6 +56,7 @@
           Horario
         </h3>
         <span id="ct-horario-span">Lun – Vie &nbsp;·&nbsp; 8:30 – 18:00</span>
+        <p id="ct-festivos-p" class="ct-festivos-note" style="display:none"></p>
       </div>
     </div>
 
@@ -65,7 +66,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="strip-inline-icon"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           Ubicación
         </h3>
-        <a id="ct-ubicacion-a" href="https://www.google.com/maps?q=20.621222,-100.470500" target="_blank" rel="noopener noreferrer">Jardines del Sol, Querétaro</a>
+        <a id="ct-ubicacion-a" href="https://www.google.com/maps?q=20.621236,-100.470829" target="_blank" rel="noopener noreferrer">Jardines del Sol, Querétaro</a>
       </div>
     </div>
 
@@ -131,8 +132,7 @@
         <h2>Encuéntranos</h2>
         <p class="aside-address">
           <strong>DEMATIQ AUTOMATIZACIÓN</strong><br>
-          <a href="https://www.google.com/maps?q=20.621222,-100.470500" target="_blank" rel="noopener noreferrer">Calle Jardín de la Alabanza 2049, Jardines del Sol</a><br>
-          Querétaro, Qro., México
+          <a id="ct-aside-address-a" href="https://www.google.com/maps?q=20.621236,-100.470829" target="_blank" rel="noopener noreferrer">Calle Jardín de la Alabanza 2049, Jardines del Sol, Querétaro, México</a>
         </p>
       </div>
 
@@ -172,7 +172,7 @@
   </div>
   <div class="map-wrapper">
     <iframe id="ct-map-iframe"
-      src="https://maps.google.com/maps?q=20.621222,-100.470500&z=17&output=embed"
+      src="https://maps.google.com/maps?q=20.621236,-100.470829&z=17&output=embed"
       width="100%" height="100%" style="border:0;"
       allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
     </iframe>
@@ -240,9 +240,28 @@
         if (span) span.textContent = d.horario;
       }
 
+      if (Array.isArray(d.diasFestivos) && d.diasFestivos.length) {
+        const p = document.getElementById('ct-festivos-p');
+        if (p) {
+          const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+          const items = d.diasFestivos
+            .filter(f => f && f.dia && f.mes)
+            .map(f => {
+              const fecha = `${f.dia} de ${MESES[f.mes - 1] || ''}`.trim();
+              return f.motivo ? `${f.motivo} (${fecha})` : fecha;
+            });
+          if (items.length) {
+            p.textContent = 'No laboramos: ' + items.join(', ');
+            p.style.display = 'block';
+          }
+        }
+      }
+
       if (d.direccion) {
         const a = document.getElementById('ct-ubicacion-a');
         if (a) a.textContent = d.direccion;
+        const asideA = document.getElementById('ct-aside-address-a');
+        if (asideA) asideA.textContent = d.direccion;
       }
 
       if (d.mapCoords) {
@@ -250,6 +269,8 @@
         if (iframe) iframe.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(d.mapCoords) + '&z=17&output=embed';
         const a = document.getElementById('ct-ubicacion-a');
         if (a) a.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
+        const asideA = document.getElementById('ct-aside-address-a');
+        if (asideA) asideA.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
       }
     } catch (e) { /* fallo silencioso */ }
   })();

@@ -427,6 +427,8 @@
     progBar.style.width = '0%';
     progLbl.textContent = 'Preparando subida…';
 
+    const oldVideoPath = document.getElementById('heroVideo').value;
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '../../api/contenido.php');
     xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
@@ -472,6 +474,7 @@
 
     const fd = new FormData();
     fd.append('video', file);
+    fd.append('oldPath', oldVideoPath || '');
     xhr.send(fd);
   }
 
@@ -520,6 +523,7 @@
     if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (JPG, PNG, WebP)', 'error'); return; }
 
     const localURL = URL.createObjectURL(file);
+    const oldPosterPath = document.getElementById('posterPath').value;
     document.getElementById('posterPath').value = '';
     setPosterPreview('');
     const img = document.getElementById('posterImg');
@@ -534,6 +538,7 @@
 
     const fd = new FormData();
     fd.append('image', file);
+    fd.append('oldPath', oldPosterPath || '');
     try {
       const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();
@@ -726,6 +731,8 @@
     };
   }
 
+  const escSol = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
   function renderSolGrid(gridId, cards, prefix) {
     const grid = document.getElementById(gridId);
     if (!grid) return;
@@ -736,10 +743,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             Vista previa
           </span>
-          <img id="solImg_${prefix}_${i}" src="../../../${card.imagen}" alt="${card.titulo}"
+          <img id="solImg_${prefix}_${i}" src="../../../${escSol(card.imagen)}" alt="${escSol(card.titulo)}"
             onerror="this.style.display='none'">
-          <button type="button" class="preview-zoom-btn" title="Ver en grande"
-            onclick="event.stopPropagation(); openLightboxImage(document.getElementById('solImg_${prefix}_${i}').src, '${card.titulo.replace(/'/g, "\\'")}', true)">
+          <button type="button" class="preview-zoom-btn" title="Ver en grande" data-prefix="${prefix}" data-idx="${i}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </button>
           <div class="sol-card-admin-hint" id="solHint_${prefix}_${i}">
@@ -748,15 +754,24 @@
           </div>
         </div>
         <div class="sol-card-admin-body">
-          <input type="text" value="${card.titulo.replace(/"/g,'&quot;')}"
+          <input type="text" value="${escSol(card.titulo)}"
             oninput="solData.${prefix}[${i}].titulo=this.value;checkDirty()" onblur="onFieldBlur()">
-          <span class="sol-card-img-path" id="solPath_${prefix}_${i}" title="${card.imagen}">
+          <span class="sol-card-img-path" id="solPath_${prefix}_${i}" title="${escSol(card.imagen)}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-            <span class="sol-card-img-path-text">${card.imagen}</span>
+            <span class="sol-card-img-path-text">${escSol(card.imagen)}</span>
           </span>
-          <span class="sol-card-link-hint">${card.href}</span>
+          <span class="sol-card-link-hint">${escSol(card.href)}</span>
         </div>
       </div>`).join('');
+
+    grid.querySelectorAll('.preview-zoom-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const p = btn.dataset.prefix, idx = Number(btn.dataset.idx);
+        const imgEl = document.getElementById(`solImg_${p}_${idx}`);
+        openLightboxImage(imgEl ? imgEl.src : '', cards[idx]?.titulo || '', true);
+      };
+    });
   }
 
   renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
@@ -813,6 +828,7 @@
     }
     const fd = new FormData();
     fd.append('image', file);
+    fd.append('oldPath', solData[prefix][i].imagen || '');
     try {
       const res  = await fetch('../../api/contenido.php', { method:'POST', headers:{'X-CSRF-Token':CSRF_TOKEN}, body:fd });
       const json = await res.json();

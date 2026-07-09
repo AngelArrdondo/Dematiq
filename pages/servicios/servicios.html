@@ -103,13 +103,15 @@
 
   <script>
     (async function () {
+      const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       try {
         const data = await fetch('/api/contenido.php?clave=servicios').then(r => r.json());
         if (!Array.isArray(data) || data.length === 0) return;
 
-        // Guardar descripciones estáticas (admin no las almacena)
+        // Guardar descripciones e imágenes estáticas (fallback si el admin no las tiene)
         const staticBtns = [...document.querySelectorAll('.svc-option')];
         const descs = staticBtns.map(b => b.dataset.desc || '');
+        const imgs1 = staticBtns.map(b => b.dataset.img  || '');
         const imgs2 = staticBtns.map(b => b.dataset.img2 || '');
 
         // Reconstruir botones desde BD (maneja agregar / eliminar / modificar)
@@ -121,11 +123,12 @@
         data.forEach((s, i) => {
           const btn = document.createElement('button');
           btn.className = 'svc-option' + (i === 0 ? ' active' : '');
+          const img1Val = s.image1 || s.image || ''; /* backward compat con el campo único anterior */
           btn.dataset.title = s.nombre || '';
-          btn.dataset.img   = s.image ? ap(s.image) : '';
-          btn.dataset.img2  = imgs2[i] || (s.image ? ap(s.image) : '');
+          btn.dataset.img   = img1Val   ? ap(img1Val)   : (imgs1[i] || '');
+          btn.dataset.img2  = s.image2  ? ap(s.image2)  : (imgs2[i] || '');
           btn.dataset.desc  = s.desc || descs[i] || '';
-          btn.innerHTML = `<span class="svc-option-name">${s.nombre || ''}</span>`;
+          btn.innerHTML = `<span class="svc-option-name">${esc(s.nombre)}</span>`;
           if (sticky) sticky.appendChild(btn);
         });
       } catch (e) {}

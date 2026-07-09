@@ -23,7 +23,7 @@ try {
   <title>Proyectos | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="proyectos.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/proyectos/proyectos.css?v=1">
 </head>
 <body>
 
@@ -122,14 +122,15 @@ try {
         <strong>Tienes cambios sin guardar</strong>
         <span>Guarda para que se reflejen en la página pública</span>
       </div>
-      <button class="un-save" onclick="saveProjects()">
+      <button class="un-discard" onclick="cancelProjects()">No guardar</button>
+      <button class="un-save" id="mainSaveBtn" onclick="saveProjects()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
         Guardar ahora
       </button>
     </div>
 
     <!-- ══ CARD: PROYECTOS ═════════════════════════════ -->
-    <div class="section-card">
+    <div class="section-card" data-accent="orange">
       <div class="sc-head">
         <div class="sc-icon si-orange">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -139,6 +140,7 @@ try {
         <div class="sc-head-text">
           <h3>Lista de proyectos</h3>
           <p>Activa "Destacado" en los que quieres mostrar en el carrusel de inicio</p>
+          <p class="field-hint">Dimensión recomendada para la imagen: mínimo <strong>1000×625px</strong>, horizontal (16:10 o más ancha) — así se ve en el carrusel de la página principal.</p>
         </div>
         <button class="btn-admin btn-outline-admin" onclick="addProject()" style="flex-shrink:0;font-size:.8rem;padding:7px 14px;gap:6px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -161,14 +163,6 @@ try {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         Ver página
       </a>
-      <button class="btn-admin btn-outline-admin" onclick="cancelProjects()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Descartar
-      </button>
-      <button class="btn-admin btn-primary-admin" onclick="saveProjects()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-        Guardar cambios
-      </button>
     </div>
 
   </div>
@@ -214,11 +208,22 @@ try {
   </div>
 </div>
 
+<!-- ══ LIGHTBOX (vista previa grande de la imagen) ══ -->
+<div class="lightbox-backdrop" id="lightboxModal" onclick="if(event.target===this) closeLightbox()">
+  <div class="lightbox-content" id="lightboxContent">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" title="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img id="lightboxImg" src="" alt="" style="display:none">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="proyectos.js?v=1"></script>
+<script src="../../assets/js/proyectos/proyectos.js?v=1"></script>
 
 </body>
 </html>

@@ -23,7 +23,7 @@ try {
   <title>Imágenes | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="imagenes.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/imagenes/imagenes.css?v=1">
 </head>
 <body>
 
@@ -217,6 +217,7 @@ try {
     </div>
     <h3>¿Eliminar imagen?</h3>
     <p>Se eliminará permanentemente del servidor:<br><strong id="delModalPath"></strong></p>
+    <p id="delModalUsage" style="display:none;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:.85rem"></p>
     <div class="del-modal-actions">
       <button class="del-btn cancel" onclick="closeDelModal()">Cancelar</button>
       <button class="del-btn confirm" id="delConfirmBtn" onclick="confirmDelete()">Sí, eliminar</button>
@@ -228,7 +229,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="imagenes.js?v=1"></script>
+<script src="../../assets/js/imagenes/imagenes.js?v=1"></script>
 
 </body>
 </html>

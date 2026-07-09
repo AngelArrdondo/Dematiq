@@ -23,7 +23,7 @@ try {
   <title>Socios | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="partners.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/partners/partners.css?v=1">
 </head>
 <body>
 
@@ -74,24 +74,66 @@ try {
 
   <div class="admin-content">
 
-    <div class="section-header">
-      <h1>Empresas Asociadas</h1>
-      <p>Administra los logos y enlaces del carrusel de socios.</p>
+    <!-- ══ BANNER ══════════════════════════════════════ -->
+    <div class="ptn-banner" style="margin-bottom:16px;">
+      <div class="ptn-banner-mesh"></div>
+      <div class="banner-inner">
+        <div class="banner-chip"><span class="bdot"></span> Página activa</div>
+        <h1 class="banner-title">Empresas Asociadas</h1>
+        <p class="banner-desc">Administra los logos y enlaces de los socios que aparecen en el sitio.</p>
+        <div class="banner-section-cards">
+          <div class="bsc">
+            <div class="bsc-icon bsci-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+            </div>
+            <div class="bsc-info">
+              <div class="bsc-label">Socios</div>
+              <div class="bsc-val" id="statTotal">0</div>
+            </div>
+          </div>
+          <div class="bsc">
+            <div class="bsc-icon bsci-teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+            </div>
+            <div class="bsc-info">
+              <div class="bsc-label">Con logo</div>
+              <div class="bsc-val" id="statLogos">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <div class="admin-card-title">
+    <!-- ══ UNSAVED NOTICE ══════════════════════════════ -->
+    <div class="unsaved-notice hidden" id="unsavedNotice">
+      <div class="un-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="un-text">
+        <strong>Tienes cambios sin guardar</strong>
+        <span>Guarda para que se reflejen en la página pública</span>
+      </div>
+      <button class="un-discard" onclick="cancelPartners()">No guardar</button>
+      <button class="un-save" id="mainSaveBtn" onclick="savePartners()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+        Guardar ahora
+      </button>
+    </div>
+
+    <div class="section-card" data-accent="indigo">
+      <div class="sc-head">
+        <div class="sc-icon si-indigo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/>
           </svg>
-          Lista de socios
-          <span class="slides-count-badge" id="partner-count"></span>
         </div>
-        <button class="btn-admin btn-outline-admin" onclick="addPartner()" style="font-size:.8rem;padding:6px 12px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+        <div class="sc-head-text">
+          <h3>Lista de socios <span class="slides-count-badge" id="partner-count"></span></h3>
+          <p>Nombre, logo y URL de cada empresa socia</p>
+          <p class="field-hint">El logo se muestra sin recortar (contain) — usa <strong>PNG/WebP con fondo transparente</strong> para que se vea bien sobre cualquier fondo.</p>
+        </div>
+        <button id="addPartnerBtn" class="btn-admin btn-outline-admin" onclick="addPartner()" style="flex-shrink:0;font-size:.8rem;padding:7px 14px;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Agregar socio
         </button>
       </div>
@@ -105,13 +147,6 @@ try {
         </svg>
         Ver en sitio
       </a>
-      <button class="btn-admin btn-primary-admin" onclick="savePartners()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-          <polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/>
-        </svg>
-        Guardar cambios
-      </button>
     </div>
 
   </div>
@@ -121,7 +156,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="partners.js?v=1"></script>
+<script src="../../assets/js/partners/partners.js?v=1"></script>
 
 </body>
 </html>

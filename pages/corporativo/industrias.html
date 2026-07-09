@@ -71,7 +71,7 @@
     const pillsWrap = document.querySelector('.ind-pills');
     const sidebar   = document.querySelector('.svc-optionlist-sticky');
     const container = document.getElementById('infoContainer');
-    const txt = s => (s == null ? '' : String(s));
+    const txt = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
     // Un subtema = nombre + descripción, siempre visible (sin abrir/cerrar)
     function subItem(item) {
@@ -84,13 +84,15 @@
     function panelHTML(ind, i) {
       const areas = (ind.areas || []).map(subItem).join('');
       const temas = (ind.temas || []).map(subItem).join('');
-      return `<div id="${ind.id}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
+      const img1  = ind.imagen1 ? '../../' + txt(ind.imagen1) : '../../assets/images/general/img1.webp';
+      const img2  = ind.imagen2 ? '../../' + txt(ind.imagen2) : '../../assets/images/general/img2.webp';
+      return `<div id="${txt(ind.id)}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
         <h3>${txt(ind.nombre)}</h3>
         <p class="ind-intro">${txt(ind.intro)}</p>
         <div class="carousel2" data-idx="0">
           <div class="c2-track">
-            <img src="../../assets/images/general/img1.webp" alt="${txt(ind.nombre)}">
-            <img src="../../assets/images/general/img2.webp" alt="${txt(ind.nombre)}">
+            <img src="${img1}" alt="${txt(ind.nombre)}">
+            <img src="${img2}" alt="${txt(ind.nombre)}">
           </div>
           <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
         </div>
@@ -126,9 +128,14 @@
 
     function renderAll(list) {
       if (pillsWrap) {
-        pillsWrap.innerHTML = list.map((ind, i) =>
-          `<button class="ind-pill${i === 0 ? ' active' : ''}" onclick="mostrarIndustriaPill('${ind.id}',this)">${txt(ind.nombre)}</button>`
-        ).join('');
+        pillsWrap.innerHTML = '';
+        list.forEach((ind, i) => {
+          const pill = document.createElement('button');
+          pill.className = 'ind-pill' + (i === 0 ? ' active' : '');
+          pill.textContent = ind.nombre || '';
+          pill.addEventListener('click', () => mostrarIndustriaPill(ind.id, pill));
+          pillsWrap.appendChild(pill);
+        });
       }
       if (sidebar) {
         const head = sidebar.querySelector('.svc-optionlist-head');
@@ -151,7 +158,7 @@
     // Sincroniza nombre/intro desde la BD si existe, conservando áreas y temas locales
     (async function () {
       try {
-        const db = await fetch('/api/contenido.php?clave=industrias').then(r => r.json());
+        const db = await fetch('/api/contenido.php?clave=industrias', { cache: 'no-store' }).then(r => r.json());
         if (!Array.isArray(db) || !db.length) return;
         const byId = Object.fromEntries(DATA.map(d => [d.id, d]));
         const merged = db.map(row => {
@@ -160,6 +167,8 @@
             id: row.id,
             nombre: row.nombre || local.nombre || '',
             intro: row.descripcion || local.intro || '',
+            imagen1: row.imagen1 || '',
+            imagen2: row.imagen2 || '',
             areas: local.areas || [],
             temas: local.temas || []
           };

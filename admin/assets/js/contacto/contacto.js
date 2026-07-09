@@ -1,5 +1,7 @@
 AdminSidebar.init('contacto', '../../', '../../../');
 
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
 /* ── User menu ─────────────────────────────────── */
 const userMenuBtn = document.getElementById('userMenuBtn');
 userMenuBtn.addEventListener('click', function(e) {
@@ -179,6 +181,66 @@ function initSchedule() {
   renderSlots();
 }
 
+/* ══ DÍAS FESTIVOS ═══════════════════════════════ */
+const MAX_FESTIVOS = 30;
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+let festivos = [];
+
+function renderFestivos() {
+  const c = document.getElementById('festivos-list');
+  c.innerHTML = '';
+  if (!festivos.length) {
+    c.innerHTML = '<p class="festivos-empty">Sin fechas agregadas — se atiende según el horario semanal todos los días.</p>';
+    return;
+  }
+  festivos.forEach((f, i) => {
+    const diaOpts = ['<option value="">Día</option>']
+      .concat(Array.from({length:31}, (_,d) => `<option value="${d+1}"${Number(f.dia)===d+1?' selected':''}>${d+1}</option>`))
+      .join('');
+    const mesOpts = ['<option value="">Mes</option>']
+      .concat(MESES.map((m,idx) => `<option value="${idx+1}"${Number(f.mes)===idx+1?' selected':''}>${m.charAt(0).toUpperCase()+m.slice(1)}</option>`))
+      .join('');
+    const row = document.createElement('div');
+    row.className = 'social-field';
+    row.innerHTML = `
+      <div class="social-field-head">
+        <span class="social-name">Fecha ${i + 1}</span>
+        <button type="button" class="social-rm" title="Quitar">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="festivo-row-inputs">
+        <select class="festivo-dia">${diaOpts}</select>
+        <select class="festivo-mes">${mesOpts}</select>
+        <input type="text" class="festivo-motivo" placeholder="Motivo (ej. Navidad)" value="${esc(f.motivo)}">
+      </div>`;
+    row.querySelector('.festivo-dia').addEventListener('change', e => { festivos[i].dia = e.target.value; });
+    row.querySelector('.festivo-mes').addEventListener('change', e => { festivos[i].mes = e.target.value; });
+    row.querySelector('.festivo-motivo').addEventListener('input', e => { festivos[i].motivo = e.target.value; });
+    row.querySelector('.social-rm').addEventListener('click', () => { festivos.splice(i, 1); renderFestivos(); });
+    c.appendChild(row);
+  });
+}
+
+function addFestivo() {
+  if (festivos.length >= MAX_FESTIVOS) { showToast(`Máximo ${MAX_FESTIVOS} fechas permitidas`, 'error'); return; }
+  festivos.push({ dia: '', mes: '', motivo: '' });
+  renderFestivos();
+}
+
+function initFestivos() {
+  festivos = Array.isArray(_D.diasFestivos)
+    ? _D.diasFestivos.map(f => ({ dia: f.dia || '', mes: f.mes || '', motivo: f.motivo || '' }))
+    : [];
+  renderFestivos();
+}
+
+function getFestivos() {
+  return festivos
+    .filter(f => f.dia && f.mes)
+    .map(f => ({ dia: Number(f.dia), mes: Number(f.mes), motivo: (f.motivo || '').trim() }));
+}
+
 /* ══ MAP ═════════════════════════════════════════ */
 let map, marker;
 const DEF_LAT = 20.621222, DEF_LNG = -100.470500;
@@ -296,11 +358,17 @@ async function saveContacto() {
       whatsapp:    loc ? fmtPhone(code,loc) : '',
       whatsappNum: loc ? buildLink(code,loc) : '',
       horario:     getHorario(),
+      diasFestivos: getFestivos(),
       direccion:   document.getElementById('direccion').value.trim(),
       mapCoords:   document.getElementById('map-coords').value.trim(),
       social: getSocials()
     });
-    if (res && res.ok) showToast('Cambios guardados correctamente');
+    if (res && res.ok) {
+      showToast('Cambios guardados correctamente — recargando…');
+      const btn = document.getElementById('mainSaveBtn');
+      if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
+      setTimeout(() => location.reload(), 1100);
+    }
     else showToast(res?.error||'Error al guardar','error');
   } catch { showToast('Error de conexión','error'); }
 }
@@ -347,7 +415,7 @@ function renderSocialGrid() {
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <input type="url" data-social-id="${net.id}" value="${item.url}" placeholder="${net.placeholder}">
+      <input type="url" data-social-id="${net.id}" value="${esc(item.url)}" placeholder="${net.placeholder}">
     `;
     field.querySelector('.social-rm').addEventListener('click', () => removeSocial(idx));
     grid.appendChild(field);
@@ -413,8 +481,39 @@ document.addEventListener('click', () => {
   document.getElementById('social-picker').classList.remove('open');
 });
 
+/* ── Quick nav: scroll-to + scrollspy ──────────── */
+(function initQuickNav() {
+  const pills = Array.from(document.querySelectorAll('.qn-pill'));
+  if (!pills.length) return;
+  pills.forEach(p => p.addEventListener('click', () => {
+    const target = document.getElementById(p.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+  const sections = pills.map(p => document.getElementById(p.dataset.target)).filter(Boolean);
+  function spy() {
+    let activeIdx = 0;
+    const refY = 140;
+    sections.forEach((sec, i) => { if (sec.getBoundingClientRect().top - refY <= 0) activeIdx = i; });
+    pills.forEach((p, i) => p.classList.toggle('active', i === activeIdx));
+  }
+  document.addEventListener('scroll', spy, { passive: true });
+  spy();
+})();
+
+/* ── Banner stats ──────────────────────────────── */
+function updateBannerStats() {
+  const statSocials = document.getElementById('statSocials');
+  const statSlots    = document.getElementById('statSlots');
+  const statLoc      = document.getElementById('statLoc');
+  if (statSocials) statSocials.textContent = socialItems.filter(i => i.url).length || '0';
+  if (statSlots)   statSlots.textContent   = slots.length || '0';
+  if (statLoc)     statLoc.textContent     = (_D.mapCoords || '').trim() ? 'Fijada' : 'Sin fijar';
+}
+
 /* ── Init ────────────────────────────────────── */
 initWA();
 initSchedule();
+initFestivos();
 initSocials();
+updateBannerStats();
 document.addEventListener('DOMContentLoaded', initMap);

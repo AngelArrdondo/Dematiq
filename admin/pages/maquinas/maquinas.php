@@ -23,7 +23,7 @@ try {
   <title>Máquinas | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="maquinas.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/maquinas/maquinas.css?v=1">
 </head>
 <body>
 
@@ -113,6 +113,13 @@ try {
       </div>
     </div>
 
+    <!-- ══ QUICK NAV ═══════════════════════════════════ -->
+    <nav class="quick-nav" id="quickNav" aria-label="Ir a sección">
+      <a class="qn-pill" data-target="secSelector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Página</a>
+      <a class="qn-pill" data-target="secTitulos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h8M4 18h12"/></svg>Títulos</a>
+      <a class="qn-pill" data-target="secTabs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>Tabs</a>
+    </nav>
+
     <!-- ══ UNSAVED NOTICE ══════════════════════════════ -->
     <div class="unsaved-notice hidden" id="unsavedNotice">
       <div class="un-icon">
@@ -122,14 +129,15 @@ try {
         <strong>Tienes cambios sin guardar</strong>
         <span>Guarda antes de cambiar de página de soluciones</span>
       </div>
-      <button class="un-save" onclick="savePage()">
+      <button class="un-discard" onclick="cancelPage()">No guardar</button>
+      <button class="un-save" id="mainSaveBtn" onclick="savePage()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
         Guardar ahora
       </button>
     </div>
 
     <!-- ══ CARD: SELECTOR DE PÁGINA ══════════════════ -->
-    <div class="section-card">
+    <div class="section-card" id="secSelector" data-accent="slate" style="animation-delay:.02s">
       <div class="sc-head">
         <div class="sc-icon si-slate">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -145,7 +153,7 @@ try {
     </div>
 
     <!-- ══ CARD: TÍTULOS ══════════════════════════════ -->
-    <div class="section-card">
+    <div class="section-card" id="secTitulos" data-accent="sky" style="animation-delay:.07s">
       <div class="sc-head">
         <div class="sc-icon si-sky">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -173,7 +181,7 @@ try {
     </div>
 
     <!-- ══ CARD: TABS ══════════════════════════════════ -->
-    <div class="section-card">
+    <div class="section-card" id="secTabs" data-accent="sky" style="animation-delay:.12s">
       <div class="sc-head">
         <div class="sc-icon si-sky">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -183,6 +191,7 @@ try {
         <div class="sc-head-text">
           <h3>Tipos de máquinas / Tabs</h3>
           <p>Cada tab es una opción del panel lateral con nombre, descripción y 2 imágenes en carrusel</p>
+          <p class="field-hint">Las imágenes se recortan tipo "cover" en un carrusel horizontal — usa fotos <strong>horizontales</strong> (16:9 o más anchas) para que no se vean recortadas de forma rara.</p>
         </div>
         <button class="btn-admin btn-outline-admin" onclick="addTab()" style="flex-shrink:0;font-size:.8rem;padding:7px 14px;gap:6px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -205,16 +214,19 @@ try {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         Ver página
       </a>
-      <button class="btn-admin btn-outline-admin" onclick="cancelPage()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Descartar
-      </button>
-      <button class="btn-admin btn-primary-admin" onclick="savePage()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-        Guardar cambios
-      </button>
     </div>
 
+  </div>
+</div>
+
+<!-- ══ LIGHTBOX (vista previa grande de la imagen) ══ -->
+<div class="lightbox-backdrop" id="lightboxModal" onclick="if(event.target===this) closeLightbox()">
+  <div class="lightbox-content" id="lightboxContent">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" title="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img id="lightboxImg" src="" alt="" style="display:none">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
   </div>
 </div>
 
@@ -284,7 +296,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="maquinas.js?v=1"></script>
+<script src="../../assets/js/maquinas/maquinas.js?v=1"></script>
 
 </body>
 </html>

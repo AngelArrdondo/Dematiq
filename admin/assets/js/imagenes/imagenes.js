@@ -153,10 +153,21 @@
   }
 
   /* ─── modal eliminar ─────────────────────────────── */
-  function openDelModal(path) {
+  async function openDelModal(path) {
     pendingDelete = path;
     document.getElementById('delModalPath').textContent = path;
     document.getElementById('delModal').classList.add('open');
+
+    const usageEl = document.getElementById('delModalUsage');
+    usageEl.style.display = 'none';
+    try {
+      const res  = await fetch('../../api/imagenes.php?action=check-usage&path=' + encodeURIComponent(path));
+      const json = await res.json();
+      if (json.ok && json.usedIn && json.usedIn.length) {
+        usageEl.textContent = `⚠ Esta imagen sigue en uso en: ${json.usedIn.join(', ')}. Si la borras, esas secciones quedarán con una imagen rota.`;
+        usageEl.style.display = 'block';
+      }
+    } catch { /* si falla la verificación, se deja eliminar sin advertencia */ }
   }
   function closeDelModal() {
     document.getElementById('delModal').classList.remove('open');

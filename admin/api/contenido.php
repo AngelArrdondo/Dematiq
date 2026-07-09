@@ -19,6 +19,16 @@ if ($method === 'POST' && !Auth::csrfVerify()) {
     exit;
 }
 
+function eliminarArchivoAnterior(string $oldPath, string $baseDir): void {
+    $oldPath = trim($oldPath);
+    if ($oldPath === '') return;
+    $real     = realpath(__DIR__ . '/../../' . $oldPath);
+    $baseReal = realpath($baseDir);
+    if ($real === false || $baseReal === false) return;
+    if (strpos($real, $baseReal) !== 0) return; // fuera del directorio permitido, ignorar
+    @unlink($real);
+}
+
 if ($method === 'GET') {
     $clave = $_GET['clave'] ?? '';
     echo $clave
@@ -72,6 +82,8 @@ if ($method === 'GET') {
         exit;
     }
 
+    eliminarArchivoAnterior($_POST['oldPath'] ?? '', $uploadDir);
+
     echo json_encode([
         'ok'   => true,
         'path' => 'assets/videos/' . $filename,
@@ -82,7 +94,7 @@ if ($method === 'GET') {
 
 } elseif ($method === 'POST' && !empty($_FILES['image'])) {
     $file    = $_FILES['image'];
-    $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
     $mime    = mime_content_type($file['tmp_name']);
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -108,10 +120,11 @@ if ($method === 'GET') {
     }
 
     $ext = match($mime) {
-        'image/jpeg' => 'jpg',
-        'image/png'  => 'png',
-        'image/webp' => 'webp',
-        'image/gif'  => 'gif',
+        'image/jpeg'    => 'jpg',
+        'image/png'     => 'png',
+        'image/webp'    => 'webp',
+        'image/gif'     => 'gif',
+        'image/svg+xml' => 'svg',
     };
 
     $allowedFolders = ['general', 'partners'];
@@ -126,6 +139,8 @@ if ($method === 'GET') {
         exit;
     }
 
+    eliminarArchivoAnterior($_POST['oldPath'] ?? '', __DIR__ . '/../../assets/images/');
+
     echo json_encode(['ok' => true, 'path' => 'assets/images/' . $folder . '/' . $filename]);
 
 } elseif ($method === 'POST') {
@@ -136,6 +151,51 @@ if ($method === 'GET') {
     if (!$clave || $valor === null) {
         http_response_code(400);
         echo json_encode(['error' => 'Faltan parámetros']);
+        exit;
+    }
+
+    $limitesCantidad = [
+        'marcas'     => 20,
+        'partners'   => 12,
+        'industrias' => 15,
+        'servicios'  => 20,
+        'proyectos'  => 40,
+    ];
+    if (isset($limitesCantidad[$clave]) && is_array($valor) && count($valor) > $limitesCantidad[$clave]) {
+        http_response_code(400);
+        echo json_encode(['error' => "Máximo {$limitesCantidad[$clave]} elementos permitidos"]);
+        exit;
+    }
+
+    if ($clave === 'contacto' && is_array($valor) && !empty($valor['email']) && !filter_var($valor['email'], FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Email de contacto no válido']);
+        exit;
+    }
+
+    $maxFestivos = 30;
+    if ($clave === 'contacto' && is_array($valor) && isset($valor['diasFestivos']) && is_array($valor['diasFestivos'])) {
+        if (count($valor['diasFestivos']) > $maxFestivos) {
+            http_response_code(400);
+            echo json_encode(['error' => "Máximo {$maxFestivos} fechas permitidas"]);
+            exit;
+        }
+        foreach ($valor['diasFestivos'] as $f) {
+            $dia = $f['dia'] ?? null;
+            $mes = $f['mes'] ?? null;
+            if (!is_numeric($dia) || !is_numeric($mes) || $dia < 1 || $dia > 31 || $mes < 1 || $mes > 12) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Día festivo con fecha inválida']);
+                exit;
+            }
+        }
+    }
+
+    $clavesMaquinas = ['ensamble', 'maqcontrol', 'maqprob', 'maqinspe', 'maclim', 'maqmar', 'macrobot', 'maqindus'];
+    $limiteTabs     = 10;
+    if (in_array($clave, $clavesMaquinas, true) && is_array($valor) && isset($valor['tabs']) && is_array($valor['tabs']) && count($valor['tabs']) > $limiteTabs) {
+        http_response_code(400);
+        echo json_encode(['error' => "Máximo {$limiteTabs} pestañas permitidas"]);
         exit;
     }
 

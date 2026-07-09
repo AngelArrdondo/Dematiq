@@ -46,6 +46,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'list') {
     exit;
 }
 
+// ── GET: check if an image path is referenced in contenido ────
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'check-usage') {
+    $path = ltrim($_GET['path'] ?? '', '/');
+    $usedIn = [];
+    if ($path !== '') {
+        $stmt = $pdo->query('SELECT clave, valor FROM contenido');
+        foreach ($stmt as $row) {
+            if (strpos($row['valor'], $path) !== false) {
+                $usedIn[] = $row['clave'];
+            }
+        }
+    }
+    echo json_encode(['ok' => true, 'usedIn' => $usedIn]);
+    exit;
+}
+
 // ── POST: delete image ────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
     if (!Auth::csrfVerify()) {

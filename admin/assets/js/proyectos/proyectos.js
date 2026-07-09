@@ -38,6 +38,12 @@
     desc:       p.desc       || '',
     destacado:  !!p.destacado,
     href:       p.href       || '',
+    solucion:   p.solucion   || '',
+    resultados: p.resultados || '',
+    metricas:   (() => {
+      const arr = Array.isArray(p.metricas) ? p.metricas : [];
+      return [0, 1, 2].map(k => ({ v: arr[k]?.v || '', l: arr[k]?.l || '' }));
+    })(),
   }));
   let origJSON = JSON.stringify(projects);
   let dirty    = false;
@@ -109,31 +115,66 @@
   async function modalSaveAndGo() { await saveProjects(); if (pendingNavUrl) window.location.href = pendingNavUrl; }
   function modalDiscardAndGo()    { dirty = false; if (pendingNavUrl) window.location.href = pendingNavUrl; }
   function modalCancel()          { pendingNavUrl = null; document.getElementById('navModal').classList.remove('show'); }
+  /* ─── lightbox (vista previa grande) ─────────────── */
+  function openLightboxImage(src, caption) {
+    if (!src) { showToast('Todavía no hay imagen para mostrar', 'error'); return; }
+    const modal = document.getElementById('lightboxModal');
+    const img   = document.getElementById('lightboxImg');
+    img.src = src; img.style.display = 'block';
+    document.getElementById('lightboxCaption').textContent = caption || '';
+    modal.classList.add('show');
+  }
+  function closeLightbox() {
+    document.getElementById('lightboxModal').classList.remove('show');
+  }
+
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveProjects(); return; }
-    if (e.key === 'Escape') modalCancel();
+    if (e.key === 'Escape') {
+      if (document.getElementById('lightboxModal').classList.contains('show')) { closeLightbox(); return; }
+      modalCancel();
+    }
   });
   window.addEventListener('beforeunload', function(e) {
     if (dirty) { e.preventDefault(); e.returnValue = '¿Salir sin guardar los cambios?'; return e.returnValue; }
   });
 
+  /* ─── validación de dimensiones ──────────────────── */
+  /* La página principal muestra esta imagen en el carrusel "stage-carousel"
+     con proporción ~16:10 y object-fit:cover (ver assets/css/pages/home.css
+     .stage-card__img) — por eso se piden fotos horizontales de buena resolución. */
+  const PROY_MIN_W     = 1000;
+  const PROY_MIN_H     = 625;
+  const PROY_MIN_RATIO = 1.3; /* ancho/alto — por debajo de esto es demasiado vertical/cuadrada */
+
+  function probeImageDimensions(url) {
+    return new Promise(resolve => {
+      const probe = new Image();
+      probe.onload  = () => resolve({ w: probe.naturalWidth, h: probe.naturalHeight });
+      probe.onerror = () => resolve({ w: 0, h: 0 });
+      probe.src = url;
+    });
+  }
+
   /* ─── preview imagen ─────────────────────────────── */
   function setPreview(i, src) {
-    const box = document.getElementById(`imgBox${i}`);
+    const box  = document.getElementById(`imgBox${i}`);
     if (!box) return;
-    const img = box.querySelector('img');
-    const ph  = box.querySelector('.img-placeholder');
-    const bdg = box.querySelector('.img-badge-preview');
+    const img  = box.querySelector('img');
+    const ph   = box.querySelector('.img-placeholder');
+    const zoom = document.getElementById(`imgZoom${i}`);
     if (!src) {
-      if (img) img.style.display = 'none';
-      if (ph)  ph.style.display = '';
+      if (img)  img.style.display  = 'none';
+      if (ph)   ph.style.display   = '';
+      if (zoom) zoom.style.display = 'none';
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; };
-      if (ph) ph.style.display = 'none';
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; };
+      if (ph)   ph.style.display   = 'none';
+      if (zoom) zoom.style.display = 'flex';
     }
   }
 
@@ -151,6 +192,21 @@
     if (!input.files[0]) return;
     const file = input.files[0];
     if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB por imagen', 'error'); input.value = ''; return; }
+    if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (JPG, PNG, WebP)', 'error'); input.value = ''; return; }
+
+    const localURL = URL.createObjectURL(file);
+    const { w, h } = await probeImageDimensions(localURL);
+    if (w && h) {
+      if (w < PROY_MIN_W || h < PROY_MIN_H) {
+        showToast(`Imagen no subida: ${w}×${h}px es muy pequeña — se necesita mínimo ${PROY_MIN_W}×${PROY_MIN_H}px para que no se vea borrosa`, 'error');
+        URL.revokeObjectURL(localURL); input.value = ''; return;
+      }
+      if (w / h < PROY_MIN_RATIO) {
+        showToast(`Imagen no subida: ${w}×${h}px es demasiado vertical — esta foto se recorta en un carrusel horizontal, usa una imagen horizontal (16:10 o más ancha)`, 'error');
+        URL.revokeObjectURL(localURL); input.value = ''; return;
+      }
+    }
+    URL.revokeObjectURL(localURL);
 
     const box = document.getElementById(`imgBox${i}`);
     const img = box?.querySelector('img');
@@ -164,6 +220,7 @@
     const fd = new FormData();
     fd.append('image', file);
     fd.append('folder', 'general');
+    fd.append('oldPath', projects[i].img || '');
     try {
       const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();
@@ -232,6 +289,10 @@
             <div class="img-preview-box" id="imgBox${i}"
               onclick="document.getElementById('imgFile${i}').click()" title="Clic para cambiar imagen">
               <img src="" alt="" style="display:none">
+              <button type="button" class="preview-zoom-btn" style="display:none" id="imgZoom${i}" title="Ver en grande"
+                onclick="event.stopPropagation(); openLightboxImage(document.getElementById('imgBox${i}').querySelector('img').src, '${esc(p.title||'Proyecto')}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
               <div class="img-placeholder">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
                 <span>Sin imagen</span>
@@ -336,6 +397,37 @@
               </div>
             </div>
 
+            <div class="field-divider">Ficha de detalle (proyecto.html)</div>
+
+            <div class="field">
+              <div class="field-top"><label>Solución</label></div>
+              <textarea class="fi" rows="3" placeholder="Párrafo principal: qué se diseñó y qué se resolvió para este proyecto…"
+                oninput="projects[${i}].solucion=this.value;checkDirty()"
+                onblur="onFieldBlur()">${escTxt(p.solucion||'')}</textarea>
+              <p class="field-hint">Párrafo destacado de la ficha del proyecto — si se deja vacío, esa sección no se muestra</p>
+            </div>
+
+            <div class="field">
+              <div class="field-top"><label>Resultados</label></div>
+              <textarea class="fi" rows="2" placeholder="Párrafo adicional (opcional): beneficios o resultados obtenidos…"
+                oninput="projects[${i}].resultados=this.value;checkDirty()"
+                onblur="onFieldBlur()">${escTxt(p.resultados||'')}</textarea>
+            </div>
+
+            <div class="field">
+              <div class="field-top"><label>Métricas destacadas (opcional, hasta 3)</label></div>
+              <div class="metric-row">
+                ${[0, 1, 2].map(m => `
+                  <div class="metric-mini">
+                    <input type="text" class="fi metric-v" placeholder="+35%" value="${esc(p.metricas[m].v)}"
+                      oninput="projects[${i}].metricas[${m}].v=this.value;checkDirty()" onblur="onFieldBlur()">
+                    <input type="text" class="fi metric-l" placeholder="Eficiencia" value="${esc(p.metricas[m].l)}"
+                      oninput="projects[${i}].metricas[${m}].l=this.value;checkDirty()" onblur="onFieldBlur()">
+                  </div>`).join('')}
+              </div>
+              <p class="field-hint">Valor + etiqueta de cada cifra — deja en blanco las que no apliquen</p>
+            </div>
+
           </div>
         </div>`;
       c.appendChild(div);
@@ -361,8 +453,14 @@
     }
   }
 
+  const MAX_PROJECTS = 40;
   function addProject() {
-    projects.push({ id: '', title: '', cat: '', badge: '', sector: '', servicios: '', ubicacion: '', anio: '', img: '', alt: '', desc: '', destacado: false, href: '' });
+    if (projects.length >= MAX_PROJECTS) { showToast(`Máximo ${MAX_PROJECTS} proyectos permitidos`, 'error'); return; }
+    projects.push({
+      id: '', title: '', cat: '', badge: '', sector: '', servicios: '', ubicacion: '', anio: '',
+      img: '', alt: '', desc: '', destacado: false, href: '',
+      solucion: '', resultados: '', metricas: [{ v: '', l: '' }, { v: '', l: '' }, { v: '', l: '' }],
+    });
     renderProjects();
     markDirty();
     const cards = document.querySelectorAll('.slide-card');
@@ -386,8 +484,19 @@
 
   async function saveProjects() {
     try {
-      const res = await CM.set('proyectos', projects);
-      if (res && res.ok) { clearDirty(); showToast('Cambios guardados correctamente'); viewPublic('/pages/corporativo/proyecto.html'); }
+      const payload = projects.map(p => ({
+        ...p,
+        metricas: (p.metricas || []).filter(m => (m.v || '').trim() || (m.l || '').trim()),
+      }));
+      const res = await CM.set('proyectos', payload);
+      if (res && res.ok) {
+        clearDirty();
+        showToast('Cambios guardados correctamente — recargando…');
+        const btn = document.getElementById('mainSaveBtn');
+        if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
+        viewPublic('/pages/corporativo/proyecto.html');
+        setTimeout(() => location.reload(), 1100);
+      }
       else showToast(res?.error || 'Error al guardar', 'error');
     } catch { showToast('Error de conexión', 'error'); }
   }

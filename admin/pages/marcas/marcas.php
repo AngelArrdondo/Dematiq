@@ -23,7 +23,7 @@ try {
   <title>Marcas Asociadas | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="marcas.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/marcas/marcas.css?v=1">
 </head>
 <body>
 
@@ -113,8 +113,24 @@ try {
       <div class="marquee-preview-track" id="marqueePreview"></div>
     </div>
 
+    <!-- Unsaved notice -->
+    <div class="unsaved-notice hidden" id="unsavedNotice">
+      <div class="un-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="un-text">
+        <strong>Tienes cambios sin guardar</strong>
+        <span>Guarda para que se reflejen en la página pública</span>
+      </div>
+      <button class="un-discard" onclick="cancelMarcas()">No guardar</button>
+      <button class="un-save" id="mainSaveBtn" onclick="saveMarcas()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+        Guardar ahora
+      </button>
+    </div>
+
     <!-- Brand list -->
-    <div class="admin-card" style="margin-bottom:0">
+    <div class="admin-card marcas-section-card" style="margin-bottom:0">
       <div class="admin-card-header">
         <div class="admin-card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -122,11 +138,12 @@ try {
           </svg>
           Lista de marcas
         </div>
-        <button class="btn-admin btn-outline-admin" onclick="addMarca()" style="font-size:.8rem;padding:6px 14px">
+        <button id="addMarcaBtn" class="btn-admin btn-outline-admin" onclick="addMarca()" style="font-size:.8rem;padding:6px 14px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Agregar marca
         </button>
       </div>
+      <p class="field-hint" style="padding:0 20px;margin-top:8px">El logo se pinta de blanco en el carrusel (igual que en Inicio) — usa PNG/WebP/SVG con <strong>fondo transparente</strong>, si no se verá como un bloque blanco sólido.</p>
 
       <div id="marcasContainer"></div>
     </div>
@@ -137,16 +154,19 @@ try {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         Ver en sitio
       </a>
-      <button class="btn-admin btn-outline-admin" onclick="cancelMarcas()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Descartar
-      </button>
-      <button class="btn-admin btn-primary-admin" onclick="saveMarcas()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-        Guardar cambios
-      </button>
     </div>
 
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox-backdrop" id="lightboxModal" onclick="if(event.target===this) closeLightbox()">
+  <div class="lightbox-content" id="lightboxContent">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" title="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img id="lightboxImg" src="" alt="" style="display:none">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
   </div>
 </div>
 
@@ -156,7 +176,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="marcas.js?v=1"></script>
+<script src="../../assets/js/marcas/marcas.js?v=1"></script>
 
 </body>
 </html>

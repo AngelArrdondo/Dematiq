@@ -221,6 +221,7 @@
   <!-- Contenido dinámico desde DB -->
   <script>
   (async function() {
+    const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     try {
       const [home, marcas] = await Promise.all([
         fetch('/api/contenido.php?clave=home').then(r => r.json()),
@@ -242,8 +243,8 @@
       if (track && Array.isArray(marcas) && marcas.length) {
         const items = marcas.map(m => {
           const inner = m.url
-            ? `<a href="${m.url}" target="_blank" rel="noopener"><img src="${m.logo}" alt="${m.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a>`
-            : `<img src="${m.logo}" alt="${m.nombre}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')">`;
+            ? `<a href="${esc(m.url)}" target="_blank" rel="noopener"><img src="${esc(m.logo)}" alt="${esc(m.nombre)}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a>`
+            : `<img src="${esc(m.logo)}" alt="${esc(m.nombre)}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')">`;
           return `<div class="marquee-item">${inner}</div>`;
         }).join('');
         track.innerHTML = items + items;
@@ -258,10 +259,10 @@
         }
         function solCard(c) {
           const title = c.subtitulo
-            ? `<h5 class="card-title card-title--split">${c.titulo}<span class="card-title-line2">${c.subtitulo}</span></h5>`
-            : `<h5 class="card-title">${c.titulo}</h5>`;
-          const desc = c.descripcion ? `<span class="solucion-card-desc">${c.descripcion}</span>` : '';
-          return `<a href="${c.href}" class="custom-card-link"><div class="card custom-card solucion-icon-card"><div class="solucion-icon-wrapper"><img src="${c.imagen}" class="solucion-icon" alt="${c.titulo}" onerror="this.src='assets/images/general/img1.webp'"></div>${title}${desc}</div></a>`;
+            ? `<h5 class="card-title card-title--split">${esc(c.titulo)}<span class="card-title-line2">${esc(c.subtitulo)}</span></h5>`
+            : `<h5 class="card-title">${esc(c.titulo)}</h5>`;
+          const desc = c.descripcion ? `<span class="solucion-card-desc">${esc(c.descripcion)}</span>` : '';
+          return `<a href="${esc(c.href)}" class="custom-card-link"><div class="card custom-card solucion-icon-card"><div class="solucion-icon-wrapper"><img src="${esc(c.imagen)}" class="solucion-icon" alt="${esc(c.titulo)}" onerror="this.src='assets/images/general/img1.webp'"></div>${title}${desc}</div></a>`;
         }
         const feat = document.getElementById('solucionesFeatured');
         if (feat && Array.isArray(sol.featured)) feat.innerHTML = sol.featured.map(solCard).join('');

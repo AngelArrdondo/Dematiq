@@ -151,6 +151,11 @@
       if (data.p1 && qParas[0]) qParas[0].textContent = data.p1;
       if (data.p2 && qParas[1]) qParas[1].textContent = data.p2;
 
+      if (data.quienesImg) {
+        const qImg = document.querySelector('.quienes-img');
+        if (qImg) qImg.src = /^https?:\/\/|^\//.test(data.quienesImg) ? data.quienesImg : '../../' + data.quienesImg;
+      }
+
       const filosofia = document.querySelectorAll('.filosofia-card');
       if (data.mision  && filosofia[0]) { const p = filosofia[0].querySelector('p'); if (p) p.textContent = data.mision; }
       if (data.vision  && filosofia[1]) { const p = filosofia[1].querySelector('p'); if (p) p.textContent = data.vision; }

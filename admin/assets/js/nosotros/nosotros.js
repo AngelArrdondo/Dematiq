@@ -169,6 +169,7 @@
       }
     }
 
+    const oldImgPath = document.getElementById('quienesImgPath').value;
     document.getElementById('quienesImgPath').value = '';
     const img = document.getElementById('imgPreview');
     const zoomBtn = document.getElementById('imgZoomBtn');
@@ -182,6 +183,7 @@
 
     const fd = new FormData();
     fd.append('image', file);
+    fd.append('oldPath', oldImgPath || '');
     try {
       const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
       const json = await res.json();

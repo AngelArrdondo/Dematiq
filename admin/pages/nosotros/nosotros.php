@@ -24,7 +24,7 @@ try {
   <title>Nosotros | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="nosotros.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/nosotros/nosotros.css?v=1">
 </head>
 <body>
 
@@ -494,7 +494,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="nosotros.js?v=1"></script>
+<script src="../../assets/js/nosotros/nosotros.js?v=1"></script>
 
 </body>
 </html>
