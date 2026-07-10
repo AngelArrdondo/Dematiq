@@ -33,6 +33,7 @@ $_fotoPrefix = $fotoPrefix ?? '';
           <button class="profile-avatar-edit-btn" onclick="document.getElementById('avatarInput').click()" title="Cambiar foto" aria-label="Cambiar foto de perfil">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
+          <span class="spec-badge spec-badge-corner-tr" tabindex="0" data-tip="Foto cuadrada (1:1), mínimo 300×300px, con tu rostro centrado y ocupando la mayor parte del encuadre — se recorta en círculo, así que cualquier cosa cerca de las esquinas se corta.">i</span>
           <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadAvatar(this)">
         </div>
 

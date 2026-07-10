@@ -133,6 +133,7 @@ try {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Subir imágenes
         </button>
+        <span class="spec-badge spec-badge-r" tabindex="0" style="flex-shrink:0" data-tip="Esta librería no recorta ni redimensiona — sube la imagen ya en el tamaño final que necesitas. Antes de subir, revisa el ícono (i) de la sección donde la vas a usar (Inicio, Nosotros, Industrias, Marcas, etc.) para la medida y proporción exactas — cada una tiene su propia recomendación.">i</span>
         <input type="file" id="uploadInput" accept="image/*" multiple style="display:none" onchange="uploadFiles(this.files)">
       </div>
 

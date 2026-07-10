@@ -151,7 +151,10 @@
         </div>
         <div class="slide-body">
           <div class="slide-img-col">
-            <div class="slide-img-preview" id="imgPreview${i}"></div>
+            <div style="position:relative">
+              <div class="slide-img-preview" id="imgPreview${i}"></div>
+              <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" data-tip="Logo en PNG/WebP con fondo transparente, cualquier proporción funciona porque no se recorta (contain) — solo se ajusta dentro del recuadro. Un fondo sólido (blanco o de color) se verá como un recuadro feo detrás del logo.">i</span>
+            </div>
             <button type="button" class="btn-admin btn-outline-admin" id="imgPickBtn${i}"
               onclick="document.getElementById('imgFile${i}').click()"
               style="width:100%;justify-content:center;gap:6px;font-size:.8rem;padding:7px 10px">

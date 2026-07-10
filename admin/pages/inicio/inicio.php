@@ -233,7 +233,9 @@ try {
               ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               <div><strong id="uploadZoneText">Clic o arrastra una imagen</strong></div>
-              <span>JPG, PNG, WebP · máx 5 MB</span>
+              <span>JPG, PNG, WebP · máx 5 MB
+                <span class="spec-badge" tabindex="0" onclick="event.stopPropagation()" data-tip="Formato horizontal panorámico, mínimo recomendado 1920×1080px (16:9) — entre más ancha, mejor. Se recorta automáticamente tipo &quot;cover&quot; para llenar el hero completo, así que evita fotos verticales, cuadradas o con lo importante muy cerca de los bordes (se puede cortar).">i</span>
+              </span>
             </div>
             <input type="file" id="posterFile" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadPoster(this)">
             <div class="field" style="margin-bottom:0">
@@ -305,7 +307,9 @@ try {
               ondragover="onVideoDragOver(event)" ondragleave="onVideoDragLeave(event)" ondrop="onVideoDrop(event)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><polygon points="23,7 16,12 23,17 23,7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
               <div><strong id="videoUploadZoneText">Clic o arrastra un video MP4</strong></div>
-              <span>MP4, WebM · máx 80 MB · máx 1080p (Full HD)</span>
+              <span>MP4, WebM · máx 80 MB · máx 1080p (Full HD)
+                <span class="spec-badge" tabindex="0" onclick="event.stopPropagation()" data-tip="Formato horizontal panorámico (16:9), resolución 1080p (1920×1080) o menor, y corto (≤30 seg) para que el loop no se sienta pesado. Se recorta tipo &quot;cover&quot; y se reproduce en bucle sin sonido — evita videos verticales o con texto/logos cerca de los bordes.">i</span>
+              </span>
             </div>
             <input type="file" id="videoFile" accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv"
               style="display:none" onchange="onVideoFileSelect(this)">

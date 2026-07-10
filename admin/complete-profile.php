@@ -166,6 +166,39 @@ $displayName = $user['nombre'] ?? $user['username'];
     .brand-avatar-hint {
       font-size: .65rem; color: rgba(255,255,255,.3);
     }
+    @keyframes specBadgePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(0,255,185,.55); }
+      70%  { box-shadow: 0 0 0 8px rgba(0,255,185,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,255,185,0); }
+    }
+    .spec-badge {
+      position: absolute; top: -6px; right: -6px; z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--teal); color: #04211a;
+      border: 2px solid rgba(255,255,255,.9);
+      box-shadow: 0 1px 5px rgba(0,0,0,.45);
+      font: 800 13px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      cursor: help;
+      animation: specBadgePulse 1.4s ease-out 2;
+      transition: transform .15s ease;
+    }
+    .spec-badge:hover, .spec-badge:focus-visible { transform: scale(1.15); outline: none; }
+    .spec-badge::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 11px); right: -4px;
+      transform: translateY(4px);
+      background: #0a0f24; color: #fff;
+      font: 500 12.5px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 10px 13px; border-radius: 9px;
+      width: max-content; max-width: 230px; white-space: normal; text-align: left;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .15s ease, transform .15s ease;
+      box-shadow: 0 10px 26px rgba(0,0,0,.45); z-index: 60;
+    }
+    .spec-badge:hover::after, .spec-badge:focus-visible::after {
+      opacity: 1; visibility: visible; transform: translateY(0);
+    }
 
     .version-badge {
       display: inline-flex; align-items: center; gap: 5px;
@@ -361,6 +394,7 @@ $displayName = $user['nombre'] ?? $user['username'];
               </svg>
               <span>Subir foto</span>
             </div>
+            <span class="spec-badge" tabindex="0" onclick="event.stopPropagation()" data-tip="Foto cuadrada (1:1), mínimo 300×300px, con tu rostro centrado y ocupando la mayor parte del encuadre — se recorta en círculo, así que cualquier cosa cerca de las esquinas se corta.">i</span>
           </div>
           <div class="brand-avatar-name"><?= htmlspecialchars($displayName) ?></div>
           <div class="brand-avatar-hint">Toca para cambiar foto</div>

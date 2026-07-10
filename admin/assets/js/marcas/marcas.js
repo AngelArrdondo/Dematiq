@@ -255,8 +255,11 @@
         </div>
         <div class="brand-body">
           <div class="brand-img-col">
-            <div class="brand-img-preview" id="brandPreview${i}" onclick="pickLogo(${i})" title="Clic para cambiar logo">
-              <div class="brand-img-hint">${pickIcon} Cambiar</div>
+            <div style="position:relative">
+              <div class="brand-img-preview" id="brandPreview${i}" onclick="pickLogo(${i})" title="Clic para cambiar logo">
+                <div class="brand-img-hint">${pickIcon} Cambiar</div>
+              </div>
+              <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" onclick="event.stopPropagation()" data-tip="Logo en PNG/WebP/SVG con fondo transparente, ideal con al menos 300px de alto para que no se vea pixelado. Se pinta de blanco automáticamente en el carrusel — si no tiene transparencia real se verá como un bloque blanco sólido feo. No se recorta (contain), así que cualquier proporción funciona.">i</span>
             </div>
             <button type="button" class="btn-admin btn-outline-admin" id="pickBtn${i}"
               onclick="pickLogo(${i})"

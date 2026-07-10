@@ -257,6 +257,7 @@
             onclick="event.stopPropagation(); openLightboxImage(document.getElementById('imgPreview${i}_${slot}').querySelector('img').src, 'Imagen ${slot}')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </button>
+          <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" onclick="event.stopPropagation()" data-tip="Foto horizontal, mínimo 1000×560px (16:9 o más ancha). Se muestra en un carrusel que recorta tipo &quot;cover&quot;, así que evita que lo importante de la imagen quede muy cerca de los bordes superior/inferior — se puede cortar.">i</span>
           <div class="img-placeholder">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
             <span>Sin imagen</span>

@@ -278,7 +278,9 @@ try {
               ondragover="onImgDragOver(event)" ondragleave="onImgDragLeave(event)" ondrop="onImgDrop(event)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               <div><strong id="imgUploadZoneText">Clic o arrastra una imagen</strong></div>
-              <span>JPG, PNG, WebP · máx 5 MB</span>
+              <span>JPG, PNG, WebP · máx 5 MB
+                <span class="spec-badge" tabindex="0" onclick="event.stopPropagation()" data-tip="Foto vertical, mínimo 800×1000px (relación de aspecto 4:5 o más alta). Si es más horizontal que 1.3:1 (ancho/alto) o más pequeña, el sistema la rechaza al subirla. Se recorta tipo &quot;cover&quot;, así que evita que el sujeto esté muy cerca de los bordes.">i</span>
+              </span>
             </div>
             <input type="file" id="imgFile" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadQuienesImg(this)">
             <div class="field" style="margin-bottom:0">

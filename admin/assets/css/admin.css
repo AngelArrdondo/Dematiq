@@ -961,3 +961,63 @@ body        { overflow-x: hidden; }
   /* Save bar already stacks at 768px via flex-direction:column */
   .save-bar .btn-admin { min-height: 48px; font-size: .88rem; }
 }
+
+/* ══ SPEC BADGE — recordatorio de medidas/formato/peso recomendado junto a cada subida de imagen o video ══ */
+@keyframes specBadgePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(26,74,158,.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(26,74,158,0); }
+  100% { box-shadow: 0 0 0 0 rgba(26,74,158,0); }
+}
+.spec-badge {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  background: var(--accent, #1a4a9e); color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 5px rgba(0,0,0,.35);
+  font: 800 13px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: help; vertical-align: middle;
+  animation: specBadgePulse 1.4s ease-out 2;
+  transition: transform .15s ease, background .15s ease;
+}
+.spec-badge:hover, .spec-badge:focus-visible {
+  background: #0f3172; color: #fff; outline: none; transform: scale(1.15);
+}
+.spec-badge::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 11px); left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #1a1f36; color: #fff;
+  font: 500 12.5px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 10px 13px; border-radius: 9px;
+  width: max-content; max-width: 260px; white-space: normal; text-align: left;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .15s ease, transform .15s ease;
+  box-shadow: 0 10px 26px rgba(0,0,0,.32); z-index: 60;
+}
+.spec-badge::before {
+  content: ''; position: absolute; bottom: calc(100% + 5px); left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: #1a1f36;
+  opacity: 0; visibility: hidden; transition: opacity .15s ease; z-index: 60;
+}
+.spec-badge:hover::after, .spec-badge:focus-visible::after,
+.spec-badge:hover::before, .spec-badge:focus-visible::before {
+  opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+}
+/* right-anchored tooltip — use near a container's right edge so it doesn't overflow */
+.spec-badge-r::after { left: auto; right: -2px; transform: translateY(4px); }
+.spec-badge-r:hover::after, .spec-badge-r:focus-visible::after { transform: translateY(0); }
+.spec-badge-r::before { left: auto; right: 8px; transform: none; }
+/* corner-overlay variant for image preview boxes (parent needs position:relative, already true of .img-preview-box / .upload-zone contexts) */
+.spec-badge-corner {
+  position: absolute; bottom: 7px; right: 7px; z-index: 5;
+  background: var(--accent, #1a4a9e);
+}
+.spec-badge-corner:hover, .spec-badge-corner:focus-visible { background: #0f3172; }
+/* top-right corner variant, for previews whose bottom-right corner is already taken (e.g. an edit button) */
+.spec-badge-corner-tr {
+  position: absolute; top: -6px; right: -6px; z-index: 5;
+  background: var(--accent, #1a4a9e);
+}
+.spec-badge-corner-tr:hover, .spec-badge-corner-tr:focus-visible { background: #0f3172; }
