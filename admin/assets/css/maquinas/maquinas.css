@@ -24,7 +24,9 @@
       position:absolute;inset:0;pointer-events:none;overflow:hidden;
       background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
       background-size:22px 22px;
+      animation: meshPan 40s linear infinite;
     }
+    @keyframes meshPan { from { background-position: 0 0; } to { background-position: 220px 220px; } }
     .banner-inner { position:relative;z-index:1; }
     .banner-chip {
       display:inline-flex;align-items:center;gap:7px;

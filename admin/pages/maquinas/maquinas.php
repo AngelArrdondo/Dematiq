@@ -23,7 +23,7 @@ try {
   <title>Máquinas | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="../../assets/css/maquinas/maquinas.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/maquinas/maquinas.css?v=2">
 </head>
 <body>
 
