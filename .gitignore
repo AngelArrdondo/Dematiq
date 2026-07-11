@@ -19,3 +19,6 @@ Thumbs.db
 # Backup files
 *.backup
 *~
+
+# Notas internas de desarrollo (no deben subirse al hosting)
+pruebas.txt

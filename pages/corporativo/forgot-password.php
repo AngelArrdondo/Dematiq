@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token     = bin2hex(random_bytes(32));
             $expira    = date('Y-m-d H:i:s', strtotime('+30 minutes'));
             $tokens_dir = __DIR__ . '/../../includes/tokens';
+            if (!is_dir($tokens_dir)) {
+                mkdir($tokens_dir, 0700, true);
+            }
             $file       = $tokens_dir . '/' . hash('sha256', $token) . '.json';
 
             file_put_contents($file, json_encode([

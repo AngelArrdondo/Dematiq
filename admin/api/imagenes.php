@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 0);   // evita que warnings contaminen el JSON
+
 require_once __DIR__ . '/../../includes/auth.php';
 
 Auth::require('/pages/corporativo/login.php');

@@ -2,10 +2,15 @@
 Options -Indexes
 
 # ── Subida de archivos ────────────────────────────────────────
-php_value upload_max_filesize 200M
-php_value post_max_size       210M
-php_value max_execution_time  300
-php_value max_input_time      300
+# Solo aplica si PHP corre como módulo Apache (mod_php). En PHP-FPM
+# (el caso más común en hosting compartido tipo Hostinger) estos límites
+# se controlan desde admin/.user.ini — deben mantenerse iguales ahí.
+<IfModule mod_php.c>
+  php_value upload_max_filesize 200M
+  php_value post_max_size       210M
+  php_value max_execution_time  300
+  php_value max_input_time      300
+</IfModule>
 
 # ── Forzar HTTPS ─────────────────────────────────────────────
 <IfModule mod_rewrite.c>

@@ -1,11 +1,11 @@
 <?php
-// En producción (cPanel): define estas variables en el .env de tu hosting
-// o directamente en cPanel → Software → PHP → Environment Variables.
-// En local: edita los valores directamente aquí.
+// En producción (cPanel/Hostinger): define estas variables en
+// cPanel/hPanel → Software → PHP → Environment Variables.
+// En local: define las mismas variables en tu entorno (no hardcodees el password aquí).
 define('DB_HOST',    getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME',    getenv('DB_NAME') ?: 'dematiq_db');
 define('DB_USER',    getenv('DB_USER') ?: 'dematiq_app');
-define('DB_PASS',    getenv('DB_PASS') ?: '3zjatGKsdEt8uMOwPt8YISaL6WF44xoc');
+define('DB_PASS',    getenv('DB_PASS') ?: '');
 define('DB_CHARSET', 'utf8mb4');
 
 try {

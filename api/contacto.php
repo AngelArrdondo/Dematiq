@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 0);   // evita que warnings contaminen el JSON
+
 require_once __DIR__ . '/../includes/PHPMailer/Exception.php';
 require_once __DIR__ . '/../includes/PHPMailer/PHPMailer.php';
 require_once __DIR__ . '/../includes/PHPMailer/SMTP.php';
@@ -7,7 +9,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
 header('Content-Type: application/json; charset=UTF-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://dematiq.com.mx');
 header('Access-Control-Allow-Methods: POST');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
