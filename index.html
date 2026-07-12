@@ -201,16 +201,6 @@
 
   <!-- Footer inserted by footer.js -->
 
-  <!-- Contador privado (solo visible en index.html?admin) -->
-  <div id="admin-counter" style="display:none;position:fixed;bottom:20px;right:20px;z-index:9999;
-    background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand-mid) 100%);color:#fff;padding:14px 20px;border-radius:12px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.5);font-family:'Roboto',sans-serif;font-size:0.9rem;min-width:180px;
-    border-left:4px solid var(--brand-mid);">
-    <div style="font-size:0.72rem;opacity:0.6;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Visitas totales</div>
-    <div id="admin-count" style="font-size:2rem;font-weight:700;color:#7cb8ff;">—</div>
-    <div style="font-size:0.72rem;opacity:0.5;margin-top:4px;">Solo visible para ti · index.html?admin</div>
-  </div>
-
   <!-- Bootstrap JS -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <!-- Componentes -->
@@ -294,34 +284,6 @@
 
     } catch(e) { console.warn('Content API unavailable, using static fallback'); }
   })();
-  </script>
-
-  <!-- Contador de visitas (privado) -->
-  <script>
-    (function () {
-      const KEY = 'dematiq_visits';
-      const n   = (parseInt(localStorage.getItem(KEY) || '0', 10)) + 1;
-      localStorage.setItem(KEY, n);
-
-      const _d   = new Date();
-      const _iso = `${_d.getFullYear()}-${String(_d.getMonth()+1).padStart(2,'0')}-${String(_d.getDate()).padStart(2,'0')}`;
-      const _daily = JSON.parse(localStorage.getItem('dematiq_visits_daily') || '{}');
-      _daily[_iso] = (_daily[_iso] || 0) + 1;
-      localStorage.setItem('dematiq_visits_daily', JSON.stringify(_daily));
-
-      if (new URLSearchParams(window.location.search).has('admin')) {
-        document.getElementById('admin-counter').style.display = 'block';
-        const el = document.getElementById('admin-count');
-
-        fetch('https://api.counterapi.dev/v1/dematiq-automation/visits/up')
-          .then(r => r.json())
-          .then(d => { el.textContent = d.value.toLocaleString(); })
-          .catch(() => {
-            el.textContent = n.toLocaleString();
-            document.querySelector('#admin-counter div:last-child').textContent = 'Conteo local';
-          });
-      }
-    })();
   </script>
 
 </body>

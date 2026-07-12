@@ -88,8 +88,13 @@ class FooterComponent {
   }
 }
 
+function registrarVisita() {
+  fetch('/api/visita.php', { method: 'POST' }).catch(() => {});
+}
+
 function footerInit() {
   FooterComponent.init();
+  registrarVisita();
   fetch('/api/contenido.php?clave=contacto').then(r => r.json()).then(d => {
     if (!d || typeof d !== 'object') return;
     const footer = document.getElementById('footer');
