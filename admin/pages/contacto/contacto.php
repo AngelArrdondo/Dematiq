@@ -22,7 +22,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=9">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=10">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="../../assets/css/contacto/contacto.css?v=1">

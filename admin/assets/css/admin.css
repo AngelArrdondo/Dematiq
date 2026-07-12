@@ -908,9 +908,12 @@ body {
    MOBILE ENHANCEMENTS
    ═══════════════════════════════════════════ */
 
-/* Prevent horizontal scroll on all viewports */
-body        { overflow-x: hidden; }
-.admin-main { overflow-x: hidden; }
+/* Prevent horizontal scroll on all viewports.
+   Only body gets overflow-x:hidden — adding it to .admin-main too made that
+   div compute overflow-y:auto (the CSS rule that pairs a non-visible axis
+   with an implicit auto on the other), turning it into an unintended
+   scroll container that broke position:sticky on .admin-topbar inside it. */
+body { overflow-x: hidden; }
 
 /* ── Responsive helpers used by pages ───── */
 
