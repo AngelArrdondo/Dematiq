@@ -146,19 +146,31 @@
     const img  = box.querySelector('img');
     const ph   = box.querySelector('.img-placeholder');
     const zoom = document.getElementById(`imgZoom${i}_${slot}`);
+    const clr  = document.getElementById(`imgClear${i}_${slot}`);
     if (!src) {
       if (img)  img.style.display  = 'none';
       if (ph)   ph.style.display   = '';
       if (zoom) zoom.style.display = 'none';
+      if (clr)  clr.style.display  = 'none';
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; };
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; };
       if (ph)   ph.style.display   = 'none';
       if (zoom) zoom.style.display = 'flex';
+      if (clr)  clr.style.display  = 'flex';
     }
+  }
+
+  /* ─── quitar imagen (deja el slot vacío, no borra el archivo del servidor) ── */
+  function clearImage(i, slot) {
+    servicios[i][`image${slot}`] = '';
+    const pathEl = document.getElementById(`imgPath${i}_${slot}`);
+    if (pathEl) pathEl.value = '';
+    setPreview(i, slot, '');
+    markDirty();
   }
 
   /* ─── validación de dimensiones ──────────────────── */
@@ -254,6 +266,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </button>
           <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" onclick="event.stopPropagation()" data-tip="Foto horizontal, mínimo 1000×560px (16:9 o más ancha). Se muestra en un carrusel que recorta tipo &quot;cover&quot;, así que evita que lo importante de la imagen quede muy cerca de los bordes superior/inferior — se puede cortar.">i</span>
+          <button type="button" class="img-clear-btn" style="display:none" id="imgClear${i}_${slot}" title="Quitar imagen"
+            onclick="event.stopPropagation(); clearImage(${i},${slot})">${trashIcon}</button>
           <div class="img-placeholder">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
             <span>Sin imagen</span>
@@ -392,11 +406,10 @@
       const res = await CM.set('servicios', servicios);
       if (res && res.ok) {
         clearDirty();
-        showToast('Cambios guardados correctamente — recargando…');
+        showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');
         if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
         viewPublic('/pages/servicios/servicios.html');
-        setTimeout(() => location.reload(), 1100);
       }
       else showToast(res?.error || 'Error al guardar', 'error');
     } catch { showToast('Error de conexión', 'error'); }

@@ -364,10 +364,9 @@ async function saveContacto() {
       social: getSocials()
     });
     if (res && res.ok) {
-      showToast('Cambios guardados correctamente — recargando…');
+      showToast('Cambios guardados correctamente');
       const btn = document.getElementById('mainSaveBtn');
       if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
-      setTimeout(() => location.reload(), 1100);
     }
     else showToast(res?.error||'Error al guardar','error');
   } catch { showToast('Error de conexión','error'); }

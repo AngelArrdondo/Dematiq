@@ -52,6 +52,8 @@
   function setPreview(i, src) {
     const prev = document.getElementById('imgPreview' + i);
     if (!prev) return;
+    const clr = document.getElementById('imgClear' + i);
+    if (clr) clr.style.display = src ? 'flex' : 'none';
     if (!src) {
       prev.innerHTML = `<div class="img-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span>Sin logo</span></div>`;
       return;
@@ -59,9 +61,18 @@
     const img = document.createElement('img');
     img.src = src;
     img.alt = (partners[i] && partners[i].nombre) || 'Logo';
-    img.onerror = () => { prev.innerHTML = `<div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span>No se pudo cargar</span></div>`; };
+    img.onerror = () => { prev.innerHTML = `<div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span>No se pudo cargar</span></div>`; if (clr) clr.style.display = 'none'; };
     prev.innerHTML = '';
     prev.appendChild(img);
+  }
+
+  /* ── quitar logo (deja el campo vacío, no borra el archivo del servidor) ── */
+  function clearPartnerImage(i) {
+    partners[i].logo = '';
+    const pathEl = document.getElementById('imgPath' + i);
+    if (pathEl) pathEl.value = '';
+    setPreview(i, '');
+    markDirty();
   }
 
   /* Los logos se muestran con object-fit:contain sobre fondo blanco/oscuro —
@@ -154,6 +165,8 @@
             <div style="position:relative">
               <div class="slide-img-preview" id="imgPreview${i}"></div>
               <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" data-tip="Logo en PNG/WebP con fondo transparente, cualquier proporción funciona porque no se recorta (contain) — solo se ajusta dentro del recuadro. Un fondo sólido (blanco o de color) se verá como un recuadro feo detrás del logo.">i</span>
+              <button type="button" class="img-clear-btn" style="display:none" id="imgClear${i}" title="Quitar logo"
+                onclick="event.stopPropagation(); clearPartnerImage(${i})">${trashIcon}</button>
             </div>
             <button type="button" class="btn-admin btn-outline-admin" id="imgPickBtn${i}"
               onclick="document.getElementById('imgFile${i}').click()"
@@ -199,10 +212,9 @@
       const res = await CM.set('partners', partners);
       if (res && res.ok) {
         clearDirty();
-        showToast('Cambios guardados correctamente — recargando…');
+        showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');
         if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
-        setTimeout(() => location.reload(), 1100);
       } else {
         showToast(res?.error || 'Error al guardar', 'error');
       }

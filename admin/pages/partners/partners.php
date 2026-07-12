@@ -21,7 +21,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Socios | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=8">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=9">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="../../assets/css/partners/partners.css?v=1">
 </head>
@@ -156,7 +156,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/partners/partners.js?v=1"></script>
+<script src="../../assets/js/partners/partners.js?v=2"></script>
 
 </body>
 </html>

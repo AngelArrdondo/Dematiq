@@ -22,7 +22,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=8">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=9">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="../../assets/css/contacto/contacto.css?v=1">
@@ -355,7 +355,7 @@ try {
 const CSRF_TOKEN = '<?= $csrfToken ?>';
 const _D = <?= json_encode($d, JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="../../assets/js/contacto/contacto.js?v=1"></script>
+<script src="../../assets/js/contacto/contacto.js?v=2"></script>
 
 </body>
 </html>

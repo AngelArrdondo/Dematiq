@@ -1024,3 +1024,17 @@ body        { overflow-x: hidden; }
   width: 15px; height: 15px; font-size: 9px; border-width: 1.5px;
   vertical-align: -3px; margin-left: 3px;
 }
+
+/* ══ IMG CLEAR BUTTON — vacía un slot de imagen ya subida, sin borrar el archivo del servidor ══ */
+/* bottom-left corner, mirrors .spec-badge-corner (bottom-right) so both can coexist on the same preview box */
+.img-clear-btn {
+  position: absolute; bottom: 7px; left: 7px; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  background: rgba(220,38,38,.92); color: #fff;
+  border: 2px solid #fff; padding: 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,.35);
+  cursor: pointer;
+  transition: transform .15s ease, background .15s ease;
+}
+.img-clear-btn:hover, .img-clear-btn:focus-visible { background: #b91c1c; transform: scale(1.1); outline: none; }

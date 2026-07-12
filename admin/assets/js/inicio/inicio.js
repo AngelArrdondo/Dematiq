@@ -625,11 +625,10 @@
         originalCta     = Object.assign({}, ctaVals);
         originalTitulos = Object.assign({}, home.titulos);
         clearDirty();
-        showToast('Cambios guardados correctamente — recargando…');
+        showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');
         if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
         viewPublic('/index.html');
-        setTimeout(() => location.reload(), 1100);
       } else {
         showToast(res?.error || 'Error al guardar', 'error');
       }

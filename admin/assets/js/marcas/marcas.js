@@ -85,7 +85,9 @@
     if (!prev) return;
     const hint = prev.querySelector('.brand-img-hint');
     const zoom = prev.querySelector('.preview-zoom-btn');
+    const clr  = document.getElementById('brandClear' + i);
     if (zoom) zoom.style.display = src ? 'flex' : 'none';
+    if (clr)  clr.style.display  = src ? 'flex' : 'none';
     if (!src) {
       prev.innerHTML = `<div class="img-placeholder"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span>Sin logo</span></div>`;
       if (hint) prev.appendChild(hint);
@@ -214,6 +216,16 @@
     document.getElementById('marcaFileInput').click();
   }
 
+  /* ── quitar logo (deja el campo vacío, no borra el archivo del servidor) ── */
+  function clearMarcaImage(i) {
+    marcas[i].logo = '';
+    const pathEl = document.getElementById('imgPath' + i);
+    if (pathEl) pathEl.value = '';
+    setPreview(i, '');
+    updatePreview(); updateStats();
+    markDirty();
+  }
+
   /* ── Reorder ──────────────────────────────────── */
   function moveMarca(i, dir) {
     const j = i + dir;
@@ -260,6 +272,8 @@
                 <div class="brand-img-hint">${pickIcon} Cambiar</div>
               </div>
               <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" onclick="event.stopPropagation()" data-tip="Logo en PNG/WebP/SVG con fondo transparente, ideal con al menos 300px de alto para que no se vea pixelado. Se pinta de blanco automáticamente en el carrusel — si no tiene transparencia real se verá como un bloque blanco sólido feo. No se recorta (contain), así que cualquier proporción funciona.">i</span>
+              <button type="button" class="img-clear-btn" style="display:none" id="brandClear${i}" title="Quitar logo"
+                onclick="event.stopPropagation(); clearMarcaImage(${i})">${trashIcon}</button>
             </div>
             <button type="button" class="btn-admin btn-outline-admin" id="pickBtn${i}"
               onclick="pickLogo(${i})"
@@ -335,10 +349,9 @@
       const res = await CM.set('marcas', marcas);
       if (res && res.ok) {
         clearDirty();
-        showToast('Cambios guardados correctamente — recargando…');
+        showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');
         if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
-        setTimeout(() => location.reload(), 1100);
       } else {
         showToast(res?.error || 'Error al guardar', 'error');
       }
