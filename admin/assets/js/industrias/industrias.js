@@ -274,7 +274,7 @@
             oninput="industrias[${i}].${kind}[${j}].n=this.value;checkDirty()" onblur="onFieldBlur()">
           <button type="button" class="btn-rm-sm" onclick="removeSubItem(${i},'${kind}',${j})" title="Eliminar">${rmSmIcon}</button>
         </div>
-        <textarea class="sub-item-desc" rows="2" placeholder="Descripción breve"
+        <textarea class="sub-item-desc" rows="3" placeholder="Descripción breve"
           oninput="industrias[${i}].${kind}[${j}].d=this.value;checkDirty()" onblur="onFieldBlur()">${escTxt(it.d||'')}</textarea>
       </div>`).join('');
     return `

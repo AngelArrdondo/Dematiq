@@ -23,7 +23,7 @@ try {
   <title>Industrias | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=10">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="../../assets/css/industrias/industrias.css?v=2">
+  <link rel="stylesheet" href="../../assets/css/industrias/industrias.css?v=5">
 </head>
 <body>
 

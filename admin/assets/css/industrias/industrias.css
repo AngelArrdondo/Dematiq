@@ -281,18 +281,24 @@
     }
 
     /* ─── ÁREAS DE PLANTA / TEMAS TÉCNICOS (listas repetibles) ─ */
-    .sub-items-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
-    .sub-item{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fafcff;transition:border-color .15s;}
+    .sub-items-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;align-items:start;}
+    .sub-item{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:#fafcff;transition:border-color .15s;}
     .sub-item:focus-within{border-color:var(--accent-lt);}
-    .sub-item-head{display:flex;align-items:center;gap:6px;padding:7px 8px;background:#f5f8ff;border-bottom:1px solid var(--border);}
-    .sub-item-name{flex:1;min-width:0;border:none;background:transparent;padding:4px 4px;font-size:.8rem;font-weight:700;color:var(--text);outline:none;}
-    .sub-item-name:focus{background:#fff;border-radius:6px;}
-    .sub-item-desc{display:block;width:100%;box-sizing:border-box;border:none;outline:none;resize:vertical;padding:9px 10px;font-size:.76rem;font-family:inherit;color:var(--text-lt);background:transparent;line-height:1.5;}
+    .sub-item-head{display:flex;align-items:center;gap:5px;padding:5px 6px 5px 9px;background:#f5f8ff;border-bottom:1px solid var(--border);}
+    .sub-item-name{flex:1;min-width:0;border:none;background:transparent;padding:3px 2px;font-size:.76rem;font-weight:700;color:var(--text);outline:none;}
+    .sub-item-name:focus{background:#fff;border-radius:5px;}
+    .sub-item-desc{display:block;width:100%;box-sizing:border-box;border:none;outline:none;resize:vertical;padding:7px 9px;font-size:.7rem;font-family:inherit;color:var(--text-lt);background:transparent;line-height:1.4;scrollbar-width:thin;}
     .sub-item-desc:focus{background:#fff;color:var(--text);}
-    .btn-rm-sm{flex-shrink:0;width:22px;height:22px;border-radius:6px;border:none;background:transparent;color:#c23b3b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .sub-item-desc::-webkit-scrollbar{width:6px;}
+    .sub-item-desc::-webkit-scrollbar-track{background:transparent;}
+    .sub-item-desc::-webkit-scrollbar-thumb{background:#c7d5f0;border-radius:3px;}
+    .sub-item-desc::-webkit-scrollbar-button{display:none;height:0;width:0;}
+    .btn-rm-sm{flex-shrink:0;width:19px;height:19px;border-radius:5px;border:none;background:transparent;color:#c23b3b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .btn-rm-sm svg{width:9px;height:9px;}
     .btn-rm-sm:hover{background:#fde8e8;}
-    .add-sub-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:7px;border-radius:9px;border:1.5px dashed #c7d5f0;background:#f7f9ff;color:var(--accent);font-size:.76rem;font-weight:700;cursor:pointer;transition:all .15s;}
+    .add-sub-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:6px;border-radius:9px;border:1.5px dashed #c7d5f0;background:#f7f9ff;color:var(--accent);font-size:.74rem;font-weight:700;cursor:pointer;transition:all .15s;}
     .add-sub-btn:hover{border-color:var(--accent-lt);background:#eef3ff;}
 
+    @media(max-width:760px){.sub-items-list{grid-template-columns:1fr;}}
     @media(max-width:600px){.slide-fields-col{padding:16px 18px;}.blur-prompt{right:12px;bottom:70px;width:230px;}}
   
