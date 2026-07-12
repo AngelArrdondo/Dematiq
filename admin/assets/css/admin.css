@@ -356,6 +356,7 @@ body {
   .profile-avatar-circle   { width: 76px; height: 76px; }
   .profile-avatar-circle   { font-size: 1.9rem; }
   .profile-avatar-wrap     { margin-bottom: 16px; }
+  .profile-avatar-wrap .spec-badge-corner-tr { width: 18px; height: 18px; font-size: 11px; top: -4px; right: -4px; }
 }
 
 @media (max-width: 480px) {
@@ -375,6 +376,7 @@ body {
   .profile-avatar-circle   { width: 60px; height: 60px; }
   .profile-avatar-circle   { font-size: 1.5rem; }
   .profile-avatar-wrap     { margin-bottom: 12px; }
+  .profile-avatar-wrap .spec-badge-corner-tr { width: 16px; height: 16px; font-size: 10px; top: -3px; right: -3px; }
   .profile-modal-header    { padding: 12px 20px 10px; }
   .profile-modal-body      { padding: 14px 24px 18px; }
   .profile-tabs            { margin-bottom: 14px; }
@@ -983,32 +985,28 @@ body        { overflow-x: hidden; }
 .spec-badge:hover, .spec-badge:focus-visible {
   background: #0f3172; color: #fff; outline: none; transform: scale(1.15);
 }
-.spec-badge::after {
-  content: attr(data-tip);
-  position: absolute; bottom: calc(100% + 11px); left: 50%;
-  transform: translateX(-50%) translateY(4px);
+/* Tooltip is rendered into <body> by JS (see profile-modal.php) as a
+   position:fixed .spec-badge-tip, not a child of .spec-badge — a CSS-only
+   ::after popup gets clipped by every rounded-corner preview box/card that
+   uses overflow:hidden, which is nearly all of them. */
+.spec-badge-tip {
+  position: fixed; z-index: 9999;
   background: #1a1f36; color: #fff;
   font: 500 12.5px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   padding: 10px 13px; border-radius: 9px;
-  width: max-content; max-width: 260px; white-space: normal; text-align: left;
-  opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity .15s ease, transform .15s ease;
-  box-shadow: 0 10px 26px rgba(0,0,0,.32); z-index: 60;
+  max-width: 260px; white-space: normal; text-align: left;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s ease;
+  box-shadow: 0 10px 26px rgba(0,0,0,.32);
 }
-.spec-badge::before {
-  content: ''; position: absolute; bottom: calc(100% + 5px); left: 50%;
+.spec-badge-tip.visible { opacity: 1; }
+.spec-badge-tip::after {
+  content: ''; position: absolute; left: var(--arrow-left, 50%);
   transform: translateX(-50%);
-  border: 6px solid transparent; border-top-color: #1a1f36;
-  opacity: 0; visibility: hidden; transition: opacity .15s ease; z-index: 60;
+  border: 6px solid transparent;
 }
-.spec-badge:hover::after, .spec-badge:focus-visible::after,
-.spec-badge:hover::before, .spec-badge:focus-visible::before {
-  opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
-}
-/* right-anchored tooltip — use near a container's right edge so it doesn't overflow */
-.spec-badge-r::after { left: auto; right: -2px; transform: translateY(4px); }
-.spec-badge-r:hover::after, .spec-badge-r:focus-visible::after { transform: translateY(0); }
-.spec-badge-r::before { left: auto; right: 8px; transform: none; }
+.spec-badge-tip--above::after { top: 100%; border-top-color: #1a1f36; }
+.spec-badge-tip--below::after { bottom: 100%; border-bottom-color: #1a1f36; }
 /* corner-overlay variant for image preview boxes (parent needs position:relative, already true of .img-preview-box / .upload-zone contexts) */
 .spec-badge-corner {
   position: absolute; bottom: 7px; right: 7px; z-index: 5;
@@ -1021,3 +1019,8 @@ body        { overflow-x: hidden; }
   background: var(--accent, #1a4a9e);
 }
 .spec-badge-corner-tr:hover, .spec-badge-corner-tr:focus-visible { background: #0f3172; }
+/* inline variant — sits next to small hint text inside an upload zone, shrunk to match the text's line height */
+.upload-zone .spec-badge {
+  width: 15px; height: 15px; font-size: 9px; border-width: 1.5px;
+  vertical-align: -3px; margin-left: 3px;
+}

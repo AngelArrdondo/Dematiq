@@ -22,7 +22,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosotros | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=7">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=8">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="../../assets/css/nosotros/nosotros.css?v=1">
 </head>

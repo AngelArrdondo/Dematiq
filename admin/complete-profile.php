@@ -346,6 +346,7 @@ $displayName = $user['nombre'] ?? $user['username'];
       .brand-divider, .version-badge { display: none; }
       .brand-avatar-wrap { flex-direction: row; gap: 12px; justify-content: flex-end; flex: none; }
       .brand-avatar-circle { width: 52px; height: 52px; font-size: 1.4rem; }
+      .spec-badge { width: 17px; height: 17px; font-size: 10px; top: -4px; right: -4px; }
       .brand-avatar-overlay span { font-size: .55rem; }
       .brand-avatar-name  { font-size: .75rem; }
       .brand-avatar-hint  { display: none; }

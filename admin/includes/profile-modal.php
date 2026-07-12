@@ -262,3 +262,56 @@ $_fotoPrefix = $fotoPrefix ?? '';
   };
 })();
 </script>
+<script>
+(function () {
+  var tipEl = null;
+
+  function showTip(badge) {
+    hideTip();
+    var text = badge.getAttribute('data-tip');
+    if (!text) return;
+    tipEl = document.createElement('div');
+    tipEl.className = 'spec-badge-tip';
+    tipEl.textContent = text;
+    document.body.appendChild(tipEl);
+
+    var r  = badge.getBoundingClientRect();
+    var tr = tipEl.getBoundingClientRect();
+    var below = false;
+    var top = r.top - tr.height - 11;
+    if (top < 8) { top = r.bottom + 11; below = true; }
+
+    var left = r.left + r.width / 2 - tr.width / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - tr.width - 8));
+
+    tipEl.style.top  = top + 'px';
+    tipEl.style.left = left + 'px';
+    tipEl.style.setProperty('--arrow-left', (r.left + r.width / 2 - left) + 'px');
+    tipEl.classList.add(below ? 'spec-badge-tip--below' : 'spec-badge-tip--above');
+    requestAnimationFrame(function () { if (tipEl) tipEl.classList.add('visible'); });
+  }
+
+  function hideTip() {
+    if (tipEl) { tipEl.remove(); tipEl = null; }
+  }
+
+  document.addEventListener('mouseover', function (e) {
+    var b = e.target.closest && e.target.closest('.spec-badge');
+    if (b) showTip(b);
+  });
+  document.addEventListener('mouseout', function (e) {
+    var b = e.target.closest && e.target.closest('.spec-badge');
+    if (b && !b.contains(e.relatedTarget)) hideTip();
+  });
+  document.addEventListener('focusin', function (e) {
+    var b = e.target.closest && e.target.closest('.spec-badge');
+    if (b) showTip(b);
+  });
+  document.addEventListener('focusout', function (e) {
+    var b = e.target.closest && e.target.closest('.spec-badge');
+    if (b) hideTip();
+  });
+  window.addEventListener('scroll', hideTip, true);
+  window.addEventListener('resize', hideTip);
+})();
+</script>
