@@ -169,8 +169,8 @@
             intro: row.descripcion || local.intro || '',
             imagen1: row.imagen1 || '',
             imagen2: row.imagen2 || '',
-            areas: local.areas || [],
-            temas: local.temas || []
+            areas: (Array.isArray(row.areas) && row.areas.length) ? row.areas : (local.areas || []),
+            temas: (Array.isArray(row.temas) && row.temas.length) ? row.temas : (local.temas || [])
           };
         });
         renderAll(merged);

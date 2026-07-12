@@ -19,6 +19,8 @@
     descripcion: ind.descripcion || '',
     imagen1:     ind.imagen1 || ind.imagen || '',  /* backward compat con campo único */
     imagen2:     ind.imagen2     || '',
+    areas:       Array.isArray(ind.areas) ? ind.areas : [],
+    temas:       Array.isArray(ind.temas) ? ind.temas : [],
   }));
   let origJSON = JSON.stringify(industrias);
   let dirty    = false;
@@ -246,6 +248,41 @@
   function esc(s)    { return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function escTxt(s) { return String(s || '').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+  /* ─── áreas de planta / temas técnicos (listas repetibles) ─ */
+  const rmSmIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  const MAX_SUBITEMS = 12;
+
+  function subItemsEditor(i, kind, items, placeholderName) {
+    items = items || [];
+    const rows = items.map((it, j) => `
+      <div class="sub-item">
+        <div class="sub-item-head">
+          <input type="text" class="sub-item-name" value="${esc(it.n||'')}" placeholder="${placeholderName}"
+            oninput="industrias[${i}].${kind}[${j}].n=this.value;checkDirty()" onblur="onFieldBlur()">
+          <button type="button" class="btn-rm-sm" onclick="removeSubItem(${i},'${kind}',${j})" title="Eliminar">${rmSmIcon}</button>
+        </div>
+        <textarea class="sub-item-desc" rows="2" placeholder="Descripción breve"
+          oninput="industrias[${i}].${kind}[${j}].d=this.value;checkDirty()" onblur="onFieldBlur()">${escTxt(it.d||'')}</textarea>
+      </div>`).join('');
+    return `
+      <div class="sub-items-list">${rows || '<p class="field-hint" style="margin:0">Sin ítems todavía.</p>'}</div>
+      <button type="button" class="add-sub-btn" onclick="addSubItem(${i},'${kind}')">+ Agregar</button>`;
+  }
+
+  function addSubItem(i, kind) {
+    if (!Array.isArray(industrias[i][kind])) industrias[i][kind] = [];
+    if (industrias[i][kind].length >= MAX_SUBITEMS) { showToast(`Máximo ${MAX_SUBITEMS} ítems`, 'error'); return; }
+    industrias[i][kind].push({ n: '', d: '' });
+    renderIndustrias();
+    markDirty();
+  }
+
+  function removeSubItem(i, kind, j) {
+    industrias[i][kind].splice(j, 1);
+    renderIndustrias();
+    checkDirty();
+  }
+
   function imgSlot(i, slot, val) {
     return `
       <div class="img-slot">
@@ -355,6 +392,16 @@
                 oninput="industrias[${i}].descripcion=this.value;checkDirty()"
                 onblur="onFieldBlur()">${escTxt(ind.descripcion||'')}</textarea>
             </div>
+            <div class="field">
+              <div class="field-top"><label>Áreas de planta</label></div>
+              <p class="field-hint" style="margin:0 0 8px">Subsecciones (nombre + descripción) del bloque "Áreas de planta" en la página pública.</p>
+              ${subItemsEditor(i, 'areas', ind.areas, 'Nombre del área')}
+            </div>
+            <div class="field">
+              <div class="field-top"><label>Temas técnicos</label></div>
+              <p class="field-hint" style="margin:0 0 8px">Subsecciones (nombre + descripción) del bloque "Temas técnicos" en la página pública.</p>
+              ${subItemsEditor(i, 'temas', ind.temas, 'Nombre del tema')}
+            </div>
           </div>
 
         </div>`;
@@ -369,7 +416,7 @@
   const MAX_INDUSTRIAS = 15;
   function addIndustria() {
     if (industrias.length >= MAX_INDUSTRIAS) { showToast(`Máximo ${MAX_INDUSTRIAS} industrias permitidas`, 'error'); return; }
-    industrias.push({ id: '', nombre: '', descripcion: '', imagen1: '', imagen2: '' });
+    industrias.push({ id: '', nombre: '', descripcion: '', imagen1: '', imagen2: '', areas: [], temas: [] });
     renderIndustrias();
     markDirty();
     const cards = document.querySelectorAll('.slide-card');
