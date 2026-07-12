@@ -230,7 +230,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/imagenes/imagenes.js?v=1"></script>
+<script src="../../assets/js/imagenes/imagenes.js?v=2"></script>
 
 </body>
 </html>

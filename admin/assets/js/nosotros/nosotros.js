@@ -131,12 +131,13 @@
     input.value = '';
   }
 
-  /* Dimensiones mínimas recomendadas: el contenedor de la página pública
-     muestra esta imagen en un recuadro vertical (object-fit: cover, min-height 420px),
-     por eso pedimos una foto vertical/cuadrada de al menos 800×1000px. */
-  const QUIENES_MIN_W = 800;
-  const QUIENES_MIN_H = 1000;
-  const QUIENES_MAX_RATIO = 1.3; /* ancho/alto — más allá de esto es demasiado horizontal */
+  /* Dimensiones mínimas recomendadas: en la página pública esta imagen ocupa
+     la mitad horizontal de la sección "Quiénes somos" (grid 1fr 1fr, object-fit:
+     cover, min-height 420px) — es un panel ancho, no un recuadro vertical,
+     por eso pedimos una foto horizontal de al menos 1000×560px. */
+  const QUIENES_MIN_W = 1000;
+  const QUIENES_MIN_H = 560;
+  const QUIENES_MIN_RATIO = 1.2; /* ancho/alto — por debajo de esto es demasiado vertical/cuadrada */
 
   function probeImageDimensions(url) {
     return new Promise(resolve => {
@@ -158,12 +159,12 @@
     const { w, h } = await probeImageDimensions(localURL);
     if (w && h) {
       if (w < QUIENES_MIN_W || h < QUIENES_MIN_H) {
-        showToast(`Imagen no subida: ${w}×${h}px es muy pequeña — se necesita mínimo ${QUIENES_MIN_W}×${QUIENES_MIN_H}px (vertical) para que no se vea borrosa`, 'error');
+        showToast(`Imagen no subida: ${w}×${h}px es muy pequeña — se necesita mínimo ${QUIENES_MIN_W}×${QUIENES_MIN_H}px (horizontal) para que no se vea borrosa`, 'error');
         URL.revokeObjectURL(localURL);
         return;
       }
-      if (w / h > QUIENES_MAX_RATIO) {
-        showToast(`Imagen no subida: ${w}×${h}px es demasiado horizontal — esta foto se muestra en formato vertical, usa una imagen vertical o cuadrada`, 'error');
+      if (w / h < QUIENES_MIN_RATIO) {
+        showToast(`Imagen no subida: ${w}×${h}px es demasiado vertical — esta foto se muestra en un panel horizontal, usa una imagen horizontal (apaisada)`, 'error');
         URL.revokeObjectURL(localURL);
         return;
       }

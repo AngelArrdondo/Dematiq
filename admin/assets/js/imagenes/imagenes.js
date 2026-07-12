@@ -229,7 +229,7 @@
         const json = await res.json();
         if (json.ok) {
           if (!imagesData[currentFolder]) imagesData[currentFolder] = [];
-          imagesData[currentFolder].unshift({ name: file.name, path: json.path, size: file.size });
+          imagesData[currentFolder].unshift({ name: file.name, path: '/' + json.path.replace(/^\/+/, ''), size: file.size });
         } else {
           showToast(json.error || `Error: ${file.name}`, 'error');
         }

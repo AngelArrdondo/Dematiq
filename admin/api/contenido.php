@@ -21,16 +21,6 @@ if ($method === 'POST' && !Auth::csrfVerify()) {
     exit;
 }
 
-function eliminarArchivoAnterior(string $oldPath, string $baseDir): void {
-    $oldPath = trim($oldPath);
-    if ($oldPath === '') return;
-    $real     = realpath(__DIR__ . '/../../' . $oldPath);
-    $baseReal = realpath($baseDir);
-    if ($real === false || $baseReal === false) return;
-    if (strpos($real, $baseReal) !== 0) return; // fuera del directorio permitido, ignorar
-    @unlink($real);
-}
-
 if ($method === 'GET') {
     $clave = $_GET['clave'] ?? '';
     echo $clave
@@ -83,8 +73,6 @@ if ($method === 'GET') {
         echo json_encode(['error' => 'Error al guardar el video en el servidor']);
         exit;
     }
-
-    eliminarArchivoAnterior($_POST['oldPath'] ?? '', $uploadDir);
 
     echo json_encode([
         'ok'   => true,
@@ -140,8 +128,6 @@ if ($method === 'GET') {
         echo json_encode(['error' => 'Error al guardar la imagen']);
         exit;
     }
-
-    eliminarArchivoAnterior($_POST['oldPath'] ?? '', __DIR__ . '/../../assets/images/');
 
     echo json_encode(['ok' => true, 'path' => 'assets/images/' . $folder . '/' . $filename]);
 
