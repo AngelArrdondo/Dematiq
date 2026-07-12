@@ -272,6 +272,14 @@
         const asideA = document.getElementById('ct-aside-address-a');
         if (asideA) asideA.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
       }
+
+      if (d.social && typeof d.social === 'object') {
+        ['facebook','instagram','linkedin','youtube'].forEach(net => {
+          if (!d.social[net]) return;
+          const el = document.querySelector(`.social-pill[aria-label="${net.charAt(0).toUpperCase()+net.slice(1)}"]`);
+          if (el) el.href = d.social[net];
+        });
+      }
     } catch (e) { /* fallo silencioso */ }
   })();
 </script>
