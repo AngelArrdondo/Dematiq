@@ -118,25 +118,31 @@
   }
 
   async function loadProjects() {
-    // 1) Preferir los DESTACADOS del arreglo compartido DEMATIQ_PROJECTS.
-    //    Así, marcar destacado:true en los datos basta para que salga aquí.
-    if (Array.isArray(window.DEMATIQ_PROJECTS)) {
-      const dest = window.DEMATIQ_PROJECTS.filter(p => p.destacado);
-      if (dest.length) {
-        return dest.map(p => ({
-          img: (p.img || '').replace(/^(\.\.\/)+/, ''),  // index.html está en la raíz del sitio
-          nombre: p.title,
-          desc: p.desc,
-          href: 'pages/corporativo/proyecto.html?id=' + encodeURIComponent(p.id)
-        }));
-      }
-    }
-    // 2) Respaldo: API de contenido
+    // Base: proyectos de ejemplo (por si algún id aún no fue editado en el admin).
+    let list = Array.isArray(window.DEMATIQ_PROJECTS) ? window.DEMATIQ_PROJECTS.slice() : [];
+
+    // Sincroniza con la BD (admin/pages/proyectos): las ediciones reales
+    // reemplazan al proyecto de ejemplo con el mismo id. Así, marcar
+    // destacado:true en el admin sí se refleja aquí.
     try {
-      const data = await fetch('/api/contenido.php?clave=proyectos').then(r => r.json());
-      if (Array.isArray(data) && data.length) return data;
+      const db = await fetch('/api/contenido.php?clave=proyectos', { cache: 'no-store' }).then(r => r.json());
+      if (Array.isArray(db) && db.length) {
+        const byId = Object.fromEntries(list.map(p => [p.id, p]));
+        list = db.map(row => ({ ...byId[row.id], ...row }));
+      }
     } catch (_) {}
-    // 3) Respaldo final: lista interna
+
+    const dest = list.filter(p => p.destacado);
+    const source = dest.length ? dest : list;
+    if (source.length) {
+      return source.map(p => ({
+        img: (p.img || '').replace(/^(\.\.\/)+/, ''),  // index.html está en la raíz del sitio
+        nombre: p.title,
+        desc: p.desc,
+        href: 'pages/corporativo/proyecto.html?id=' + encodeURIComponent(p.id)
+      }));
+    }
+    // Respaldo final: lista interna
     return PROJECTS;
   }
 

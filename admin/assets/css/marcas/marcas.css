@@ -150,11 +150,11 @@
 
     /* marquee preview */
     .marquee-preview-wrap {
-      background:#0f172a; border-radius:14px; padding:18px 20px; overflow:hidden;
+      background:#fff; border:1px solid #e5e9f0; border-radius:14px; padding:18px 20px; overflow:hidden;
       margin-bottom:16px; position:relative;
     }
     .marquee-preview-label {
-      font-size:.62rem; font-weight:700; color:rgba(255,255,255,.35);
+      font-size:.62rem; font-weight:700; color:rgba(15,23,42,.4);
       text-transform:uppercase; letter-spacing:1.2px; margin-bottom:12px;
     }
     .marquee-preview-track {
@@ -166,7 +166,7 @@
     }
     .marquee-preview-item img {
       max-height:28px; max-width:80px; object-fit:contain;
-      filter:brightness(0) invert(1); opacity:.65;
+      filter:grayscale(100%); opacity:.85;
     }
 
     /* empty state */

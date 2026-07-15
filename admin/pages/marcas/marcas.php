@@ -23,7 +23,7 @@ try {
   <title>Marcas Asociadas | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=10">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="../../assets/css/marcas/marcas.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/marcas/marcas.css?v=2">
 </head>
 <body>
 
@@ -143,7 +143,7 @@ try {
           Agregar marca
         </button>
       </div>
-      <p class="field-hint" style="padding:0 20px;margin-top:8px">El logo se pinta de blanco en el carrusel (igual que en Inicio) — usa PNG/WebP/SVG con <strong>fondo transparente</strong>, si no se verá como un bloque blanco sólido.</p>
+      <p class="field-hint" style="padding:0 20px;margin-top:8px">El carrusel del Inicio tiene <strong>fondo blanco</strong> y pinta los logos en escala de grises — usa PNG/WebP/SVG con fondo <strong>transparente o blanco</strong>; un fondo de color sólido se vería como un bloque de color.</p>
 
       <div id="marcasContainer"></div>
     </div>

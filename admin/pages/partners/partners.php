@@ -130,7 +130,7 @@ try {
         <div class="sc-head-text">
           <h3>Lista de socios <span class="slides-count-badge" id="partner-count"></span></h3>
           <p>Nombre, logo y URL de cada empresa socia</p>
-          <p class="field-hint">El logo se muestra sin recortar (contain) — usa <strong>PNG/WebP con fondo transparente</strong> para que se vea bien sobre cualquier fondo.</p>
+          <p class="field-hint">El logo se muestra sin recortar (contain) sobre el carrusel de <strong>fondo blanco</strong> de "Empresas Asociadas" (Nosotros) — usa PNG/WebP/SVG con fondo <strong>transparente o blanco</strong>; un fondo de color sólido se vería como un bloque de color.</p>
         </div>
         <button id="addPartnerBtn" class="btn-admin btn-outline-admin" onclick="addPartner()" style="flex-shrink:0;font-size:.8rem;padding:7px 14px;gap:6px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -141,7 +141,7 @@ try {
     </div>
 
     <div class="save-bar">
-      <a href="/index.html" target="_blank" class="btn-admin btn-outline-admin">
+      <a href="/pages/corporativo/nosotros.html" target="_blank" class="btn-admin btn-outline-admin">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
         </svg>
@@ -156,7 +156,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=2"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/partners/partners.js?v=2"></script>
+<script src="../../assets/js/partners/partners.js?v=3"></script>
 
 </body>
 </html>

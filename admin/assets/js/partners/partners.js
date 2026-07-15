@@ -75,24 +75,34 @@
     markDirty();
   }
 
-  /* Los logos se muestran con object-fit:contain sobre fondo blanco/oscuro —
-     lo que arruina la vista es un logo con fondo sólido (recuadro visible),
-     no una proporción específica. Por eso validamos transparencia, no medidas. */
-  function probeImageTransparency(file) {
+  /* El marquee de "Empresas Asociadas" (Nosotros) tiene fondo BLANCO y pinta
+     el logo en escala de grises (filter:grayscale, ver home.css .marquee-item
+     img). Un logo con fondo transparente o blanco se funde con el carrusel;
+     un fondo de color sólido se vería como un bloque de color. */
+  function probeImageBackground(file) {
     return new Promise(resolve => {
+      if (file.type === 'image/svg+xml') { resolve('ok'); return; } /* SVG: se asume vectorial/transparente */
       const img = new Image();
       img.onload = () => {
         try {
+          const size = 32;
           const canvas = document.createElement('canvas');
-          canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+          canvas.width = size; canvas.height = size;
           const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0);
-          const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-          for (let a = 3; a < data.length; a += 4) if (data[a] < 250) { resolve(true); return; }
-          resolve(false);
-        } catch { resolve(true); } /* no se pudo leer (CORS/canvas tainted) — no bloquear */
+          ctx.drawImage(img, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          // Revisa las 4 esquinas: si alguna es transparente o blanca, el fondo funde bien con el carrusel.
+          const corners = [[0, 0], [size - 1, 0], [0, size - 1], [size - 1, size - 1]];
+          let ok = false;
+          for (const [x, y] of corners) {
+            const p = (y * size + x) * 4;
+            const [r, g, b, a] = [data[p], data[p + 1], data[p + 2], data[p + 3]];
+            if (a < 250 || (r > 235 && g > 235 && b > 235)) { ok = true; break; }
+          }
+          resolve(ok ? 'ok' : 'solid-color');
+        } catch { resolve('ok'); } /* no se pudo leer (CORS/canvas tainted) — no bloquear */
       };
-      img.onerror = () => resolve(true);
+      img.onerror = () => resolve('ok');
       img.src = URL.createObjectURL(file);
     });
   }
@@ -103,12 +113,10 @@
     if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB', 'error'); input.value = ''; return; }
     if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes', 'error'); input.value = ''; return; }
 
-    if (file.type !== 'image/svg+xml') {
-      const hasTransparency = await probeImageTransparency(file);
-      if (!hasTransparency) {
-        showToast('Logo no subido: la imagen no tiene fondo transparente — usa PNG/WebP con transparencia para que no se vea como un bloque sólido', 'error');
-        input.value = ''; return;
-      }
+    const bg = await probeImageBackground(file);
+    if (bg === 'solid-color') {
+      showToast('Logo no subido: tiene un fondo de color sólido y se vería como un bloque de color en el carrusel (fondo blanco). Usa un PNG, WebP o SVG con fondo transparente o blanco.', 'error');
+      input.value = ''; return;
     }
 
     const localURL = URL.createObjectURL(file);
@@ -164,7 +172,7 @@
           <div class="slide-img-col">
             <div style="position:relative">
               <div class="slide-img-preview" id="imgPreview${i}"></div>
-              <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" data-tip="Logo en PNG/WebP con fondo transparente, cualquier proporción funciona porque no se recorta (contain) — solo se ajusta dentro del recuadro. Un fondo sólido (blanco o de color) se verá como un recuadro feo detrás del logo.">i</span>
+              <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" data-tip="Logo en PNG/WebP/SVG con fondo transparente o blanco, cualquier proporción funciona porque no se recorta (contain) — solo se ajusta dentro del recuadro. El carrusel tiene fondo blanco; un fondo de color sólido se verá como un recuadro de color detrás del logo.">i</span>
               <button type="button" class="img-clear-btn" style="display:none" id="imgClear${i}" title="Quitar logo"
                 onclick="event.stopPropagation(); clearPartnerImage(${i})">${trashIcon}</button>
             </div>

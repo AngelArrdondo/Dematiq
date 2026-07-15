@@ -113,12 +113,14 @@
     if (zoom) prev.appendChild(zoom);
   }
 
-  /* ── Validación de transparencia ──────────────── */
-  /* El logo se pinta de blanco vía CSS (brightness(0) invert(1)) en el
-     marquee del Inicio; sin transparencia se ve como un bloque blanco sólido. */
-  function probeImageTransparency(file) {
+  /* ── Validación de fondo del logo ─────────────── */
+  /* El marquee del Inicio tiene fondo BLANCO y pinta el logo en escala de
+     grises (filter:grayscale, ver home.css #empresas / .marquee-item img).
+     Un logo con fondo transparente o blanco se funde con el carrusel; un
+     fondo de color sólido se vería como un bloque de color. */
+  function probeImageBackground(file) {
     return new Promise((resolve) => {
-      if (file.type === 'image/svg+xml') { resolve(true); return; } /* SVG: se asume vectorial/transparente */
+      if (file.type === 'image/svg+xml') { resolve('ok'); return; } /* SVG: se asume vectorial/transparente */
       const img = new Image();
       const url = URL.createObjectURL(file);
       img.onload = () => {
@@ -129,15 +131,21 @@
           const ctx = c.getContext('2d');
           ctx.drawImage(img, 0, 0, size, size);
           const data = ctx.getImageData(0, 0, size, size).data;
-          let hasTransparency = false;
-          for (let p = 3; p < data.length; p += 4) {
-            if (data[p] < 250) { hasTransparency = true; break; }
+          // Revisa las 4 esquinas: si alguna es transparente o blanca, el fondo funde bien con el carrusel.
+          const corners = [
+            [0, 0], [size - 1, 0], [0, size - 1], [size - 1, size - 1]
+          ];
+          let ok = false;
+          for (const [x, y] of corners) {
+            const p = (y * size + x) * 4;
+            const [r, g, b, a] = [data[p], data[p + 1], data[p + 2], data[p + 3]];
+            if (a < 250 || (r > 235 && g > 235 && b > 235)) { ok = true; break; }
           }
-          resolve(hasTransparency);
-        } catch { resolve(true); }
+          resolve(ok ? 'ok' : 'solid-color');
+        } catch { resolve('ok'); }
         URL.revokeObjectURL(url);
       };
-      img.onerror = () => { URL.revokeObjectURL(url); resolve(true); };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve('ok'); };
       img.src = url;
     });
   }
@@ -152,9 +160,9 @@
     if (file.size > 5 * 1024 * 1024) { showToast('Máximo 5 MB', 'error'); return; }
     if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (PNG, WebP, SVG)', 'error'); return; }
 
-    const hasTransparency = await probeImageTransparency(file);
-    if (!hasTransparency) {
-      showToast('Logo rechazado — no tiene fondo transparente y se vería como un bloque blanco sólido en el carrusel. Usa un PNG, WebP o SVG con transparencia.', 'error');
+    const bg = await probeImageBackground(file);
+    if (bg === 'solid-color') {
+      showToast('Logo rechazado — tiene un fondo de color sólido y se vería como un bloque de color en el carrusel (fondo blanco). Usa un PNG, WebP o SVG con fondo transparente o blanco.', 'error');
       return;
     }
 

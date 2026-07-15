@@ -133,15 +133,8 @@ if ($action === 'get') {
         mkdir($uploadDir, 0755, true);
     }
 
-    // Remove old avatar file
     try { $stmt = $pdo->prepare('SELECT foto FROM usuarios WHERE id = ? LIMIT 1'); $stmt->execute([$user['id']]); } catch (PDOException $e) { echo json_encode(['ok' => false, 'msg' => 'Columna foto no existe aún. Ejecuta la migración de base de datos.']); exit; }
     $oldFoto = $stmt->fetchColumn();
-    if ($oldFoto) {
-        $oldFile = __DIR__ . '/../' . ltrim($oldFoto, '/');
-        if (file_exists($oldFile)) {
-            unlink($oldFile);
-        }
-    }
 
     if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
         echo json_encode(['ok' => false, 'msg' => 'Error al guardar la imagen']);
@@ -150,6 +143,15 @@ if ($action === 'get') {
 
     $path = 'assets/avatars/' . $filename;
     $pdo->prepare('UPDATE usuarios SET foto = ? WHERE id = ?')->execute([$path, $user['id']]);
+
+    // Solo borrar el avatar viejo una vez que el nuevo quedó guardado y la BD actualizada
+    if ($oldFoto) {
+        $oldFile = __DIR__ . '/../' . ltrim($oldFoto, '/');
+        if (file_exists($oldFile)) {
+            unlink($oldFile);
+        }
+    }
+
     echo json_encode(['ok' => true, 'path' => $path]);
 
 } elseif ($action === 'change_password') {

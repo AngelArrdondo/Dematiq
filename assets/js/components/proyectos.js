@@ -13,6 +13,14 @@ const ARROW_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+// Las rutas que guarda el admin son relativas a la raíz del sitio (ej. "assets/images/general/x.webp").
+// Esta página vive en pages/corporativo/, dos niveles abajo, así que hay que anteponer "../../".
+const resolveImg = raw => {
+  if (!raw) return '';
+  if (/^https?:\/\//.test(raw) || raw.startsWith('/') || raw.startsWith('../')) return raw;
+  return '../../' + raw;
+};
+
 /* ── Cuenta cuántos proyectos hay por categoría ── */
 function countFor(filter) {
   if (filter === 'all') return PROJECTS.length;
@@ -154,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
           badge:  row.badge  || local.badge  || '',
           sector: row.sector || local.sector || '',
           anio:   row.anio   || local.anio   || '',
-          img:    row.img    || local.img    || '',
+          img:    resolveImg(row.img || local.img || ''),
           alt:    row.alt    || local.alt    || '',
           desc:   row.desc   || local.desc   || '',
         };

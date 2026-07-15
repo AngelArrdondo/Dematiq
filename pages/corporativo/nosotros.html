@@ -98,7 +98,7 @@
 <section id="empresas">
   <h2 class="section-title" style="padding-top:20px; margin-bottom:16px;">Empresas Asociadas</h2>
   <div class="marquee-wrapper">
-    <div class="marquee-track">
+    <div class="marquee-track" id="socios-track">
       <div class="marquee-item"><img src="../../assets/images/partners/Danfoss.webp" alt="Danfoss"></div>
       <div class="marquee-item"><img src="../../assets/images/partners/Eaton.webp" alt="Eaton"></div>
       <div class="marquee-item"><img src="../../assets/images/partners/METECNO.webp" alt="Metecno"></div>
@@ -136,6 +136,7 @@
 <script>
   // ── Carga dinámica desde la base de datos ──
   (async function () {
+    const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     try {
       const data = await fetch('/api/contenido.php?clave=nosotros').then(r => r.json());
       if (!data || typeof data !== 'object') return;
@@ -161,6 +162,22 @@
       if (data.vision  && filosofia[1]) { const p = filosofia[1].querySelector('p'); if (p) p.textContent = data.vision; }
       if (data.valores && filosofia[2]) { const p = filosofia[2].querySelector('p'); if (p) p.textContent = data.valores; }
     } catch (e) { /* fallo silencioso */ }
+
+    // ── Empresas Asociadas (Socios) — marquee (duplicado para loop continuo) ──
+    try {
+      const socios = await fetch('/api/contenido.php?clave=partners').then(r => r.json());
+      const track = document.getElementById('socios-track');
+      if (track && Array.isArray(socios) && socios.length) {
+        const items = socios.map(s => {
+          const logo = /^https?:\/\/|^\//.test(s.logo || '') ? s.logo : '../../' + (s.logo || '');
+          const inner = s.url
+            ? `<a href="${esc(s.url)}" target="_blank" rel="noopener"><img src="${esc(logo)}" alt="${esc(s.nombre)}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')"></a>`
+            : `<img src="${esc(logo)}" alt="${esc(s.nombre)}" onerror="this.style.display='none';this.parentNode.classList.add('marquee-item--empty')">`;
+          return `<div class="marquee-item">${inner}</div>`;
+        }).join('');
+        track.innerHTML = items + items;
+      }
+    } catch (e) { /* fallo silencioso — quedan los logos de ejemplo */ }
   })();
 </script>
 

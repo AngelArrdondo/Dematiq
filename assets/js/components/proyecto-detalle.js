@@ -20,6 +20,14 @@
 
   const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+  // Las rutas que guarda el admin son relativas a la raíz del sitio (ej. "assets/images/general/x.webp").
+  // Esta página vive en pages/corporativo/, dos niveles abajo, así que hay que anteponer "../../".
+  const resolveImg = raw => {
+    if (!raw) return '';
+    if (/^https?:\/\//.test(raw) || raw.startsWith('/') || raw.startsWith('../')) return raw;
+    return '../../' + raw;
+  };
+
   const id = new URLSearchParams(window.location.search).get('id');
 
   // Sincroniza desde la BD (admin/pages/proyectos) si existe. El admin ya
@@ -41,7 +49,7 @@
           servicios:  row.servicios  || local.servicios  || '',
           ubicacion:  row.ubicacion  || local.ubicacion  || '',
           anio:       row.anio       || local.anio       || '',
-          img:        row.img        || local.img        || '',
+          img:        resolveImg(row.img || local.img || ''),
           alt:        row.alt        || local.alt        || '',
           solucion:   row.solucion   || local.solucion   || '',
           resultados: row.resultados || local.resultados || '',

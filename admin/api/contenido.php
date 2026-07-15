@@ -12,6 +12,26 @@ if (!Auth::check()) {
     exit;
 }
 
+function deleteOldAsset(string $rawPath, array $allowedDirs): void
+{
+    $rawPath = trim($rawPath);
+    if ($rawPath === '') {
+        return;
+    }
+    $base = realpath(__DIR__ . '/../../');
+    $abs  = realpath($base . '/' . ltrim($rawPath, '/'));
+    if (!$abs || strpos($abs, $base . DIRECTORY_SEPARATOR) !== 0) {
+        return;
+    }
+    foreach ($allowedDirs as $dir) {
+        $dir = realpath($dir);
+        if ($dir && strpos($abs, $dir . DIRECTORY_SEPARATOR) === 0) {
+            @unlink($abs);
+            return;
+        }
+    }
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Verificar CSRF en escrituras
@@ -74,6 +94,8 @@ if ($method === 'GET') {
         exit;
     }
 
+    deleteOldAsset($_POST['oldPath'] ?? '', [__DIR__ . '/../../assets/videos']);
+
     echo json_encode([
         'ok'   => true,
         'path' => 'assets/videos/' . $filename,
@@ -123,11 +145,20 @@ if ($method === 'GET') {
     $filename  = $prefix . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
     $uploadDir = __DIR__ . '/../../assets/images/' . $folder . '/';
 
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
     if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
         http_response_code(500);
         echo json_encode(['error' => 'Error al guardar la imagen']);
         exit;
     }
+
+    deleteOldAsset($_POST['oldPath'] ?? '', [
+        __DIR__ . '/../../assets/images/general',
+        __DIR__ . '/../../assets/images/partners',
+    ]);
 
     echo json_encode(['ok' => true, 'path' => 'assets/images/' . $folder . '/' . $filename]);
 
