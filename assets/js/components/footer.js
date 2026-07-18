@@ -106,7 +106,10 @@ function footerInit() {
     if (d.whatsappNum || d.whatsapp) {
       const el = footer.querySelector('.footer-action-link--wa');
       if (el) {
-        if (d.whatsappNum) el.href = d.whatsappNum;
+        if (d.whatsappNum) {
+          const msg = 'Hola, me gustaría obtener más información sobre DEMATIQ';
+          el.href = 'https://wa.me/' + d.whatsappNum + '?text=' + encodeURIComponent(msg);
+        }
         if (d.whatsapp) el.childNodes[el.childNodes.length - 1].textContent = d.whatsapp;
       }
     }

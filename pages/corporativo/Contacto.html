@@ -38,7 +38,7 @@
       </div>
     </a>
 
-    <a href="https://web.whatsapp.com/send?phone=524427214891&text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20DEMATIQ"
+    <a href="https://wa.me/524427214891?text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20DEMATIQ"
        target="_blank" rel="noopener" class="contact-strip-card" id="ct-wa-card">
       <div>
         <h3>
@@ -232,7 +232,8 @@
       }
       if (d.whatsappNum) {
         const card = document.getElementById('ct-wa-card');
-        if (card) card.href = d.whatsappNum;
+        const msg = 'Hola, me gustaría obtener más información sobre DEMATIQ';
+        if (card) card.href = 'https://wa.me/' + d.whatsappNum + '?text=' + encodeURIComponent(msg);
       }
 
       if (d.horario) {
