@@ -1,4 +1,10 @@
 <?php
+// PHP no toma la zona horaria del sistema/MySQL por defecto (queda en UTC), lo
+// que desalinea cualquier date()/strtotime() comparado luego contra NOW() de
+// MySQL (p.ej. expiración de sesiones). Fijarla aquí, cargado por casi todo
+// el proyecto, evita depender de que el hosting tenga date.timezone en su php.ini.
+date_default_timezone_set('America/Mexico_City');
+
 // En producción (cPanel/Hostinger): define estas variables en
 // cPanel/hPanel → Software → PHP → Environment Variables.
 // En local: define las mismas variables en tu entorno (no hardcodees el password aquí).
