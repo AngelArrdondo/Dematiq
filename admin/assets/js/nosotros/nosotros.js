@@ -108,6 +108,9 @@
     img.onload  = () => { img.style.display = 'block'; noImg.style.display = 'none'; if (zoomBtn) zoomBtn.style.display = 'flex'; MediaSpecs.render(specs, fullSrc); };
     img.onerror = () => { img.style.display = 'none';  noImg.style.display = ''; if (zoomBtn) zoomBtn.style.display = 'none'; if (specs) { specs.textContent = ''; specs.classList.add('empty'); } };
     img.src = fullSrc;
+    /* si el src no cambió (ej. ya venía renderizado por el servidor), el navegador
+       no vuelve a disparar 'load' — forzamos el mismo callback manualmente */
+    if (img.complete && img.naturalWidth) img.onload();
     checkDirty();
   }
 
@@ -229,6 +232,9 @@
     /* imgPreview siempre trae una imagen renderizada por el servidor (propia o el placeholder por defecto) */
     const zoomBtn = document.getElementById('imgZoomBtn');
     if (zoomBtn) zoomBtn.style.display = 'flex';
+    const initImg = document.getElementById('imgPreview');
+    const initSpecs = document.getElementById('imgSpecs');
+    if (initImg && initSpecs) MediaSpecs.render(initSpecs, initImg.src);
   })();
 
   /* ─── BLUR-SAVE PROMPT ───────────────────────────── */

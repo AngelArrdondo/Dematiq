@@ -28,7 +28,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="assets/css/admin.css?v=10">
+  <link rel="stylesheet" href="assets/css/admin.css?v=11">
   <link rel="icon" type="image/svg+xml" href="../assets/images/logos/favicon-d.svg">
   <style>
     .summary-row {
@@ -216,7 +216,7 @@ try {
 <?php $profileApiPath = 'api/profile.php'; require __DIR__ . '/includes/profile-modal.php'; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<script src="assets/js/auth.js?v=2"></script>
+<script src="assets/js/auth.js?v=3"></script>
 <script>
   const CSRF_TOKEN = '<?= $csrfToken ?>';
 

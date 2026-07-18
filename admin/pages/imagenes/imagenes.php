@@ -21,7 +21,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Imágenes | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=10">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=11">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="../../assets/css/imagenes/imagenes.css?v=1">
 </head>
@@ -228,9 +228,9 @@ try {
 
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
-<script src="../../assets/js/auth.js?v=2"></script>
+<script src="../../assets/js/auth.js?v=3"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/imagenes/imagenes.js?v=2"></script>
+<script src="../../assets/js/imagenes/imagenes.js?v=3"></script>
 
 </body>
 </html>
