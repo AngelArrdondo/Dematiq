@@ -172,7 +172,7 @@
           <div class="slide-img-col">
             <div style="position:relative">
               <div class="slide-img-preview" id="imgPreview${i}"></div>
-              <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" data-tip="Logo en PNG/WebP/SVG con fondo transparente o blanco, cualquier proporción funciona porque no se recorta (contain) — solo se ajusta dentro del recuadro. El carrusel tiene fondo blanco; un fondo de color sólido se verá como un recuadro de color detrás del logo.">i</span>
+              <span class="spec-badge spec-badge-corner spec-badge-r" tabindex="0" data-tip="Logo en PNG/WebP/SVG con fondo transparente o blanco, ideal con al menos 300px de alto para que no se vea pixelado. Cualquier proporción funciona porque no se recorta (contain) — solo se ajusta dentro del recuadro. El carrusel tiene fondo blanco; un fondo de color sólido se verá como un recuadro de color detrás del logo.">i</span>
               <button type="button" class="img-clear-btn" style="display:none" id="imgClear${i}" title="Quitar logo"
                 onclick="event.stopPropagation(); clearPartnerImage(${i})">${trashIcon}</button>
             </div>
