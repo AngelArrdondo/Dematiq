@@ -158,23 +158,26 @@
 
   /* ─── preview imagen ─────────────────────────────── */
   function setPreview(i, src) {
-    const box  = document.getElementById(`imgBox${i}`);
+    const box   = document.getElementById(`imgBox${i}`);
     if (!box) return;
-    const img  = box.querySelector('img');
-    const ph   = box.querySelector('.img-placeholder');
-    const zoom = document.getElementById(`imgZoom${i}`);
-    const clr  = document.getElementById(`imgClear${i}`);
+    const img   = box.querySelector('img');
+    const ph    = box.querySelector('.img-placeholder');
+    const zoom  = document.getElementById(`imgZoom${i}`);
+    const clr   = document.getElementById(`imgClear${i}`);
+    const specs = document.getElementById(`imgSpecs${i}`);
     if (!src) {
       if (img)  img.style.display  = 'none';
       if (ph)   ph.style.display   = '';
       if (zoom) zoom.style.display = 'none';
       if (clr)  clr.style.display  = 'none';
+      if (specs) MediaSpecs.render(specs, '');
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; };
+      img.onload  = () => { if (specs) MediaSpecs.render(specs, img.src); };
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; if (specs) MediaSpecs.render(specs, ''); };
       if (ph)   ph.style.display   = 'none';
       if (zoom) zoom.style.display = 'flex';
       if (clr)  clr.style.display  = 'flex';
@@ -326,6 +329,7 @@
               placeholder="assets/images/general/foto.webp"
               oninput="projects[${i}].img=this.value;setPreview(${i},this.value);checkDirty()"
               onblur="onFieldBlur()">
+            <span class="media-spec-readout empty" id="imgSpecs${i}"></span>
           </div>
 
           <!-- ── CAMPOS ────────────────────────────────── -->

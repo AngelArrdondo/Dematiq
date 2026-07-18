@@ -201,6 +201,91 @@ const CM = {
   }
 };
 
+// ── Media specs readout ──────────────────────────────────────────────
+// Muestra, junto a cada preview de imagen/video, las características REALES
+// del archivo que ya está cargado (dimensiones, formato, peso, duración) —
+// a diferencia del .spec-badge (que solo recomienda qué subir), esto refleja
+// lo que ya se subió, tanto para un archivo recién elegido como para uno
+// guardado previamente.
+const MediaSpecs = {
+  fmtSize(bytes) {
+    if (bytes === null || bytes === undefined || isNaN(bytes)) return null;
+    if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  },
+  fmtFormat(nameOrUrl) {
+    const m = String(nameOrUrl || '').split(/[?#]/)[0].match(/\.([a-z0-9]+)$/i);
+    return m ? m[1].toUpperCase() : '';
+  },
+  fmtDuration(sec) {
+    if (!sec && sec !== 0) return '';
+    const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+    return `${m}:${String(s).padStart(2, '0')}`;
+  },
+  probeImage(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+      img.onerror = () => resolve({ w: 0, h: 0 });
+      img.src = url;
+    });
+  },
+  probeVideo(url) {
+    return new Promise(resolve => {
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      v.muted = true;
+      let done = false;
+      const finish = (result) => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        v.remove();
+        resolve(result);
+      };
+      const timer = setTimeout(() => finish({ w: 0, h: 0, dur: 0 }), 10000);
+      v.onloadedmetadata = () => finish({ w: v.videoWidth, h: v.videoHeight, dur: v.duration });
+      v.onerror = () => finish({ w: 0, h: 0, dur: 0 });
+      v.src = url;
+      v.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px';
+      document.body.appendChild(v);
+    });
+  },
+  async remoteSize(url) {
+    try {
+      const res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+      const len = res.headers.get('Content-Length');
+      return len ? parseInt(len, 10) : null;
+    } catch { return null; }
+  },
+  /**
+   * Escribe el readout de especificaciones en `el`.
+   * src: URL del archivo (ruta guardada en el servidor, o un blob: URL de un <input type=file> recién elegido)
+   * opts.file: el File original, si se tiene (evita el HEAD request y da el peso exacto al instante)
+   * opts.isVideo: true para leer duración con <video> en vez de dimensiones con <img>
+   */
+  async render(el, src, opts = {}) {
+    if (!el) return;
+    if (!src) { el.textContent = ''; el.classList.add('empty'); return; }
+    const token = (el._msToken = (el._msToken || 0) + 1);
+    el.classList.remove('empty');
+    el.textContent = 'Leyendo…';
+
+    const format    = this.fmtFormat(opts.file ? opts.file.name : src);
+    const sizeBytes = opts.file ? opts.file.size : await this.remoteSize(src);
+    const sizeLabel = this.fmtSize(sizeBytes);
+    const probe     = opts.isVideo ? await this.probeVideo(src) : await this.probeImage(src);
+
+    if (el._msToken !== token) return; // una petición más reciente ya reemplazó esto
+    const parts = [];
+    if (probe.w && probe.h) parts.push(`${probe.w}×${probe.h}px`);
+    if (format) parts.push(format);
+    if (sizeLabel) parts.push(sizeLabel);
+    if (opts.isVideo && probe.dur) parts.push(this.fmtDuration(probe.dur));
+    el.textContent = parts.join(' · ') || '—';
+  }
+};
+
 // ── Admin Lightbox ────────────────────────────────────────────────────
 (function () {
   const style = document.createElement('style');

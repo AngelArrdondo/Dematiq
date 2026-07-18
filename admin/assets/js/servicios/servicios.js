@@ -141,23 +141,26 @@
 
   /* ─── preview imagen ─────────────────────────────── */
   function setPreview(i, slot, src) {
-    const box  = document.getElementById(`imgPreview${i}_${slot}`);
+    const box   = document.getElementById(`imgPreview${i}_${slot}`);
     if (!box) return;
-    const img  = box.querySelector('img');
-    const ph   = box.querySelector('.img-placeholder');
-    const zoom = document.getElementById(`imgZoom${i}_${slot}`);
-    const clr  = document.getElementById(`imgClear${i}_${slot}`);
+    const img   = box.querySelector('img');
+    const ph    = box.querySelector('.img-placeholder');
+    const zoom  = document.getElementById(`imgZoom${i}_${slot}`);
+    const clr   = document.getElementById(`imgClear${i}_${slot}`);
+    const specs = document.getElementById(`imgSpecs${i}_${slot}`);
     if (!src) {
       if (img)  img.style.display  = 'none';
       if (ph)   ph.style.display   = '';
       if (zoom) zoom.style.display = 'none';
       if (clr)  clr.style.display  = 'none';
+      if (specs) MediaSpecs.render(specs, '');
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; };
+      img.onload  = () => { if (specs) MediaSpecs.render(specs, img.src); };
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; if (specs) MediaSpecs.render(specs, ''); };
       if (ph)   ph.style.display   = 'none';
       if (zoom) zoom.style.display = 'flex';
       if (clr)  clr.style.display  = 'flex';
@@ -287,6 +290,7 @@
           placeholder="assets/images/general/img${slot}.webp"
           oninput="servicios[${i}].image${slot}=this.value;setPreview(${i},${slot},this.value);checkDirty()"
           onblur="onFieldBlur()">
+        <span class="media-spec-readout empty" id="imgSpecs${i}_${slot}"></span>
       </div>`;
   }
 

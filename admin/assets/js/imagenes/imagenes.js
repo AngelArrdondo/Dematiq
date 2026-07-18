@@ -93,6 +93,7 @@
           <div class="img-thumb-wrap" onclick="openLightbox('${escH(path)}','${escH(img.name)}')">
             <img class="img-thumb" src="${escH(path)}?t=${Date.now()}"
               alt="${escH(img.name)}" loading="lazy"
+              onload="const d=this.closest('.img-card').querySelector('.img-size'); if (d) d.textContent = this.naturalWidth+'×'+this.naturalHeight+'px · '+d.textContent;"
               onerror="this.classList.add('err')">
             <div class="img-overlay">
               <div class="img-overlay-actions">

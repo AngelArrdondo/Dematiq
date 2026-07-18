@@ -81,8 +81,9 @@
 
   /* ── Image preview ────────────────────────────── */
   function setPreview(i, src) {
-    const prev = document.getElementById('brandPreview' + i);
+    const prev  = document.getElementById('brandPreview' + i);
     if (!prev) return;
+    const specs = document.getElementById('brandSpecs' + i);
     const hint = prev.querySelector('.brand-img-hint');
     const zoom = prev.querySelector('.preview-zoom-btn');
     const clr  = document.getElementById('brandClear' + i);
@@ -92,14 +93,17 @@
       prev.innerHTML = `<div class="img-placeholder"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span>Sin logo</span></div>`;
       if (hint) prev.appendChild(hint);
       if (zoom) prev.appendChild(zoom);
+      if (specs) MediaSpecs.render(specs, '');
       return;
     }
     const img = document.createElement('img');
     img.src = src;
+    img.onload = () => { if (specs) MediaSpecs.render(specs, src); };
     img.onerror = () => {
       prev.innerHTML = `<div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span>Sin vista previa</span></div>`;
       if (hint) prev.appendChild(hint);
       if (zoom) { zoom.style.display = 'none'; prev.appendChild(zoom); }
+      if (specs) MediaSpecs.render(specs, '');
     };
     prev.innerHTML = '';
     prev.appendChild(img);
@@ -294,6 +298,7 @@
             <input type="text" class="brand-path-input" id="imgPath${i}" value="${esc(m.logo)}"
               placeholder="assets/images/partners/logo.svg"
               oninput="marcas[${i}].logo=this.value;setPreview(${i},this.value?'../../../'+this.value:'');updatePreview();updateStats();checkDirty()">
+            <span class="media-spec-readout empty" id="brandSpecs${i}"></span>
           </div>
           <div class="brand-fields-col">
             <div class="form-group">

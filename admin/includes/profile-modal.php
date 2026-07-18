@@ -36,6 +36,7 @@ $_fotoPrefix = $fotoPrefix ?? '';
           <span class="spec-badge spec-badge-corner-tr" tabindex="0" data-tip="Foto cuadrada (1:1), mínimo 300×300px, con tu rostro centrado y ocupando la mayor parte del encuadre — se recorta en círculo, así que cualquier cosa cerca de las esquinas se corta.">i</span>
           <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadAvatar(this)">
         </div>
+        <span class="media-spec-readout empty" id="avatarSpecs" style="justify-content:center;margin-bottom:14px"></span>
 
         <div class="profile-field-row">
           <div class="profile-field">
@@ -150,11 +151,15 @@ $_fotoPrefix = $fotoPrefix ?? '';
   }
 
   function setModalAvatar(foto, nombre) {
-    const el = document.getElementById('modalAvatarCircle');
+    const el    = document.getElementById('modalAvatarCircle');
+    const specs = document.getElementById('avatarSpecs');
     if (foto) {
-      el.innerHTML = `<img src="${_fotoPrefix}${foto}?t=${Date.now()}" alt="Avatar">`;
+      const src = `${_fotoPrefix}${foto}?t=${Date.now()}`;
+      el.innerHTML = `<img src="${src}" alt="Avatar">`;
+      if (specs) MediaSpecs.render(specs, src);
     } else {
       el.textContent = (nombre || '?').charAt(0).toUpperCase();
+      if (specs) MediaSpecs.render(specs, '');
     }
   }
 

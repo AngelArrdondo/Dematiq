@@ -1028,6 +1028,18 @@ body { overflow-x: hidden; }
   vertical-align: -3px; margin-left: 3px;
 }
 
+/* ══ MEDIA SPEC READOUT — muestra las características reales de la imagen/video ya cargado ══ */
+.media-spec-readout {
+  display: flex; align-items: center; gap: 5px;
+  font-size: .68rem; color: var(--text-lt);
+  margin-top: 5px; font-variant-numeric: tabular-nums;
+}
+.media-spec-readout::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%; flex: none;
+  background: #22c55e;
+}
+.media-spec-readout.empty { display: none; }
+
 /* ══ IMG CLEAR BUTTON — vacía un slot de imagen ya subida, sin borrar el archivo del servidor ══ */
 /* bottom-left corner, mirrors .spec-badge-corner (bottom-right) so both can coexist on the same preview box */
 .img-clear-btn {

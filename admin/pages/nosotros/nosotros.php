@@ -292,6 +292,7 @@ try {
                 oninput="setImgPreview(this.value)" onblur="onFieldBlur()"
                 placeholder="assets/images/general/img3.webp">
               <p class="field-hint">Se recorta automáticamente para llenar el espacio (recorte tipo "cover"). Usa una foto <strong>horizontal</strong> de al menos 1000×560px — si es más vertical que 1.2:1 (ancho/alto) o más pequeña, se rechaza al subirla.</p>
+              <span class="media-spec-readout empty" id="imgSpecs"></span>
             </div>
           </div>
         </div>

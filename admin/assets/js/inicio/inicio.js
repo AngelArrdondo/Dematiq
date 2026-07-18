@@ -199,6 +199,7 @@
     const deviceNone = document.getElementById('deviceNoPoster');
     const statPoster = document.getElementById('statPoster');
 
+    const specs = document.getElementById('posterSpecs');
     document.getElementById('tickPoster')?.classList.toggle('on', !!src);
     const lpFrame = document.getElementById('badgeLpFrame');
     if (!src) {
@@ -210,6 +211,7 @@
       statPoster.className     = 'bsc-val dim';
       if (lpFrame) lpFrame.style.backgroundImage = '';
       document.getElementById('posterZoomBtn').style.display = 'none';
+      if (specs) { specs.textContent = ''; specs.classList.add('empty'); }
       return;
     }
     const fullSrc = '../../../' + src;
@@ -219,6 +221,7 @@
       deviceImg.style.display  = 'block';
       deviceNone.style.display = 'none';
       document.getElementById('posterZoomBtn').style.display = 'flex';
+      MediaSpecs.render(specs, fullSrc);
     };
     img.onerror = () => {
       img.style.display   = 'none';
@@ -226,6 +229,7 @@
       deviceImg.style.display  = 'none';
       deviceNone.style.display = '';
       document.getElementById('posterZoomBtn').style.display = 'none';
+      if (specs) { specs.textContent = ''; specs.classList.add('empty'); }
     };
     img.src = fullSrc;
     deviceImg.src = fullSrc;
@@ -270,18 +274,37 @@
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
   };
 
-  function analyzeVideo(file, localURL) {
+  /* file: File recién elegido (da tamaño/formato exactos al instante).
+     Si se omite, se analiza localURL como un video ya guardado en el servidor
+     — el tamaño se obtiene con una petición HEAD (MediaSpecs.remoteSize). */
+  async function analyzeVideo(localURL, file) {
     const probe = document.createElement('video');
     probe.preload = 'metadata';
+    probe.muted = true;
+    probe.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px';
+    document.body.appendChild(probe);
     probe.src = localURL;
+    const sizeBytes = file ? file.size : await MediaSpecs.remoteSize(localURL);
+    const formatSrc = file ? (file.name || file.type) : localURL;
+    let done = false;
+    const failTimer = setTimeout(() => {
+      if (done) return;
+      done = true;
+      document.getElementById('videoAnalysis').classList.remove('visible');
+      probe.remove();
+    }, 10000);
+    probe.onerror = () => { done = true; clearTimeout(failTimer); probe.remove(); };
     probe.onloadedmetadata = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(failTimer);
       const w      = probe.videoWidth;
       const h      = probe.videoHeight;
       const dur    = probe.duration;
-      const sizeMB = file.size / 1024 / 1024;
-      const kbps   = dur > 0 ? Math.round(file.size * 8 / dur / 1000) : 0;
+      const sizeMB = sizeBytes ? sizeBytes / 1024 / 1024 : 0;
+      const kbps   = (dur > 0 && sizeBytes) ? Math.round(sizeBytes * 8 / dur / 1000) : 0;
 
-      document.getElementById('vStatSize').textContent    = sizeMB.toFixed(1) + ' MB';
+      document.getElementById('vStatSize').textContent    = sizeBytes ? sizeMB.toFixed(1) + ' MB' : '—';
       document.getElementById('vStatRes').textContent     = w && h ? w + '×' + h : '—';
       document.getElementById('vStatDur').textContent     = isFinite(dur) ? Math.round(dur) + ' seg' : '—';
       document.getElementById('vStatBitrate').textContent = kbps > 0 ? kbps.toLocaleString() + ' kbps' : '—';
@@ -289,19 +312,23 @@
       const checks = [];
 
       /* Formato */
-      if (file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4')) {
+      const isMp4  = (file && file.type === 'video/mp4') || /\.mp4$/i.test(formatSrc);
+      const isWebm = (file && file.type === 'video/webm') || /\.webm$/i.test(formatSrc);
+      if (isMp4) {
         checks.push({ t: 'ok',   m: 'Formato MP4 — óptimo para todos los navegadores' });
-      } else if (file.type === 'video/webm') {
+      } else if (isWebm) {
         checks.push({ t: 'warn', m: 'WebM: sin soporte en Safari. Recomendamos MP4 (H.264)' });
       } else {
         checks.push({ t: 'bad',  m: 'Formato no recomendado — convierte a MP4 (H.264)' });
       }
 
       /* Tamaño */
-      if (sizeMB <= 15)       checks.push({ t: 'ok',   m: 'Peso excelente — carga rápida en web' });
-      else if (sizeMB <= 40)  checks.push({ t: 'ok',   m: 'Peso aceptable para un hero de video' });
-      else if (sizeMB <= 80)  checks.push({ t: 'warn', m: 'Archivo pesado — considera comprimirlo (HandBrake o FFmpeg)' });
-      else                    checks.push({ t: 'bad',  m: 'Muy pesado — puede ralentizar la carga del sitio' });
+      if (sizeBytes) {
+        if (sizeMB <= 15)       checks.push({ t: 'ok',   m: 'Peso excelente — carga rápida en web' });
+        else if (sizeMB <= 40)  checks.push({ t: 'ok',   m: 'Peso aceptable para un hero de video' });
+        else if (sizeMB <= 80)  checks.push({ t: 'warn', m: 'Archivo pesado — considera comprimirlo (HandBrake o FFmpeg)' });
+        else                    checks.push({ t: 'bad',  m: 'Muy pesado — puede ralentizar la carga del sitio' });
+      }
 
       /* Resolución */
       if (w && h) {
@@ -329,6 +356,7 @@
         .join('');
 
       document.getElementById('videoAnalysis').classList.add('visible');
+      probe.remove();
     };
   }
 
@@ -413,7 +441,7 @@
     player.play().catch(() => {});
 
     /* análisis de calidad */
-    analyzeVideo(file, localURL);
+    analyzeVideo(localURL, file);
 
     /* bloquear zona de upload */
     zone.style.pointerEvents = 'none'; zone.style.opacity = '.45';
@@ -487,6 +515,7 @@
       document.getElementById('videoNoPreview').style.display = 'none';
       document.getElementById('videoZoomBtn').style.display = 'flex';
     };
+    analyzeVideo(player.src, null);
   }
 
   /* ── Drag & drop zone ────────────────────────── */
@@ -570,12 +599,13 @@
       player.style.display = 'block';
       document.getElementById('videoNoPreview').style.display = 'none';
       document.getElementById('videoZoomBtn').style.display = 'flex';
+      analyzeVideo(player.src, null);
     } else {
       player.style.display = 'none';
       document.getElementById('videoNoPreview').style.display = '';
       document.getElementById('videoZoomBtn').style.display = 'none';
+      document.getElementById('videoAnalysis').classList.remove('visible');
     }
-    document.getElementById('videoAnalysis').classList.remove('visible');
     document.getElementById('videoProg').classList.remove('visible', 'done');
     /* reset soluciones */
     if (typeof solOriginal !== 'undefined') {
@@ -743,7 +773,8 @@
             Vista previa
           </span>
           <img id="solImg_${prefix}_${i}" src="../../../${escSol(card.imagen)}" alt="${escSol(card.titulo)}"
-            onerror="this.style.display='none'">
+            onload="MediaSpecs.render(document.getElementById('solSpecs_${prefix}_${i}'), this.src)"
+            onerror="this.style.display='none';MediaSpecs.render(document.getElementById('solSpecs_${prefix}_${i}'), '')">
           <button type="button" class="preview-zoom-btn" title="Ver en grande" data-prefix="${prefix}" data-idx="${i}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </button>
@@ -760,6 +791,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
             <span class="sol-card-img-path-text">${escSol(card.imagen)}</span>
           </span>
+          <span class="media-spec-readout empty" id="solSpecs_${prefix}_${i}"></span>
           <span class="sol-card-link-hint">${escSol(card.href)}</span>
         </div>
       </div>`).join('');

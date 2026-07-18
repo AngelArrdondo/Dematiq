@@ -101,11 +101,12 @@
     const img     = document.getElementById('imgPreview');
     const noImg   = document.getElementById('imgNoImg');
     const zoomBtn = document.getElementById('imgZoomBtn');
+    const specs   = document.getElementById('imgSpecs');
     document.getElementById('tickImg')?.classList.toggle('on', !!src);
     /* sin ruta personalizada -> se usa el mismo placeholder por defecto que renderiza el servidor */
     const fullSrc = '../../../' + (src || QUIENES_IMG_DEFAULT);
-    img.onload  = () => { img.style.display = 'block'; noImg.style.display = 'none'; if (zoomBtn) zoomBtn.style.display = 'flex'; };
-    img.onerror = () => { img.style.display = 'none';  noImg.style.display = ''; if (zoomBtn) zoomBtn.style.display = 'none'; };
+    img.onload  = () => { img.style.display = 'block'; noImg.style.display = 'none'; if (zoomBtn) zoomBtn.style.display = 'flex'; MediaSpecs.render(specs, fullSrc); };
+    img.onerror = () => { img.style.display = 'none';  noImg.style.display = ''; if (zoomBtn) zoomBtn.style.display = 'none'; if (specs) { specs.textContent = ''; specs.classList.add('empty'); } };
     img.src = fullSrc;
     checkDirty();
   }
