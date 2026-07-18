@@ -31,13 +31,14 @@ class HeaderComponent {
     const navItems = [
       { href: `${base}/index.html`,                        text: 'Inicio',        page: 'index.html'    },
       { href: `${base}/pages/corporativo/nosotros.html`,   text: 'Sobre Nosotros',page: 'nosotros.html' },
-      { href: `${base}/pages/corporativo/soluciones.html`, text: 'Proyectos',     page: 'soluciones.html'},
+      { href: `${base}/pages/corporativo/soluciones.html`, text: 'Proyectos',     page: ['soluciones.html', 'proyecto.html']},
       { href: `${base}/pages/corporativo/industrias.html`, text: 'Industrias',    page: 'industrias.html'},
       { href: `${base}/pages/corporativo/Contacto.html`,   text: 'Contacto',      page: 'Contacto.html' }
     ];
 
     const navHTML = navItems.map(item => {
-      const active = currentPage === item.page ? ' class="active"' : '';
+      const pages = Array.isArray(item.page) ? item.page : [item.page];
+      const active = pages.includes(currentPage) ? ' class="active"' : '';
       return `<li><a href="${item.href}"${active}>${item.text}</a></li>`;
     }).join('');
 
