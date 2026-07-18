@@ -1,9 +1,15 @@
 <?php
 require_once __DIR__ . '/../../includes/conexion.php';
+require_once __DIR__ . '/../../includes/PHPMailer/Exception.php';
+require_once __DIR__ . '/../../includes/PHPMailer/PHPMailer.php';
+require_once __DIR__ . '/../../includes/PHPMailer/SMTP.php';
 
-$msg   = '';
-$error = '';
-$token_link = '';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+
+$msg       = '';
+$error     = '';
+$submitted = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -16,13 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch();
 
         if ($user && $user['activo']) {
-            $token     = bin2hex(random_bytes(32));
-            $expira    = date('Y-m-d H:i:s', strtotime('+30 minutes'));
+            $token      = bin2hex(random_bytes(32));
+            $expira     = date('Y-m-d H:i:s', strtotime('+30 minutes'));
             $tokens_dir = __DIR__ . '/../../includes/tokens';
             if (!is_dir($tokens_dir)) {
                 mkdir($tokens_dir, 0700, true);
             }
-            $file       = $tokens_dir . '/' . hash('sha256', $token) . '.json';
+            $file = $tokens_dir . '/' . hash('sha256', $token) . '.json';
 
             file_put_contents($file, json_encode([
                 'usuario_id' => $user['id'],
@@ -30,13 +36,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'expira'     => $expira,
             ]));
 
-            $base = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+            $base       = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
             $token_link = $base . '/pages/corporativo/reset-password.php?token=' . $token;
-            $msg = 'Enlace generado para: <strong>' . htmlspecialchars($email) . '</strong>';
-        } else {
-            // Mensaje genérico para no revelar si el email existe
-            $msg = 'Si el correo está registrado, encontrarás el enlace abajo.';
+
+            // Configura estas variables en cPanel → Software → PHP → Environment Variables
+            $smtpHost   = getenv('SMTP_HOST') ?: 'mail.dematiq.com.mx';
+            $smtpUser   = getenv('SMTP_USER') ?: 'ventas@dematiq.com.mx';
+            $smtpPass   = getenv('SMTP_PASS') ?: '';
+            $smtpPort   = getenv('SMTP_PORT') ?: 465;
+            $smtpSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_SMTPS;
+
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = $smtpHost;
+                $mail->SMTPAuth   = true;
+                $mail->Username   = $smtpUser;
+                $mail->Password   = $smtpPass;
+                $mail->SMTPSecure = $smtpSecure;
+                $mail->Port       = (int) $smtpPort;
+                $mail->CharSet    = 'UTF-8';
+
+                $mail->setFrom($smtpUser, 'DEMATIQ - Panel de administración');
+                $mail->addAddress($email, $user['nombre']);
+
+                $mail->Subject = 'Recuperar contraseña — DEMATIQ Admin';
+                $mail->isHTML(false);
+                $mail->Body    = "Hola {$user['nombre']},\n\n"
+                    . "Recibimos una solicitud para restablecer tu contraseña del panel de administración de DEMATIQ.\n\n"
+                    . "Este enlace es válido por 30 minutos:\n{$token_link}\n\n"
+                    . "Si tú no pediste este cambio, ignora este correo — tu contraseña actual sigue funcionando.\n";
+
+                $mail->send();
+            } catch (PHPMailerException $e) {
+                error_log('Error al enviar correo de recuperación de contraseña: ' . $mail->ErrorInfo);
+            }
         }
+
+        // Mismo mensaje exista o no la cuenta (y haya fallado o no el envío):
+        // no revelar si un correo está registrado.
+        $submitted = true;
+        $msg = 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada (y spam).';
     }
 }
 ?>
@@ -86,13 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       border-radius: 10px; padding: 12px 14px; font-size: .82rem; color: #b91c1c;
       margin-bottom: 20px;
     }
-    .reset-link-box {
-      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
-      padding: 12px 14px; margin-top: 14px; word-break: break-all;
-      font-size: .78rem; color: var(--brand);
-    }
-    .reset-link-box strong { display: block; margin-bottom: 6px; color: var(--text-dark); font-size: .8rem; }
-    .reset-link-box a { color: var(--brand); font-weight: 600; }
     .field-wrap { position: relative; margin-bottom: 18px; }
     .field-wrap input {
       width: 100%; padding: 20px 46px 8px 46px;
@@ -145,16 +178,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
 
   <?php if ($msg): ?>
-    <div class="msg-ok"><?= $msg ?></div>
-    <?php if ($token_link): ?>
-      <div class="reset-link-box">
-        <strong>Enlace de restablecimiento (válido 30 min):</strong>
-        <a href="<?= htmlspecialchars($token_link) ?>"><?= htmlspecialchars($token_link) ?></a>
-      </div>
-    <?php endif; ?>
+    <div class="msg-ok"><?= htmlspecialchars($msg) ?></div>
   <?php endif; ?>
 
-  <?php if (!$token_link): ?>
+  <?php if (!$submitted): ?>
   <form method="POST">
     <div class="field-wrap">
       <input type="email" name="email" placeholder="Correo electrónico"
