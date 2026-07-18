@@ -49,7 +49,7 @@
           servicios:  row.servicios  || local.servicios  || '',
           ubicacion:  row.ubicacion  || local.ubicacion  || '',
           anio:       row.anio       || local.anio       || '',
-          img:        resolveImg(row.img || local.img || ''),
+          img:        resolveImg(row.img || local.img || '') || '../../assets/images/general/img1.webp',
           alt:        row.alt        || local.alt        || '',
           solucion:   row.solucion   || local.solucion   || '',
           resultados: row.resultados || local.resultados || '',

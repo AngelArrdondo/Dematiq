@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
           badge:  row.badge  || local.badge  || '',
           sector: row.sector || local.sector || '',
           anio:   row.anio   || local.anio   || '',
-          img:    resolveImg(row.img || local.img || ''),
+          img:    resolveImg(row.img || local.img || '') || '../../assets/images/general/img1.webp',
           alt:    row.alt    || local.alt    || '',
           desc:   row.desc   || local.desc   || '',
         };
