@@ -248,6 +248,11 @@
     .preview-zoom-btn:hover { background: rgba(6,95,70,.9); transform: scale(1.08); }
     .preview-zoom-btn svg { width: 12px; height: 12px; }
 
+    /* El recuadro de logo es muy bajo (aspect-ratio 16/6): el badge "i" y el botón de
+       zoom quedaban casi encimados en la esquina derecha. Se mueve el badge a la
+       esquina superior izquierda, libre, para separarlos. */
+    .spec-badge-r { top: 8px; left: 8px; bottom: auto; right: auto; }
+
     .lightbox-backdrop {
       position: fixed; inset: 0; z-index: 1000;
       background: rgba(7,23,64,.82); backdrop-filter: blur(6px);
