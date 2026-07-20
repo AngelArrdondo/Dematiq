@@ -31,11 +31,13 @@ if ($action === 'get') {
         $profile = $stmt->fetch();
     } catch (PDOException $e) {
         // New columns not yet migrated — fall back
+        error_log('profile.php get: ' . $e->getMessage());
         try {
             $stmt = $pdo->prepare('SELECT id, username, nombre, foto FROM usuarios WHERE id = ? LIMIT 1');
             $stmt->execute([$user['id']]);
             $profile = $stmt->fetch();
         } catch (PDOException $e2) {
+            error_log('profile.php get (fallback sin foto): ' . $e2->getMessage());
             $stmt = $pdo->prepare('SELECT id, username, nombre FROM usuarios WHERE id = ? LIMIT 1');
             $stmt->execute([$user['id']]);
             $profile = $stmt->fetch();
@@ -96,6 +98,7 @@ if ($action === 'get') {
         )->execute([$nombre, $primer_nombre, $segundo_nombre, $apellido_paterno, $apellido_materno, $email_contacto, $telefono, $user['id']]);
     } catch (PDOException $e) {
         // Columns not migrated yet — update only nombre
+        error_log('profile.php update_info: ' . $e->getMessage());
         $pdo->prepare('UPDATE usuarios SET nombre = ? WHERE id = ?')->execute([$nombre, $user['id']]);
     }
 
@@ -133,7 +136,7 @@ if ($action === 'get') {
         mkdir($uploadDir, 0755, true);
     }
 
-    try { $stmt = $pdo->prepare('SELECT foto FROM usuarios WHERE id = ? LIMIT 1'); $stmt->execute([$user['id']]); } catch (PDOException $e) { echo json_encode(['ok' => false, 'msg' => 'Columna foto no existe aún. Ejecuta la migración de base de datos.']); exit; }
+    try { $stmt = $pdo->prepare('SELECT foto FROM usuarios WHERE id = ? LIMIT 1'); $stmt->execute([$user['id']]); } catch (PDOException $e) { error_log('profile.php upload_avatar: ' . $e->getMessage()); echo json_encode(['ok' => false, 'msg' => 'Columna foto no existe aún. Ejecuta la migración de base de datos.']); exit; }
     $oldFoto = $stmt->fetchColumn();
 
     if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {

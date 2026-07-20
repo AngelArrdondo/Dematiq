@@ -12,7 +12,9 @@ try {
     $stmtFoto->execute([$user['id']]);
     $fotoRaw  = $stmtFoto->fetchColumn();
     $fotoPath = $fotoRaw ? htmlspecialchars($fotoRaw) : '';
-} catch (PDOException $e) { /* column not yet migrated — ignore */ }
+} catch (PDOException $e) {
+    error_log('No se pudo obtener foto de perfil (dashboard): ' . $e->getMessage()); /* probable columna no migrada aún */
+}
 
 $visitasDiarias = [];
 try {
@@ -20,7 +22,9 @@ try {
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
         $visitasDiarias[$row['fecha']] = (int) $row['total'];
     }
-} catch (PDOException $e) { /* tabla no migrada aún — ignore */ }
+} catch (PDOException $e) {
+    error_log('No se pudo obtener visitas diarias (dashboard): ' . $e->getMessage()); /* probable tabla no migrada aún */
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">

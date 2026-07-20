@@ -18,6 +18,7 @@ try {
     )->execute();
     echo json_encode(['ok' => true]);
 } catch (PDOException $e) {
+    error_log('Error al registrar visita diaria: ' . $e->getMessage());
     http_response_code(503);
     echo json_encode(['ok' => false]);
 }

@@ -160,6 +160,7 @@ class Auth {
                 && !empty($row['apellido_materno']) && !empty($row['email_contacto'])
                 && !empty($row['telefono']);
         } catch (PDOException $e) {
+            error_log('isProfileComplete: ' . $e->getMessage());
             return true; // columnas no migradas aún — no bloquear el login
         }
     }

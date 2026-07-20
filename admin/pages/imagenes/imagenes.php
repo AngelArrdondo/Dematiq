@@ -13,7 +13,9 @@ try {
     $stmtFoto->execute([$user['id']]);
     $fotoRaw  = $stmtFoto->fetchColumn();
     $fotoPath = $fotoRaw ? '../../' . htmlspecialchars($fotoRaw) : '';
-} catch (PDOException $e) {}
+} catch (PDOException $e) {
+    error_log('No se pudo obtener foto de perfil (topbar admin): ' . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
