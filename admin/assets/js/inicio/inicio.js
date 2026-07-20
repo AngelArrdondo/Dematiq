@@ -199,7 +199,7 @@
     const deviceNone = document.getElementById('deviceNoPoster');
     const statPoster = document.getElementById('statPoster');
 
-    const specs = document.getElementById('posterSpecs');
+    const specs = document.getElementById('posterAnalysis');
     document.getElementById('tickPoster')?.classList.toggle('on', !!src);
     const lpFrame = document.getElementById('badgeLpFrame');
     if (!src) {
@@ -211,7 +211,7 @@
       statPoster.className     = 'bsc-val dim';
       if (lpFrame) lpFrame.style.backgroundImage = '';
       document.getElementById('posterZoomBtn').style.display = 'none';
-      if (specs) { specs.textContent = ''; specs.classList.add('empty'); }
+      if (specs) ImageAnalysis.render(specs, '');
       return;
     }
     const fullSrc = '../../../' + src;
@@ -221,7 +221,7 @@
       deviceImg.style.display  = 'block';
       deviceNone.style.display = 'none';
       document.getElementById('posterZoomBtn').style.display = 'flex';
-      MediaSpecs.render(specs, fullSrc);
+      if (specs) ImageAnalysis.render(specs, fullSrc, { minW: 1920, minH: 1080, minRatio: 16 / 9, enforced: false });
     };
     img.onerror = () => {
       img.style.display   = 'none';
@@ -229,7 +229,7 @@
       deviceImg.style.display  = 'none';
       deviceNone.style.display = '';
       document.getElementById('posterZoomBtn').style.display = 'none';
-      if (specs) { specs.textContent = ''; specs.classList.add('empty'); }
+      if (specs) ImageAnalysis.render(specs, '');
     };
     img.src = fullSrc;
     deviceImg.src = fullSrc;

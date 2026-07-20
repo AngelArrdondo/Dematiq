@@ -101,12 +101,12 @@
     const img     = document.getElementById('imgPreview');
     const noImg   = document.getElementById('imgNoImg');
     const zoomBtn = document.getElementById('imgZoomBtn');
-    const specs   = document.getElementById('imgSpecs');
+    const specs   = document.getElementById('imgAnalysis');
     document.getElementById('tickImg')?.classList.toggle('on', !!src);
     /* sin ruta personalizada -> se usa el mismo placeholder por defecto que renderiza el servidor */
     const fullSrc = '../../../' + (src || QUIENES_IMG_DEFAULT);
-    img.onload  = () => { img.style.display = 'block'; noImg.style.display = 'none'; if (zoomBtn) zoomBtn.style.display = 'flex'; MediaSpecs.render(specs, fullSrc); };
-    img.onerror = () => { img.style.display = 'none';  noImg.style.display = ''; if (zoomBtn) zoomBtn.style.display = 'none'; if (specs) { specs.textContent = ''; specs.classList.add('empty'); } };
+    img.onload  = () => { img.style.display = 'block'; noImg.style.display = 'none'; if (zoomBtn) zoomBtn.style.display = 'flex'; if (specs) ImageAnalysis.render(specs, fullSrc, { minW: QUIENES_MIN_W, minH: QUIENES_MIN_H, minRatio: QUIENES_MIN_RATIO, enforced: true }); };
+    img.onerror = () => { img.style.display = 'none';  noImg.style.display = ''; if (zoomBtn) zoomBtn.style.display = 'none'; if (specs) ImageAnalysis.render(specs, ''); };
     img.src = fullSrc;
     /* si el src no cambió (ej. ya venía renderizado por el servidor), el navegador
        no vuelve a disparar 'load' — forzamos el mismo callback manualmente */
@@ -233,8 +233,8 @@
     const zoomBtn = document.getElementById('imgZoomBtn');
     if (zoomBtn) zoomBtn.style.display = 'flex';
     const initImg = document.getElementById('imgPreview');
-    const initSpecs = document.getElementById('imgSpecs');
-    if (initImg && initSpecs) MediaSpecs.render(initSpecs, initImg.src);
+    const initSpecs = document.getElementById('imgAnalysis');
+    if (initImg && initSpecs) ImageAnalysis.render(initSpecs, initImg.src, { minW: QUIENES_MIN_W, minH: QUIENES_MIN_H, minRatio: QUIENES_MIN_RATIO, enforced: true });
   })();
 
   /* ─── BLUR-SAVE PROMPT ───────────────────────────── */

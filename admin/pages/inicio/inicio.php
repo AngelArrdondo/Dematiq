@@ -21,7 +21,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=11">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=12">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="../../assets/css/inicio/inicio.css?v=1">
 </head>
@@ -246,7 +246,7 @@ try {
                 oninput="setPosterPreview(this.value)" onblur="onFieldBlur()"
                 placeholder="assets/images/general/index.webp">
               <p class="field-hint">Se recorta automáticamente para llenar el hero (recorte tipo "cover"), sin dimensión mínima obligatoria — pero para que se vea bien sin recortes raros, usa una imagen horizontal panorámica (16:9 o más ancha).</p>
-              <span class="media-spec-readout empty" id="posterSpecs"></span>
+              <div class="media-analysis" id="posterAnalysis"></div>
             </div>
           </div>
         </div>
@@ -503,8 +503,8 @@ try {
 
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
-<script src="../../assets/js/auth.js?v=3"></script>
+<script src="../../assets/js/auth.js?v=4"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/inicio/inicio.js?v=3"></script>
+<script src="../../assets/js/inicio/inicio.js?v=4"></script>
 </body>
 </html>

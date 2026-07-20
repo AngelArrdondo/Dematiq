@@ -286,6 +286,106 @@ const MediaSpecs = {
   }
 };
 
+// ── Image analysis panel ─────────────────────────────────────────────
+// Versión "grande" de MediaSpecs — el mismo panel de estadísticas + checks
+// de calidad que ya tenía el video del hero en Inicio (.video-analysis),
+// pero genérico para cualquier imagen PRINCIPAL de una página (no para
+// imágenes repetidas en grids/carruseles, donde .media-spec-readout ya
+// basta y un panel grande por tarjeta saturaría la vista).
+const ImageAnalysis = {
+  ICONS: {
+    ok:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>',
+    warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    bad:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  },
+  TITLE_ICON: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+
+  /**
+   * container: elemento vacío (p.ej. <div class="media-analysis"></div>) donde se dibuja el panel completo.
+   * src: URL de la imagen (ruta guardada, o blob: de un <input type=file> recién elegido)
+   * opts.file: el File original, si se tiene (evita el HEAD request y da el peso exacto al instante)
+   * opts.minW/minH: dimensiones mínimas recomendadas para este slot
+   * opts.minRatio: proporción ancho/alto mínima recomendada (rechaza fotos muy verticales/cuadradas)
+   * opts.enforced: true si minW/minH/minRatio ya se bloquean al subir (check "bad" si no cumple) —
+   *                false si son solo una recomendación (check "warn" si no cumple)
+   */
+  async render(container, src, opts = {}) {
+    if (!container) return;
+    const token = (container._iaToken = (container._iaToken || 0) + 1);
+    if (!src) { container.innerHTML = ''; container.classList.remove('visible'); return; }
+
+    const format    = MediaSpecs.fmtFormat(opts.file ? opts.file.name : src);
+    const sizeBytes = opts.file ? opts.file.size : await MediaSpecs.remoteSize(src);
+    const probe     = await MediaSpecs.probeImage(src);
+    if (container._iaToken !== token) return; // una petición más reciente ya reemplazó esto
+
+    const w = probe.w, h = probe.h;
+    const sizeKB  = sizeBytes ? sizeBytes / 1024 : 0;
+    const ratio   = (w && h) ? w / h : 0;
+    const failLvl = opts.enforced ? 'bad' : 'warn';
+
+    const checks = [];
+
+    /* Formato */
+    if (format === 'WEBP') {
+      checks.push({ t: 'ok', m: 'Formato WebP — el más ligero, ideal para web' });
+    } else if (format === 'JPG' || format === 'JPEG') {
+      checks.push({ t: 'ok', m: 'Formato JPG — buena compatibilidad y peso' });
+    } else if (format === 'PNG') {
+      checks.push({ t: 'info', m: 'PNG pesa más que WebP/JPG para fotografías —úsalo solo si necesitas transparencia' });
+    } else if (format === 'GIF') {
+      checks.push({ t: 'warn', m: 'GIF tiene paleta de color limitada — evítalo para fotografías' });
+    } else if (format) {
+      checks.push({ t: 'info', m: `Formato ${format}` });
+    }
+
+    /* Peso */
+    if (sizeBytes) {
+      if (sizeKB <= 300)       checks.push({ t: 'ok',   m: 'Peso excelente — carga rápida en web' });
+      else if (sizeKB <= 1024) checks.push({ t: 'ok',   m: 'Peso aceptable para una imagen de esta sección' });
+      else if (sizeKB <= 3072) checks.push({ t: 'warn', m: 'Archivo pesado — considera comprimirlo o exportar en WebP' });
+      else                     checks.push({ t: 'bad',  m: 'Muy pesado — puede ralentizar la carga del sitio' });
+    }
+
+    /* Resolución */
+    if (w && h) {
+      if (opts.minW && opts.minH) {
+        if (w >= opts.minW && h >= opts.minH) {
+          checks.push({ t: 'ok', m: `Resolución ${w}×${h} — cumple el mínimo recomendado (${opts.minW}×${opts.minH})` });
+        } else {
+          checks.push({ t: failLvl, m: `Resolución ${w}×${h} — por debajo del mínimo recomendado (${opts.minW}×${opts.minH}), puede verse borrosa` });
+        }
+      } else {
+        checks.push({ t: 'info', m: `Resolución ${w}×${h}px` });
+      }
+    }
+
+    /* Proporción */
+    if (ratio && opts.minRatio) {
+      if (ratio >= opts.minRatio) {
+        checks.push({ t: 'ok', m: `Proporción ${ratio.toFixed(2)}:1 — suficientemente horizontal` });
+      } else {
+        checks.push({ t: failLvl, m: `Proporción ${ratio.toFixed(2)}:1 — demasiado vertical/cuadrada para este espacio` });
+      }
+    }
+
+    const checksHtml = checks.map(c => `<div class="mcheck ${c.t}">${this.ICONS[c.t]}<span>${c.m}</span></div>`).join('');
+
+    container.innerHTML = `
+      <div class="ma-title">${this.TITLE_ICON}Análisis del archivo</div>
+      <div class="ma-grid">
+        <div class="ma-row"><span class="ma-lbl">Tamaño</span><span class="ma-val">${MediaSpecs.fmtSize(sizeBytes) || '—'}</span></div>
+        <div class="ma-row"><span class="ma-lbl">Resolución</span><span class="ma-val">${w && h ? w + '×' + h : '—'}</span></div>
+        <div class="ma-row"><span class="ma-lbl">Formato</span><span class="ma-val">${format || '—'}</span></div>
+        <div class="ma-row"><span class="ma-lbl">Proporción</span><span class="ma-val">${ratio ? ratio.toFixed(2) + ':1' : '—'}</span></div>
+      </div>
+      <div class="ma-checks">${checksHtml}</div>
+    `;
+    container.classList.add('visible');
+  }
+};
+
 // ── Admin Lightbox ────────────────────────────────────────────────────
 (function () {
   const style = document.createElement('style');

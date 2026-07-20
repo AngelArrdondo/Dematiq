@@ -1040,6 +1040,40 @@ body { overflow-x: hidden; }
 }
 .media-spec-readout.empty { display: none; }
 
+/* ══ MEDIA ANALYSIS PANEL — igual que el panel de "Análisis del archivo" del video
+   en Inicio, pero genérico para usarse con cualquier imagen principal (no repetida)
+   en cualquier página del admin. Rellenado por ImageAnalysis.render() en auth.js. ══ */
+.media-analysis {
+  background: #f4f8ff; border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  margin-top: 10px; display: none;
+}
+.media-analysis.visible { display: block; }
+.ma-title {
+  font-size: .7rem; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+.ma-title svg { width: 13px; height: 13px; }
+.ma-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px 16px;
+  margin-bottom: 10px;
+}
+.ma-row { display: flex; flex-direction: column; gap: 1px; }
+.ma-lbl { font-size: .62rem; color: var(--text-lt); text-transform: uppercase; letter-spacing: .4px; }
+.ma-val { font-size: .78rem; font-weight: 700; color: var(--text); font-family: monospace; }
+
+.ma-checks { display: flex; flex-direction: column; gap: 4px; }
+.mcheck {
+  display: flex; align-items: center; gap: 7px;
+  font-size: .73rem; padding: 5px 9px; border-radius: 7px;
+}
+.mcheck.ok   { background: #f0fdf4; color: #15803d; }
+.mcheck.warn { background: #fffbeb; color: #92400e; }
+.mcheck.bad  { background: #fff1f2; color: #9f1239; }
+.mcheck.info { background: #f0f4ff; color: #3730a3; }
+.mcheck svg  { width: 13px; height: 13px; flex-shrink: 0; }
+
 /* ══ IMG CLEAR BUTTON — vacía un slot de imagen ya subida, sin borrar el archivo del servidor ══ */
 /* bottom-left corner, mirrors .spec-badge-corner (bottom-right) so both can coexist on the same preview box */
 .img-clear-btn {

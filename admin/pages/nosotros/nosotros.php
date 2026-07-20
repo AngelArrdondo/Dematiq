@@ -22,7 +22,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosotros | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=11">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=12">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="../../assets/css/nosotros/nosotros.css?v=1">
 </head>
@@ -292,7 +292,7 @@ try {
                 oninput="setImgPreview(this.value)" onblur="onFieldBlur()"
                 placeholder="assets/images/general/img3.webp">
               <p class="field-hint">Se recorta automáticamente para llenar el espacio (recorte tipo "cover"). Usa una foto <strong>horizontal</strong> de al menos 1000×560px — si es más vertical que 1.2:1 (ancho/alto) o más pequeña, se rechaza al subirla.</p>
-              <span class="media-spec-readout empty" id="imgSpecs"></span>
+              <div class="media-analysis" id="imgAnalysis"></div>
             </div>
           </div>
         </div>
@@ -495,9 +495,9 @@ try {
 
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
-<script src="../../assets/js/auth.js?v=3"></script>
+<script src="../../assets/js/auth.js?v=4"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/nosotros/nosotros.js?v=5"></script>
+<script src="../../assets/js/nosotros/nosotros.js?v=6"></script>
 
 </body>
 </html>
