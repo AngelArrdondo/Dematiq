@@ -18,17 +18,6 @@
   let pendingDelete = null; // { path }
 
   /* ─── helpers ────────────────────────────────────── */
-  function fmtSize(bytes) {
-    if (!bytes) return '—';
-    if (bytes < 1024)    return bytes + ' B';
-    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / 1048576).toFixed(1) + ' MB';
-  }
-
-  function extOf(name) {
-    return (name || '').split('.').pop().toLowerCase().slice(0, 4);
-  }
-
   function escH(s) {
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
@@ -84,8 +73,7 @@
       return;
     }
 
-    grid.innerHTML = list.map(img => {
-      const ext  = extOf(img.name);
+    grid.innerHTML = list.map((img, i) => {
       const path = img.path || '';
       const safe = path.replace(/'/g, "\\'");
       return `
@@ -93,7 +81,6 @@
           <div class="img-thumb-wrap" onclick="openLightbox('${escH(path)}','${escH(img.name)}')">
             <img class="img-thumb" src="${escH(path)}?t=${Date.now()}"
               alt="${escH(img.name)}" loading="lazy"
-              onload="const d=this.closest('.img-card').querySelector('.img-size'); if (d) d.textContent = this.naturalWidth+'×'+this.naturalHeight+'px · '+d.textContent;"
               onerror="this.classList.add('err')">
             <div class="img-overlay">
               <div class="img-overlay-actions">
@@ -113,13 +100,15 @@
           </div>
           <div class="img-info">
             <div class="img-name" title="${escH(img.name)}">${escH(img.name)}</div>
-            <div class="img-meta">
-              <span class="img-size">${fmtSize(img.size)}</span>
-              <span class="img-ext">${ext}</span>
-            </div>
+            <span class="media-spec-readout empty" id="imgSpecs-${i}"></span>
           </div>
         </div>`;
     }).join('');
+
+    list.forEach((img, i) => {
+      const el = document.getElementById('imgSpecs-' + i);
+      if (el) MediaSpecs.render(el, img.path, { file: { name: img.name, size: img.size } });
+    });
   }
 
   /* ─── cargar imágenes ────────────────────────────── */

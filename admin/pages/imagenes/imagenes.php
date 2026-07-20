@@ -23,7 +23,7 @@ try {
   <title>Imágenes | DEMATIQ Admin</title>
   <link rel="stylesheet" href="../../assets/css/admin.css?v=11">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="../../assets/css/imagenes/imagenes.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/imagenes/imagenes.css?v=2">
 </head>
 <body>
 
@@ -230,7 +230,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=3"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/imagenes/imagenes.js?v=3"></script>
+<script src="../../assets/js/imagenes/imagenes.js?v=4"></script>
 
 </body>
 </html>

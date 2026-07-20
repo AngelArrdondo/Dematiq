@@ -119,9 +119,6 @@
 
     .img-info{padding:8px 10px 10px;}
     .img-name{font-size:.72rem;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
-    .img-meta{display:flex;align-items:center;justify-content:space-between;}
-    .img-size{font-size:.64rem;color:var(--text-lt);}
-    .img-ext{font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:5px;background:#e0f7fa;color:#0e7490;text-transform:uppercase;}
 
     /* ─── EMPTY STATE ────────────────────────────────── */
     .img-empty{grid-column:1/-1;text-align:center;padding:50px 24px;color:var(--text-lt);}
