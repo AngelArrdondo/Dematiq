@@ -296,7 +296,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=4"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/maquinas/maquinas.js?v=3"></script>
+<script src="../../assets/js/maquinas/maquinas.js?v=4"></script>
 
 </body>
 </html>

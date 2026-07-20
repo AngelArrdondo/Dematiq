@@ -52,19 +52,19 @@
   function setPreview(i, src, file) {
     const prev  = document.getElementById('imgPreview' + i);
     if (!prev) return;
-    const specs = document.getElementById('imgSpecs' + i);
+    const specs = document.getElementById('imgAnalysis' + i);
     const clr = document.getElementById('imgClear' + i);
     if (clr) clr.style.display = src ? 'flex' : 'none';
     if (!src) {
       prev.innerHTML = `<div class="img-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg><span>Sin logo</span></div>`;
-      if (specs) MediaSpecs.render(specs, '');
+      if (specs) ImageAnalysis.render(specs, '');
       return;
     }
     const img = document.createElement('img');
     img.src = src;
     img.alt = (partners[i] && partners[i].nombre) || 'Logo';
-    img.onload  = () => { if (specs) MediaSpecs.render(specs, src, { file }); };
-    img.onerror = () => { prev.innerHTML = `<div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span>No se pudo cargar</span></div>`; if (clr) clr.style.display = 'none'; if (specs) MediaSpecs.render(specs, ''); };
+    img.onload  = () => { if (specs) ImageAnalysis.render(specs, src, { file, bgCheck: 'corner', enforced: true }); };
+    img.onerror = () => { prev.innerHTML = `<div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span>No se pudo cargar</span></div>`; if (clr) clr.style.display = 'none'; if (specs) ImageAnalysis.render(specs, ''); };
     prev.innerHTML = '';
     prev.appendChild(img);
   }
@@ -188,7 +188,7 @@
             <input type="text" class="slide-path-input" id="imgPath${i}" value="${esc(p.logo)}"
               oninput="partners[${i}].logo=this.value;setPreview(${i},this.value?'../../../'+this.value:'');checkDirty()"
               placeholder="assets/images/partners/logo.webp">
-            <span class="media-spec-readout empty" id="imgSpecs${i}"></span>
+            <div class="media-analysis" id="imgAnalysis${i}"></div>
           </div>
           <div class="slide-fields-col">
             <div class="form-group">

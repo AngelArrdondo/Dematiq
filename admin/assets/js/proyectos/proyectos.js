@@ -164,20 +164,20 @@
     const ph    = box.querySelector('.img-placeholder');
     const zoom  = document.getElementById(`imgZoom${i}`);
     const clr   = document.getElementById(`imgClear${i}`);
-    const specs = document.getElementById(`imgSpecs${i}`);
+    const specs = document.getElementById(`imgAnalysis${i}`);
     if (!src) {
       if (img)  img.style.display  = 'none';
       if (ph)   ph.style.display   = '';
       if (zoom) zoom.style.display = 'none';
       if (clr)  clr.style.display  = 'none';
-      if (specs) MediaSpecs.render(specs, '');
+      if (specs) ImageAnalysis.render(specs, '');
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onload  = () => { if (specs) MediaSpecs.render(specs, img.src); };
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; if (specs) MediaSpecs.render(specs, ''); };
+      img.onload  = () => { if (specs) ImageAnalysis.render(specs, img.src, { minW: PROY_MIN_W, minH: PROY_MIN_H, minRatio: PROY_MIN_RATIO, enforced: true }); };
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; if (specs) ImageAnalysis.render(specs, ''); };
       if (ph)   ph.style.display   = 'none';
       if (zoom) zoom.style.display = 'flex';
       if (clr)  clr.style.display  = 'flex';
@@ -329,7 +329,7 @@
               placeholder="assets/images/general/foto.webp"
               oninput="projects[${i}].img=this.value;setPreview(${i},this.value);checkDirty()"
               onblur="onFieldBlur()">
-            <span class="media-spec-readout empty" id="imgSpecs${i}"></span>
+            <div class="media-analysis" id="imgAnalysis${i}"></div>
           </div>
 
           <!-- ── CAMPOS ────────────────────────────────── -->

@@ -773,8 +773,8 @@
             Vista previa
           </span>
           <img id="solImg_${prefix}_${i}" src="../../../${escSol(card.imagen)}" alt="${escSol(card.titulo)}"
-            onload="MediaSpecs.render(document.getElementById('solSpecs_${prefix}_${i}'), this.src)"
-            onerror="this.style.display='none';MediaSpecs.render(document.getElementById('solSpecs_${prefix}_${i}'), '')">
+            onload="ImageAnalysis.render(document.getElementById('solAnalysis_${prefix}_${i}'), this.src, { bgCheck: 'full', enforced: true })"
+            onerror="this.style.display='none';ImageAnalysis.render(document.getElementById('solAnalysis_${prefix}_${i}'), '')">
           <button type="button" class="preview-zoom-btn" title="Ver en grande" data-prefix="${prefix}" data-idx="${i}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </button>
@@ -791,7 +791,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
             <span class="sol-card-img-path-text">${escSol(card.imagen)}</span>
           </span>
-          <span class="media-spec-readout empty" id="solSpecs_${prefix}_${i}"></span>
+          <div class="media-analysis" id="solAnalysis_${prefix}_${i}"></div>
           <span class="sol-card-link-hint">${escSol(card.href)}</span>
         </div>
       </div>`).join('');

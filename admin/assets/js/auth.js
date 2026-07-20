@@ -258,6 +258,60 @@ const MediaSpecs = {
       return len ? parseInt(len, 10) : null;
     } catch { return null; }
   },
+  /* Revisa las 4 esquinas: si alguna es transparente o casi blanca, el fondo
+     funde bien con el elemento que lo rodea (carrusel/tarjeta de logo). Misma
+     lógica que ya usaban Marcas/Partners por su cuenta antes de centralizarse aquí. */
+  probeCornerBackground(url, isSvg) {
+    return new Promise(resolve => {
+      if (isSvg) { resolve('ok'); return; }
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const size = 32;
+          const c = document.createElement('canvas');
+          c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          const corners = [[0, 0], [size - 1, 0], [0, size - 1], [size - 1, size - 1]];
+          let ok = false;
+          for (const [x, y] of corners) {
+            const p = (y * size + x) * 4;
+            const [r, g, b, a] = [data[p], data[p + 1], data[p + 2], data[p + 3]];
+            if (a < 250 || (r > 235 && g > 235 && b > 235)) { ok = true; break; }
+          }
+          resolve(ok ? 'ok' : 'solid-color');
+        } catch { resolve('ok'); } /* no se pudo leer (CORS/canvas tainted) — no bloquear */
+      };
+      img.onerror = () => resolve('ok');
+      img.src = url;
+    });
+  },
+  /* Revisa TODO el archivo en busca de algún píxel transparente — más estricto
+     que probeCornerBackground, para íconos que el sitio vuelve blancos vía CSS
+     (necesitan alfa real, no solo un fondo que "combine"). */
+  probeFullTransparency(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const size = 32;
+          const c = document.createElement('canvas');
+          c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, size, size);
+          const data = ctx.getImageData(0, 0, size, size).data;
+          let hasTransparency = false;
+          for (let p = 3; p < data.length; p += 4) {
+            if (data[p] < 250) { hasTransparency = true; break; }
+          }
+          resolve(hasTransparency);
+        } catch { resolve(true); }
+      };
+      img.onerror = () => resolve(true);
+      img.src = url;
+    });
+  },
   /**
    * Escribe el readout de especificaciones en `el`.
    * src: URL del archivo (ruta guardada en el servidor, o un blob: URL de un <input type=file> recién elegido)
@@ -307,8 +361,10 @@ const ImageAnalysis = {
    * opts.file: el File original, si se tiene (evita el HEAD request y da el peso exacto al instante)
    * opts.minW/minH: dimensiones mínimas recomendadas para este slot
    * opts.minRatio: proporción ancho/alto mínima recomendada (rechaza fotos muy verticales/cuadradas)
-   * opts.enforced: true si minW/minH/minRatio ya se bloquean al subir (check "bad" si no cumple) —
+   * opts.enforced: true si minW/minH/minRatio/bgCheck ya se bloquean al subir (check "bad" si no cumple) —
    *                false si son solo una recomendación (check "warn" si no cumple)
+   * opts.bgCheck: 'corner' (logos — ok si transparente O blanco, como Marcas/Partners) |
+   *               'full' (íconos que el sitio vuelve blancos por CSS — necesitan alfa real, como Inicio)
    */
   async render(container, src, opts = {}) {
     if (!container) return;
@@ -367,6 +423,26 @@ const ImageAnalysis = {
         checks.push({ t: 'ok', m: `Proporción ${ratio.toFixed(2)}:1 — suficientemente horizontal` });
       } else {
         checks.push({ t: failLvl, m: `Proporción ${ratio.toFixed(2)}:1 — demasiado vertical/cuadrada para este espacio` });
+      }
+    }
+
+    /* Fondo — logos/íconos que necesitan transparencia (o al menos fundir con
+       el fondo que los rodea) para no verse con un recuadro de color encima. */
+    if (opts.bgCheck === 'corner') {
+      const bg = await MediaSpecs.probeCornerBackground(src, format === 'SVG');
+      if (container._iaToken !== token) return;
+      if (bg === 'ok') {
+        checks.push({ t: 'ok', m: 'Fondo transparente o blanco — se funde bien con el espacio que lo rodea' });
+      } else {
+        checks.push({ t: failLvl, m: 'Fondo sólido detectado — se verá con un recuadro de color, usa PNG/WebP con transparencia' });
+      }
+    } else if (opts.bgCheck === 'full') {
+      const transparent = await MediaSpecs.probeFullTransparency(src);
+      if (container._iaToken !== token) return;
+      if (transparent) {
+        checks.push({ t: 'ok', m: 'Fondo transparente — se ve bien en cualquier color' });
+      } else {
+        checks.push({ t: failLvl, m: 'Sin transparencia — el sitio la vuelve blanca por completo, se verá como un bloque sólido' });
       }
     }
 

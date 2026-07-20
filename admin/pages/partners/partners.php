@@ -156,7 +156,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=4"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/partners/partners.js?v=4"></script>
+<script src="../../assets/js/partners/partners.js?v=5"></script>
 
 </body>
 </html>

@@ -224,7 +224,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=4"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/industrias/industrias.js?v=5"></script>
+<script src="../../assets/js/industrias/industrias.js?v=6"></script>
 
 </body>
 </html>

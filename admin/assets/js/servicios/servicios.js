@@ -147,20 +147,20 @@
     const ph    = box.querySelector('.img-placeholder');
     const zoom  = document.getElementById(`imgZoom${i}_${slot}`);
     const clr   = document.getElementById(`imgClear${i}_${slot}`);
-    const specs = document.getElementById(`imgSpecs${i}_${slot}`);
+    const specs = document.getElementById(`imgAnalysis${i}_${slot}`);
     if (!src) {
       if (img)  img.style.display  = 'none';
       if (ph)   ph.style.display   = '';
       if (zoom) zoom.style.display = 'none';
       if (clr)  clr.style.display  = 'none';
-      if (specs) MediaSpecs.render(specs, '');
+      if (specs) ImageAnalysis.render(specs, '');
       return;
     }
     if (img) {
       img.src = '../../../' + src;
       img.style.display = 'block';
-      img.onload  = () => { if (specs) MediaSpecs.render(specs, img.src); };
-      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; if (specs) MediaSpecs.render(specs, ''); };
+      img.onload  = () => { if (specs) ImageAnalysis.render(specs, img.src, { minW: SVC_MIN_W, minH: SVC_MIN_H, minRatio: SVC_MIN_RATIO, enforced: true }); };
+      img.onerror = () => { img.style.display = 'none'; if (ph) ph.style.display = ''; if (zoom) zoom.style.display = 'none'; if (clr) clr.style.display = 'none'; if (specs) ImageAnalysis.render(specs, ''); };
       if (ph)   ph.style.display   = 'none';
       if (zoom) zoom.style.display = 'flex';
       if (clr)  clr.style.display  = 'flex';
@@ -290,7 +290,7 @@
           placeholder="assets/images/general/img${slot}.webp"
           oninput="servicios[${i}].image${slot}=this.value;setPreview(${i},${slot},this.value);checkDirty()"
           onblur="onFieldBlur()">
-        <span class="media-spec-readout empty" id="imgSpecs${i}_${slot}"></span>
+        <div class="media-analysis" id="imgAnalysis${i}_${slot}"></div>
       </div>`;
   }
 
