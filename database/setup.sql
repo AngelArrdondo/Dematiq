@@ -1,13 +1,15 @@
 -- ============================================================
---  DEMATIQ — Base de datos de administración
---  Ejecutar como root: mysql -u root -p < database/setup.sql
+--  DEMATIQ — Esquema de base de datos (tablas + usuario admin)
+--
+--  Listo para hosting compartido (Hostinger): crea la BD y el
+--  usuario de MySQL desde hPanel primero, selecciona esa BD en
+--  phpMyAdmin, y luego importa este archivo — no crea la base de
+--  datos ni usuarios de MySQL por su cuenta.
+--
+--  Si tienes acceso root (local/VPS) y prefieres crear la BD y un
+--  usuario de aplicación por script en vez de a mano, usa
+--  database/setup-root-only.sql ANTES que este archivo.
 -- ============================================================
-
-CREATE DATABASE IF NOT EXISTS dematiq_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-USE dematiq_db;
 
 -- ------------------------------------------------------------
 --  TABLA: usuarios
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS log_accesos (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
---  USUARIO INICIAL
+--  USUARIO INICIAL DEL ADMIN (no confundir con el usuario de MySQL)
 --  Genera el hash con: php -r "echo password_hash('TU_PASSWORD', PASSWORD_BCRYPT, ['cost'=>12]);"
 --  y reemplaza el valor de password_hash antes de ejecutar este script.
 -- ------------------------------------------------------------
@@ -77,17 +79,3 @@ VALUES (
   'Administrador DEMATIQ'
 )
 ON DUPLICATE KEY UPDATE id = id;
-
--- ------------------------------------------------------------
---  USUARIO DE APLICACIÓN  (permisos mínimos, nunca usar root)
---  Genera una contraseña segura y reemplaza TU_CONTRASEÑA_BD
---  tanto aquí como en includes/conexion.php antes de ejecutar.
--- ------------------------------------------------------------
-CREATE USER IF NOT EXISTS 'dematiq_app'@'localhost'
-  IDENTIFIED BY 'TU_CONTRASEÑA_BD';
-
-GRANT SELECT, INSERT, UPDATE, DELETE
-  ON dematiq_db.*
-  TO 'dematiq_app'@'localhost';
-
-FLUSH PRIVILEGES;
