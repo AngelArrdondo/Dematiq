@@ -20,6 +20,10 @@ Options -Indexes
 
   # Lógica interna PHP (auth, conexión)
   RewriteRule ^includes(/|$) - [F,L]
+
+  # Repositorio git (expondría el historial, incluyendo el password
+  # hardcodeado que existió antes del commit 032f4b9)
+  RewriteRule ^\.git(/|$) - [F,L]
 </IfModule>
 
 # ── Bloquear extensiones peligrosas ─────────────────────────
