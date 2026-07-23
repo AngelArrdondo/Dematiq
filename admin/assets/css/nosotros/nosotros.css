@@ -94,6 +94,11 @@
       transition:background .15s,border-color .15s;white-space:nowrap;
     }
     .un-discard:hover{background:rgba(180,83,9,.08);border-color:#b45309;}
+    @media(max-width:480px){
+      .unsaved-notice{flex-wrap:wrap;row-gap:10px;}
+      .un-text{flex:1 1 160px;}
+      .un-discard,.un-save{flex:1 1 calc(50% - 6px);justify-content:center;}
+    }
 
     /* ─── CARDS ──────────────────────────────────────── */
     .section-card {
@@ -217,7 +222,7 @@
       border-top:1px solid rgba(221,229,245,.9);
       padding:12px 24px;
       display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-      z-index:50;margin:8px -24px 0;
+      z-index:50;margin:8px calc(-1 * var(--content-pad)) 0;
     }
     .save-spacer{flex:1;}
 

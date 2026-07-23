@@ -401,6 +401,11 @@
       transition:background .15s,border-color .15s;white-space:nowrap;
     }
     .un-discard:hover{background:rgba(180,83,9,.08);border-color:#b45309;}
+    @media(max-width:480px){
+      .unsaved-notice{flex-wrap:wrap;row-gap:10px;}
+      .un-text{flex:1 1 160px;}
+      .un-discard,.un-save{flex:1 1 calc(50% - 6px);justify-content:center;}
+    }
 
     /* ══ BLUR-SAVE PROMPT ═══════════════════════════════════ */
     .blur-prompt{

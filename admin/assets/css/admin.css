@@ -136,7 +136,8 @@ body {
   z-index: 100;
 }
 
-.admin-topbar-title { font-size: clamp(.85rem, 1.2vw, .95rem); font-weight: 700; }
+.admin-topbar > div:first-child { display: flex; align-items: center; min-width: 0; overflow: hidden; }
+.admin-topbar-title { font-size: clamp(.85rem, 1.2vw, .95rem); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── User menu (topbar) ──────────────────── */
 .user-menu {
@@ -151,6 +152,7 @@ body {
   background: none;
   transition: background .15s;
   user-select: none;
+  flex-shrink: 0;
 }
 .user-menu:hover { background: var(--page-bg); }
 .user-menu-info {
@@ -871,6 +873,17 @@ body {
 
   .admin-card { padding: 14px; }
   .admin-card-header { flex-direction: column; align-items: flex-start; }
+
+  .user-menu { gap: 8px; padding: 4px 8px; }
+  .user-menu-name { max-width: 130px; }
+}
+
+/* ── Section-card header: let the trailing "add" button drop to its
+   own row instead of squeezing sc-head-text into a narrow column ── */
+@media (max-width: 600px) {
+  .sc-head { flex-wrap: wrap; }
+  .sc-head > button:last-child,
+  .sc-head > a.btn-admin:last-child { flex: 1 0 100%; margin-top: 4px; }
 }
 
 /* ── Phone ≤ 480px ──────────────────────── */
@@ -878,9 +891,15 @@ body {
   :root { --nav-icon: 20px; --topbar-h: 52px; }
 
   .admin-content { padding: 12px; }
-  .admin-topbar { padding: 0 12px; }
+  .admin-topbar { padding: 0 12px; gap: 8px; }
+  .admin-topbar > div:first-child { gap: 8px; }
   .admin-topbar-title { font-size: .85rem; }
-  .admin-topbar-user span { display: none; }
+
+  .user-menu { gap: 6px; padding: 4px 6px; }
+  .admin-avatar { width: 28px; height: 28px; font-size: .72rem; }
+  .user-menu-name { max-width: 90px; font-size: .8rem; }
+  .user-menu-role { display: none; }
+  .user-menu-chevron { display: none; }
 
   .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
   .stat-card { padding: 12px; gap: 10px; flex-direction: column; align-items: flex-start; }

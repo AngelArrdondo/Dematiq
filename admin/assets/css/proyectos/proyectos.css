@@ -79,6 +79,11 @@
       transition:background .15s,border-color .15s;white-space:nowrap;
     }
     .un-discard:hover{background:rgba(180,83,9,.08);border-color:#b45309;}
+    @media(max-width:480px){
+      .unsaved-notice{flex-wrap:wrap;row-gap:10px;}
+      .un-text{flex:1 1 160px;}
+      .un-discard,.un-save{flex:1 1 calc(50% - 6px);justify-content:center;}
+    }
 
     /* ─── SECTION CARD ──────────────────────────────── */
     .section-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:14px;transition:box-shadow .2s,border-color .2s;}
@@ -144,7 +149,7 @@
     .slide-body{display:grid;grid-template-columns:340px 1fr;align-items:start;}
     @media(max-width:840px){.slide-body{grid-template-columns:1fr;}}
 
-    .slide-img-col{border-right:1px solid var(--border);padding:18px 16px;display:flex;flex-direction:column;gap:12px;background:#fafcff;}
+    .slide-img-col{border-right:1px solid var(--border);padding:18px 16px;display:flex;flex-direction:column;gap:12px;background:#fafcff;min-width:0;}
     @media(max-width:840px){.slide-img-col{border-right:none;border-bottom:1px solid var(--border);}}
 
     .img-preview-box{width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#eef2ff;border:1.5px dashed #c7d5f0;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .18s,box-shadow .2s,transform .18s;}
@@ -168,7 +173,7 @@
     /* badge chip sobre la imagen */
     .img-badge-preview{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:5px;background:rgba(0,0,0,.55);color:#fff;font-size:.6rem;font-weight:700;backdrop-filter:blur(3px);pointer-events:none;}
 
-    .slide-fields-col{padding:20px 22px;display:flex;flex-direction:column;}
+    .slide-fields-col{padding:20px 22px;display:flex;flex-direction:column;min-width:0;}
 
     /* ─── EMPTY STATE ────────────────────────────────── */
     .proy-empty{text-align:center;padding:40px 24px;color:var(--text-lt);}
@@ -182,7 +187,7 @@
     .add-proy-btn svg{width:16px;height:16px;}
 
     /* ─── SAVE BAR ───────────────────────────────────── */
-    .save-bar-sticky{position:sticky;bottom:0;background:rgba(240,244,255,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(221,229,245,.9);padding:12px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;z-index:50;margin:8px -24px 0;}
+    .save-bar-sticky{position:sticky;bottom:0;background:rgba(240,244,255,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(221,229,245,.9);padding:12px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;z-index:50;margin:8px calc(-1 * var(--content-pad)) 0;}
     .save-spacer{flex:1;}
 
     /* ─── BLUR-SAVE PROMPT ───────────────────────────── */

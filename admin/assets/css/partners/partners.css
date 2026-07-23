@@ -57,6 +57,11 @@
     .un-save svg{width:14px;height:14px;}
     .un-discard{display:inline-flex;align-items:center;background:transparent;color:#92400e;border:1.5px solid rgba(180,83,9,.35);cursor:pointer;font-size:.76rem;font-weight:700;padding:7px 14px;border-radius:9px;transition:background .15s,border-color .15s;white-space:nowrap;}
     .un-discard:hover{background:rgba(180,83,9,.08);border-color:#b45309;}
+    @media(max-width:480px){
+      .unsaved-notice{flex-wrap:wrap;row-gap:10px;}
+      .un-text{flex:1 1 160px;}
+      .un-discard,.un-save{flex:1 1 calc(50% - 6px);justify-content:center;}
+    }
     @keyframes saveFlash{0%{box-shadow:0 0 0 0 rgba(16,185,129,.55);}70%{box-shadow:0 0 0 14px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
     .un-save.saved{animation:saveFlash .8s ease-out;background:linear-gradient(135deg,#059669,#10b981) !important;}
 

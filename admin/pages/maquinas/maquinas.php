@@ -23,9 +23,9 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Máquinas | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="../../assets/css/admin.css?v=12">
+  <link rel="stylesheet" href="../../assets/css/admin.css?v=15">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
-  <link rel="stylesheet" href="../../assets/css/maquinas/maquinas.css?v=2">
+  <link rel="stylesheet" href="../../assets/css/maquinas/maquinas.css?v=5">
 </head>
 <body>
 
