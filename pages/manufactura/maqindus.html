@@ -89,7 +89,7 @@
         const h1 = document.querySelector('.page-hero h1');
         if (h1) h1.textContent = data.titulo;
         const head = document.querySelector('.svc-optionlist-head');
-        if (head) head.textContent = data.titulo;
+        if (head) head.textContent = data.subtitulo || data.titulo;
       }
 
       // Guardar descripciones estáticas existentes por índice (admin no las almacena)
