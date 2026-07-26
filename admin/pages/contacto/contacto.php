@@ -352,7 +352,7 @@ try {
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="../../assets/js/auth.js?v=4"></script>
+<script src="../../assets/js/auth.js?v=5"></script>
 <script>
 const CSRF_TOKEN = '<?= $csrfToken ?>';
 const _D = <?= json_encode($d, JSON_UNESCAPED_UNICODE) ?>;

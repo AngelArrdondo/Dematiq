@@ -358,9 +358,11 @@
   }
 
   async function saveMarcas() {
+    const before = original;
     try {
       const res = await CM.set('marcas', marcas);
       if (res && res.ok) {
+        CM.cleanupOrphanedImages(before, marcas);
         clearDirty();
         showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');

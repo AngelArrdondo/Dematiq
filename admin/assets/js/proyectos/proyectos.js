@@ -502,6 +502,7 @@
   function viewPublic(url) { window.open(url + '?v=' + Date.now(), 'dematiq_public'); }
 
   async function saveProjects() {
+    const before = JSON.parse(origJSON);
     try {
       const payload = projects.map(p => ({
         ...p,
@@ -509,6 +510,7 @@
       }));
       const res = await CM.set('proyectos', payload);
       if (res && res.ok) {
+        CM.cleanupOrphanedImages(before, payload);
         clearDirty();
         showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');

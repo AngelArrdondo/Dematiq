@@ -458,9 +458,11 @@
   function viewPublic(url) { window.open(url + '?v=' + Date.now(), 'dematiq_public'); }
 
   async function saveIndustrias() {
+    const before = JSON.parse(origJSON);
     try {
       const res = await CM.set('industrias', industrias);
       if (res && res.ok) {
+        CM.cleanupOrphanedImages(before, industrias);
         clearDirty();
         showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');

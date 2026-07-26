@@ -497,7 +497,7 @@ try {
 
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
-<script src="../../assets/js/auth.js?v=4"></script>
+<script src="../../assets/js/auth.js?v=5"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
 <script src="../../assets/js/nosotros/nosotros.js?v=6"></script>
 

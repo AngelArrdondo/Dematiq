@@ -220,9 +220,11 @@
     showToast('Cambios descartados');
   }
   async function savePartners() {
+    const before = JSON.parse(origJSON);
     try {
       const res = await CM.set('partners', partners);
       if (res && res.ok) {
+        CM.cleanupOrphanedImages(before, partners);
         clearDirty();
         showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');

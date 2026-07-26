@@ -189,6 +189,41 @@ const CM = {
     a.click();
   },
 
+  // Compara el contenido de una sección antes/después de guardar y borra del
+  // servidor las imágenes que ya no aparecen en ningún lado (p.ej. al eliminar
+  // una tarjeta completa de Socios/Marcas/Proyectos/Servicios/Industrias/Máquinas,
+  // el JS solo quita el elemento del arreglo — nunca borraba el archivo subido).
+  // Antes de borrar cada ruta, verifica que no siga en uso en otra sección para
+  // no romper referencias compartidas (rutas de contenido semilla reutilizadas).
+  async cleanupOrphanedImages(before, after) {
+    const DELETABLE = /^assets\/images\/(general|partners)\//;
+    function collect(val, out) {
+      if (typeof val === 'string') {
+        if (DELETABLE.test(val)) out.add(val);
+      } else if (Array.isArray(val)) {
+        val.forEach(v => collect(v, out));
+      } else if (val && typeof val === 'object') {
+        Object.values(val).forEach(v => collect(v, out));
+      }
+    }
+    const beforeSet = new Set(); collect(before, beforeSet);
+    const afterSet  = new Set(); collect(after, afterSet);
+    const removed = [...beforeSet].filter(p => !afterSet.has(p));
+
+    for (const path of removed) {
+      try {
+        const usageRes  = await fetch('/admin/api/imagenes.php?action=check-usage&path=' + encodeURIComponent(path));
+        const usageJson = await usageRes.json();
+        if (usageJson.ok && usageJson.usedIn && usageJson.usedIn.length) continue; // sigue en uso en otra sección
+
+        const fd = new FormData();
+        fd.append('action', 'delete');
+        fd.append('path', path);
+        await fetch('/admin/api/imagenes.php', { method: 'POST', headers: { 'X-CSRF-Token': _csrfToken() }, body: fd });
+      } catch { /* limpieza best-effort — nunca debe bloquear el guardado */ }
+    }
+  },
+
   importAll(file) {
     return new Promise((resolve, reject) => {
       const r = new FileReader();

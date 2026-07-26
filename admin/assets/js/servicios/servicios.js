@@ -406,9 +406,11 @@
   function viewPublic(url) { window.open(url + '?v=' + Date.now(), 'dematiq_public'); }
 
   async function saveServicios() {
+    const before = JSON.parse(origJSON);
     try {
       const res = await CM.set('servicios', servicios);
       if (res && res.ok) {
+        CM.cleanupOrphanedImages(before, servicios);
         clearDirty();
         showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');

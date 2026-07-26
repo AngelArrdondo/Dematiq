@@ -518,9 +518,11 @@
   async function savePage() {
     currentData.titulo    = document.getElementById('fieldTitulo').value.trim();
     currentData.subtitulo = document.getElementById('fieldSubtitulo').value.trim();
+    const before = JSON.parse(origJSON);
     try {
       const res = await CM.set(currentKey, currentData);
       if (res && res.ok) {
+        CM.cleanupOrphanedImages(before, currentData);
         clearDirty();
         showToast('Cambios guardados correctamente');
         const btn = document.getElementById('mainSaveBtn');
