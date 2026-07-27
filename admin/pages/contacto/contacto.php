@@ -27,7 +27,7 @@ try {
   <link rel="stylesheet" href="../../assets/css/admin.css?v=15">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="../../assets/css/contacto/contacto.css?v=1">
+  <link rel="stylesheet" href="../../assets/css/contacto/contacto.css?v=2">
 </head>
 <body>
 
