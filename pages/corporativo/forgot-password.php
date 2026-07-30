@@ -30,11 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $file = $tokens_dir . '/' . hash('sha256', $token) . '.json';
 
-            file_put_contents($file, json_encode([
+            $written = file_put_contents($file, json_encode([
                 'usuario_id' => $user['id'],
                 'email'      => $email,
                 'expira'     => $expira,
             ]));
+
+            if ($written === false) {
+                error_log("No se pudo escribir el token de recuperación en {$file} — revisa permisos del directorio includes/tokens.");
+            } else {
 
             $base       = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
             $token_link = $base . '/pages/corporativo/reset-password.php?token=' . $token;
@@ -70,6 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->send();
             } catch (PHPMailerException $e) {
                 error_log('Error al enviar correo de recuperación de contraseña: ' . $mail->ErrorInfo);
+                @unlink($file);
+            }
             }
         }
 

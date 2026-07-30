@@ -23,3 +23,7 @@ Thumbs.db
 # Notas internas de desarrollo (no deben subirse al hosting)
 pruebas.txt
 DEPLOY-CHECKLIST.md
+
+# Tokens de recuperación de contraseña (datos en runtime, nunca al repo)
+includes/tokens/*.json
+!includes/tokens/.gitkeep
