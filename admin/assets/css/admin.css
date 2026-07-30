@@ -410,6 +410,26 @@ body {
 .profile-field input:focus { outline: none; border-color: var(--accent-lt); box-shadow: 0 0 0 3px rgba(46,107,207,.12); }
 .profile-field input[readonly] { background: var(--page-bg); color: var(--text-lt); cursor: not-allowed; }
 
+.pwd-input-row { position: relative; }
+.pwd-input-row input { padding-right: 40px; }
+.pwd-toggle-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-lt);
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: color .15s, background .15s;
+}
+.pwd-toggle-btn:hover { color: var(--accent-lt); background: rgba(46,107,207,.08); }
+.pwd-toggle-btn svg { width: 16px; height: 16px; }
+
 .profile-save-btn {
   width: 100%;
   padding: 11px;

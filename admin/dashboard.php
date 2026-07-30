@@ -32,7 +32,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | DEMATIQ Admin</title>
-  <link rel="stylesheet" href="assets/css/admin.css?v=15">
+  <link rel="stylesheet" href="assets/css/admin.css?v=16">
   <link rel="icon" type="image/svg+xml" href="../assets/images/logos/favicon-d.svg">
   <style>
     .summary-row {

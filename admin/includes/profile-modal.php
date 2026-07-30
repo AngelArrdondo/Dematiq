@@ -79,15 +79,30 @@ $_fotoPrefix = $fotoPrefix ?? '';
       <div class="profile-tab-panel" id="tab-security">
         <div class="profile-field">
           <label for="currentPwd">Contraseña actual</label>
-          <input type="password" id="currentPwd" placeholder="••••••••">
+          <div class="pwd-input-row">
+            <input type="password" id="currentPwd" placeholder="••••••••">
+            <button type="button" class="pwd-toggle-btn" data-target="currentPwd" aria-label="Mostrar contraseña">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
         <div class="profile-field">
           <label for="newPwd">Nueva contraseña</label>
-          <input type="password" id="newPwd" placeholder="Mínimo 8 caracteres">
+          <div class="pwd-input-row">
+            <input type="password" id="newPwd" placeholder="Mínimo 8 caracteres">
+            <button type="button" class="pwd-toggle-btn" data-target="newPwd" aria-label="Mostrar contraseña">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
         <div class="profile-field">
           <label for="confirmPwd">Confirmar contraseña</label>
-          <input type="password" id="confirmPwd" placeholder="Repite la nueva contraseña">
+          <div class="pwd-input-row">
+            <input type="password" id="confirmPwd" placeholder="Repite la nueva contraseña">
+            <button type="button" class="pwd-toggle-btn" data-target="confirmPwd" aria-label="Mostrar contraseña">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
         <button class="profile-save-btn" id="pwdSaveBtn" onclick="changePassword()">Cambiar contraseña</button>
       </div>
@@ -129,6 +144,19 @@ $_fotoPrefix = $fotoPrefix ?? '';
       document.querySelectorAll('.profile-tab-panel').forEach(function (p) { p.classList.remove('active'); });
       this.classList.add('active');
       document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+    });
+  });
+
+  var EYE_OPEN = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  var EYE_OFF  = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  document.querySelectorAll('.pwd-toggle-btn').forEach(function (btn) {
+    var input = document.getElementById(btn.dataset.target);
+    var svg   = btn.querySelector('svg');
+    btn.addEventListener('click', function () {
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      svg.innerHTML = show ? EYE_OFF : EYE_OPEN;
+      btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
     });
   });
 
