@@ -7,6 +7,7 @@ if (Auth::check()) {
 }
 
 $error = '';
+$retry_after = null;
 $remembered_user = $_COOKIE['dematiq_remember_user'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         $error = $result['msg'];
+        $retry_after = $result['retry_after'] ?? null;
     }
 }
 ?>
@@ -348,9 +350,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
       <?php if ($error): ?>
-      <div class="form-error show">
+      <div class="form-error show" id="form-error" <?= $retry_after ? 'data-retry="' . (int) $retry_after . '"' : '' ?>>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <?= htmlspecialchars($error) ?>
+        <span id="error-text"><?= htmlspecialchars($error) ?></span>
       </div>
       <?php endif; ?>
 
@@ -428,6 +430,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 (function(){const i=document.getElementById('login-pass'),b=document.getElementById('eye-btn'),s=document.getElementById('eye-svg');const O='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',X='<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';let show=false;b.addEventListener('click',()=>{show=!show;i.type=show?'text':'password';s.innerHTML=show?X:O})})();
 
 (function(){const f=document.getElementById('login-form'),btn=document.getElementById('submit-btn');f.addEventListener('submit',()=>{btn.classList.add('loading');btn.disabled=true;});})();
+
+(function(){
+  const box = document.getElementById('form-error');
+  if (!box || !box.dataset.retry) return;
+  let remaining = parseInt(box.dataset.retry, 10);
+  if (!remaining || remaining <= 0) return;
+
+  const textEl = document.getElementById('error-text');
+  const baseMsg = textEl.textContent;
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+
+  const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+  const tick = () => {
+    if (remaining <= 0) {
+      textEl.textContent = 'Ya puedes intentar de nuevo.';
+      submitBtn.disabled = false;
+      clearInterval(timer);
+      return;
+    }
+    textEl.textContent = `${baseMsg} ${fmt(remaining)}`;
+    remaining--;
+  };
+
+  tick();
+  const timer = setInterval(tick, 1000);
+})();
 </script>
 </body>
 </html>

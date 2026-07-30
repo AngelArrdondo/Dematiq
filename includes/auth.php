@@ -17,13 +17,20 @@ class Auth {
 
         // 1. Rate limiting por IP — bloquea ataques de diccionario contra múltiples usuarios
         $stmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM log_accesos
+            'SELECT COUNT(*) AS total,
+                    TIMESTAMPDIFF(SECOND, NOW(), DATE_ADD(MIN(creado_en), INTERVAL ? MINUTE)) AS retry_after
+             FROM log_accesos
              WHERE ip = ? AND resultado = "fallo"
                AND creado_en > DATE_SUB(NOW(), INTERVAL ? MINUTE)'
         );
-        $stmt->execute([$ip, BLOQUEO_MINUTOS]);
-        if ($stmt->fetchColumn() >= IP_MAX_FALLOS) {
-            return ['ok' => false, 'msg' => 'Demasiados intentos desde tu red. Espera ' . BLOQUEO_MINUTOS . ' minutos.'];
+        $stmt->execute([BLOQUEO_MINUTOS, $ip, BLOQUEO_MINUTOS]);
+        $ipRow = $stmt->fetch();
+        if ($ipRow['total'] >= IP_MAX_FALLOS) {
+            return [
+                'ok'          => false,
+                'msg'         => 'Demasiados intentos desde tu red. Espera',
+                'retry_after' => max(1, (int) $ipRow['retry_after']),
+            ];
         }
 
         // 2. Buscar usuario
@@ -49,8 +56,12 @@ class Auth {
         // 5. Bloqueo temporal por intentos fallidos
         if ($user['bloqueado_hasta'] && new DateTime() < new DateTime($user['bloqueado_hasta'])) {
             self::registrarLog($user['id'], $username, $ip, $ua, 'bloqueado');
-            $min = (int) ceil((strtotime($user['bloqueado_hasta']) - time()) / 60);
-            return ['ok' => false, 'msg' => "Cuenta bloqueada. Intenta en {$min} min."];
+            $retryAfter = max(1, strtotime($user['bloqueado_hasta']) - time());
+            return [
+                'ok'          => false,
+                'msg'         => 'Cuenta bloqueada. Intenta de nuevo en',
+                'retry_after' => $retryAfter,
+            ];
         }
 
         // 6. Verificar contraseña
@@ -71,10 +82,14 @@ class Auth {
 
             $restantes = MAX_INTENTOS - $intentos;
             $msg = $bloqueo
-                ? 'Demasiados intentos. Cuenta bloqueada ' . BLOQUEO_MINUTOS . ' minutos.'
+                ? 'Demasiados intentos. Cuenta bloqueada. Intenta de nuevo en'
                 : "Credenciales incorrectas. Intentos restantes: {$restantes}.";
 
-            return ['ok' => false, 'msg' => $msg];
+            return [
+                'ok'          => false,
+                'msg'         => $msg,
+                'retry_after' => $bloqueo ? BLOQUEO_MINUTOS * 60 : null,
+            ];
         }
 
         // 7. Login correcto — resetear intentos y crear sesión
