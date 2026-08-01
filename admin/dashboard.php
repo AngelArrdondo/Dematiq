@@ -219,7 +219,7 @@ try {
 
 <?php $profileApiPath = 'api/profile.php'; require __DIR__ . '/includes/profile-modal.php'; ?>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="assets/js/chart.umd.min.js"></script>
 <script src="assets/js/auth.js?v=5"></script>
 <script>
   const CSRF_TOKEN = '<?= $csrfToken ?>';
