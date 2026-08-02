@@ -138,7 +138,7 @@
   (async function () {
     const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     try {
-      const data = await fetch('/api/contenido.php?clave=nosotros').then(r => r.json());
+      const data = await fetch('/api/contenido.php?clave=nosotros', { cache: 'no-store' }).then(r => r.json());
       if (!data || typeof data !== 'object') return;
 
       if (data.hero) {
@@ -165,7 +165,7 @@
 
     // ── Empresas Asociadas (Socios) — marquee (duplicado para loop continuo) ──
     try {
-      const socios = await fetch('/api/contenido.php?clave=partners').then(r => r.json());
+      const socios = await fetch('/api/contenido.php?clave=partners', { cache: 'no-store' }).then(r => r.json());
       const track = document.getElementById('socios-track');
       if (track && Array.isArray(socios) && socios.length) {
         const items = socios.map(s => {

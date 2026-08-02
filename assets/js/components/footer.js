@@ -95,7 +95,7 @@ function registrarVisita() {
 function footerInit() {
   FooterComponent.init();
   registrarVisita();
-  fetch('/api/contenido.php?clave=contacto').then(r => r.json()).then(d => {
+  fetch('/api/contenido.php?clave=contacto', { cache: 'no-store' }).then(r => r.json()).then(d => {
     if (!d || typeof d !== 'object') return;
     const footer = document.getElementById('footer');
     if (!footer) return;

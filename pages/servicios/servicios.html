@@ -105,7 +105,7 @@
     (async function () {
       const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       try {
-        const data = await fetch('/api/contenido.php?clave=servicios').then(r => r.json());
+        const data = await fetch('/api/contenido.php?clave=servicios', { cache: 'no-store' }).then(r => r.json());
         if (!Array.isArray(data) || data.length === 0) return;
 
         // Guardar descripciones e imágenes estáticas (fallback si el admin no las tiene)

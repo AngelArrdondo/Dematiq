@@ -88,7 +88,7 @@
   <script>
   (async function() {
     try {
-      const data = await fetch('/api/contenido.php?clave=maqinspe').then(r => r.json());
+      const data = await fetch('/api/contenido.php?clave=maqinspe', { cache: 'no-store' }).then(r => r.json());
       if (!data || !Array.isArray(data.tabs) || !data.tabs.length) return;
 
       if (data.titulo) {

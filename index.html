@@ -214,8 +214,8 @@
     const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     try {
       const [home, marcas] = await Promise.all([
-        fetch('/api/contenido.php?clave=home').then(r => r.json()),
-        fetch('/api/contenido.php?clave=marcas').then(r => r.json())
+        fetch('/api/contenido.php?clave=home', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/contenido.php?clave=marcas', { cache: 'no-store' }).then(r => r.json())
       ]);
 
       // Hero

@@ -216,7 +216,7 @@
   // ── Carga dinámica de datos de contacto ──
   (async function () {
     try {
-      const d = await fetch('/api/contenido.php?clave=contacto').then(r => r.json());
+      const d = await fetch('/api/contenido.php?clave=contacto', { cache: 'no-store' }).then(r => r.json());
       if (!d || typeof d !== 'object') return;
 
       if (d.email) {
