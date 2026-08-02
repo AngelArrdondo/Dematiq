@@ -54,13 +54,14 @@ $cuerpo .= "Asunto:  {$asunto}\n\n";
 $cuerpo .= "Mensaje:\n{$mensaje}\n";
 $cuerpo .= "\n-- \nFormulario web · dematiq.com.mx\n";
 
-// Configura estas variables en cPanel → Software → PHP → Environment Variables
-// (o directamente aquí si no hay acceso a variables de entorno en el hosting).
+// En producción (Hostinger): definidas via SetEnv en el .htaccess del
+// servidor (no versionado en git, ver .env.example). El puerto 465/smtps
+// se cuelga indefinidamente en este hosting; 587 con STARTTLS sí responde.
 $smtpHost = getenv('SMTP_HOST') ?: 'mail.dematiq.com.mx';
 $smtpUser = getenv('SMTP_USER') ?: 'ventas@dematiq.com.mx';
 $smtpPass = getenv('SMTP_PASS') ?: '';
-$smtpPort = getenv('SMTP_PORT') ?: 465;
-$smtpSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_SMTPS;
+$smtpPort = getenv('SMTP_PORT') ?: 587;
+$smtpSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_STARTTLS;
 
 $mail = new PHPMailer(true);
 

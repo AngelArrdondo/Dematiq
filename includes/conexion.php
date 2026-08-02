@@ -5,8 +5,8 @@
 // el proyecto, evita depender de que el hosting tenga date.timezone en su php.ini.
 date_default_timezone_set('America/Mexico_City');
 
-// En producción (cPanel/Hostinger): define estas variables en
-// cPanel/hPanel → Software → PHP → Environment Variables.
+// En producción (Hostinger): definidas via SetEnv en el .htaccess del
+// servidor (no versionado en git, ver .env.example).
 // En local: define las mismas variables en tu entorno (no hardcodees el password aquí).
 define('DB_HOST',    getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME',    getenv('DB_NAME') ?: 'dematiq_db');

@@ -43,12 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $base       = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
             $token_link = $base . '/pages/corporativo/reset-password.php?token=' . $token;
 
-            // Configura estas variables en cPanel → Software → PHP → Environment Variables
+            // En producción (Hostinger): definidas via SetEnv en el .htaccess del
+            // servidor (no versionado en git, ver .env.example). El puerto 465/smtps
+            // se cuelga indefinidamente en este hosting; 587 con STARTTLS sí responde.
             $smtpHost   = getenv('SMTP_HOST') ?: 'mail.dematiq.com.mx';
             $smtpUser   = getenv('SMTP_USER') ?: 'ventas@dematiq.com.mx';
             $smtpPass   = getenv('SMTP_PASS') ?: '';
-            $smtpPort   = getenv('SMTP_PORT') ?: 465;
-            $smtpSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_SMTPS;
+            $smtpPort   = getenv('SMTP_PORT') ?: 587;
+            $smtpSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_STARTTLS;
 
             $mail = new PHPMailer(true);
             try {
