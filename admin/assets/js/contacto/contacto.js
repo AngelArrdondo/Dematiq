@@ -15,6 +15,28 @@ userMenuBtn.addEventListener('keydown', function(e) {
 });
 document.addEventListener('click', () => userMenuBtn.classList.remove('open'));
 
+/* ══ FICHA DE LA EMPRESA (PDF) ═══════════════════ */
+let fichaPdfPath = _D.presentacionPdf || 'assets/docs/DEMATIQ.pdf';
+
+async function uploadFichaPdf(input) {
+  if (!input.files[0]) return;
+  if (input.files[0].size > 15 * 1024 * 1024) { showToast('Máximo 15 MB', 'error'); input.value = ''; return; }
+  const fd = new FormData();
+  fd.append('documento', input.files[0]);
+  fd.append('oldPath', fichaPdfPath);
+  fd.append('_csrf', CSRF_TOKEN);
+  try {
+    const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
+    const json = await res.json();
+    if (json.ok) {
+      fichaPdfPath = json.path;
+      document.getElementById('ficha-pdf-link').href = '../../../' + json.path;
+      showToast('PDF actualizado — recuerda guardar cambios');
+    } else { showToast(json.error || 'Error al subir el PDF', 'error'); }
+  } catch { showToast('Error de conexión', 'error'); }
+  finally { input.value = ''; }
+}
+
 /* ══ WHATSAPP ════════════════════════════════════ */
 function fmtPhone(code, local) {
   const d = local.replace(/\D/g,'');
@@ -361,6 +383,7 @@ async function saveContacto() {
       diasFestivos: getFestivos(),
       direccion:   document.getElementById('direccion').value.trim(),
       mapCoords:   document.getElementById('map-coords').value.trim(),
+      presentacionPdf: fichaPdfPath,
       social: getSocials()
     });
     if (res && res.ok) {

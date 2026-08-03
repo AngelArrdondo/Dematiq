@@ -104,6 +104,50 @@ if ($method === 'GET') {
         'name' => $filename,
     ]);
 
+} elseif ($method === 'POST' && !empty($_FILES['documento'])) {
+    $file    = $_FILES['documento'];
+    $allowed = ['application/pdf'];
+    $mime    = mime_content_type($file['tmp_name']);
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $msg = match($file['error']) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'El archivo excede el tamaño máximo permitido por el servidor',
+            UPLOAD_ERR_PARTIAL  => 'La carga fue interrumpida, intenta de nuevo',
+            UPLOAD_ERR_NO_FILE  => 'No se recibió ningún archivo',
+            default             => 'Error al recibir el archivo',
+        };
+        http_response_code(400);
+        echo json_encode(['error' => $msg]);
+        exit;
+    }
+    if (!in_array($mime, $allowed, true)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Formato no permitido. Solo se aceptan archivos PDF.']);
+        exit;
+    }
+    if ($file['size'] > 15 * 1024 * 1024) {
+        http_response_code(400);
+        echo json_encode(['error' => 'El archivo excede el límite de 15 MB']);
+        exit;
+    }
+
+    $filename  = 'ficha_' . time() . '_' . bin2hex(random_bytes(4)) . '.pdf';
+    $uploadDir = __DIR__ . '/../../assets/docs/';
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Error al guardar el archivo']);
+        exit;
+    }
+
+    deleteOldAsset($_POST['oldPath'] ?? '', [__DIR__ . '/../../assets/docs']);
+
+    echo json_encode(['ok' => true, 'path' => 'assets/docs/' . $filename]);
+
 } elseif ($method === 'POST' && !empty($_FILES['image'])) {
     $file    = $_FILES['image'];
     $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];

@@ -197,11 +197,11 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body p-0">
-        <iframe src="../../assets/docs/DEMATIQ.pdf" width="100%" height="650" style="border:0; display:block;"></iframe>
+        <iframe id="ct-pdf-iframe" src="../../assets/docs/DEMATIQ.pdf" width="100%" height="650" style="border:0; display:block;"></iframe>
       </div>
       <div class="modal-footer pdf-modal-footer">
         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
-        <a href="../../assets/docs/DEMATIQ.pdf" download="DEMATIQ-Ficha.pdf" class="contact-submit-btn pdf-download-btn">
+        <a id="ct-pdf-download" href="../../assets/docs/DEMATIQ.pdf" download="DEMATIQ-Ficha.pdf" class="contact-submit-btn pdf-download-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
@@ -278,6 +278,14 @@
         if (asideA) asideA.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
       }
 
+      if (d.presentacionPdf) {
+        const src = '/' + d.presentacionPdf;
+        const iframe = document.getElementById('ct-pdf-iframe');
+        if (iframe) iframe.src = src;
+        const dl = document.getElementById('ct-pdf-download');
+        if (dl) dl.href = src;
+      }
+
       if (d.social && typeof d.social === 'object') {
         ['facebook','instagram','linkedin','youtube'].forEach(net => {
           if (!d.social[net]) return;
@@ -350,7 +358,7 @@
   document.querySelector('[data-bs-target="#pdfModal"]').addEventListener('click', function (e) {
     if (window.innerWidth < 768) {
       e.preventDefault(); e.stopPropagation();
-      window.open('../../assets/docs/DEMATIQ.pdf', '_blank');
+      window.open(document.getElementById('ct-pdf-download').href, '_blank');
     }
   }, true);
 </script>
