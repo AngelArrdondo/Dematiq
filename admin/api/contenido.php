@@ -12,6 +12,45 @@ if (!Auth::check()) {
     exit;
 }
 
+// Valida el tipo real del archivo (no solo la extensión que mandó el navegador)
+// y devuelve la extensión a usar, o null si no es un formato permitido.
+// Los .docx/.pptx son en realidad ZIP — algunos servidores los detectan como
+// application/zip genérico, así que en ese caso se revisa el contenido interno
+// del ZIP para confirmar que es un documento de Office real y no un ZIP cualquiera.
+function documentoExtension(string $tmpPath, string $originalName): ?string
+{
+    $mime = mime_content_type($tmpPath);
+
+    $directos = [
+        'application/pdf'       => 'pdf',
+        'application/msword'    => 'doc',
+        'application/vnd.ms-powerpoint' => 'ppt',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+    ];
+    if (isset($directos[$mime])) {
+        return $directos[$mime];
+    }
+
+    // Fallback para docx/pptx mal detectados como zip genérico
+    if ($mime === 'application/zip' && class_exists('ZipArchive')) {
+        $extPedida = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        if (!in_array($extPedida, ['docx', 'pptx'], true)) {
+            return null;
+        }
+        $zip = new ZipArchive();
+        if ($zip->open($tmpPath) !== true) {
+            return null;
+        }
+        $marcador = $extPedida === 'docx' ? 'word/document.xml' : 'ppt/presentation.xml';
+        $esValido = $zip->locateName($marcador) !== false;
+        $zip->close();
+        return $esValido ? $extPedida : null;
+    }
+
+    return null;
+}
+
 function deleteOldAsset(string $rawPath, array $allowedDirs): void
 {
     $rawPath = trim($rawPath);
@@ -105,9 +144,7 @@ if ($method === 'GET') {
     ]);
 
 } elseif ($method === 'POST' && !empty($_FILES['documento'])) {
-    $file    = $_FILES['documento'];
-    $allowed = ['application/pdf'];
-    $mime    = mime_content_type($file['tmp_name']);
+    $file = $_FILES['documento'];
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $msg = match($file['error']) {
@@ -120,18 +157,20 @@ if ($method === 'GET') {
         echo json_encode(['error' => $msg]);
         exit;
     }
-    if (!in_array($mime, $allowed, true)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Formato no permitido. Solo se aceptan archivos PDF.']);
-        exit;
-    }
     if ($file['size'] > 15 * 1024 * 1024) {
         http_response_code(400);
         echo json_encode(['error' => 'El archivo excede el límite de 15 MB']);
         exit;
     }
 
-    $filename  = 'ficha_' . time() . '_' . bin2hex(random_bytes(4)) . '.pdf';
+    $ext = documentoExtension($file['tmp_name'], $file['name']);
+    if (!$ext) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Formato no permitido. Solo se aceptan PDF, Word (.doc/.docx) o PowerPoint (.ppt/.pptx).']);
+        exit;
+    }
+
+    $filename  = 'ficha_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
     $uploadDir = __DIR__ . '/../../assets/docs/';
 
     if (!is_dir($uploadDir)) {
@@ -147,6 +186,10 @@ if ($method === 'GET') {
     deleteOldAsset($_POST['oldPath'] ?? '', [__DIR__ . '/../../assets/docs']);
 
     echo json_encode(['ok' => true, 'path' => 'assets/docs/' . $filename]);
+
+} elseif ($method === 'POST' && ($_POST['action'] ?? '') === 'eliminar_documento') {
+    deleteOldAsset($_POST['path'] ?? '', [__DIR__ . '/../../assets/docs']);
+    echo json_encode(['ok' => true]);
 
 } elseif ($method === 'POST' && !empty($_FILES['image'])) {
     $file    = $_FILES['image'];

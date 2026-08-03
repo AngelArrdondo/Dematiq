@@ -15,8 +15,25 @@ userMenuBtn.addEventListener('keydown', function(e) {
 });
 document.addEventListener('click', () => userMenuBtn.classList.remove('open'));
 
-/* ══ FICHA DE LA EMPRESA (PDF) ═══════════════════ */
-let fichaPdfPath = _D.presentacionPdf || 'assets/docs/DEMATIQ.pdf';
+/* ══ FICHA DE LA EMPRESA (PDF / Word / PowerPoint) ═══════════════════ */
+// _D.presentacionPdf puede ser: undefined (nunca configurado, usar el PDF
+// original de respaldo), '' (el admin lo eliminó explícitamente) o una ruta.
+let fichaPdfPath = (_D.presentacionPdf !== undefined) ? _D.presentacionPdf : 'assets/docs/DEMATIQ.pdf';
+
+function actualizarUIFicha() {
+  const sinDoc  = document.getElementById('ficha-sin-documento');
+  const conDoc  = document.getElementById('ficha-con-documento');
+  const delBtn  = document.getElementById('ficha-delete-btn');
+  const hayDoc  = fichaPdfPath !== '';
+  sinDoc.style.display = hayDoc ? 'none' : '';
+  conDoc.style.display = hayDoc ? '' : 'none';
+  delBtn.style.display = hayDoc ? '' : 'none';
+  if (hayDoc) {
+    document.getElementById('ficha-pdf-link').href = '../../../' + fichaPdfPath;
+    document.getElementById('ficha-ext-actual').textContent =
+      '(' + (fichaPdfPath.split('.').pop() || '').toUpperCase() + ')';
+  }
+}
 
 async function uploadFichaPdf(input) {
   if (!input.files[0]) return;
@@ -30,11 +47,28 @@ async function uploadFichaPdf(input) {
     const json = await res.json();
     if (json.ok) {
       fichaPdfPath = json.path;
-      document.getElementById('ficha-pdf-link').href = '../../../' + json.path;
-      showToast('PDF actualizado — recuerda guardar cambios');
-    } else { showToast(json.error || 'Error al subir el PDF', 'error'); }
+      actualizarUIFicha();
+      showToast('Documento actualizado — recuerda guardar cambios');
+    } else { showToast(json.error || 'Error al subir el documento', 'error'); }
   } catch { showToast('Error de conexión', 'error'); }
   finally { input.value = ''; }
+}
+
+async function eliminarFichaDocumento() {
+  if (!confirm('¿Eliminar el documento actual? El botón "Presentación" dejará de mostrarse en el sitio hasta que subas uno nuevo.')) return;
+  const fd = new FormData();
+  fd.append('action', 'eliminar_documento');
+  fd.append('path', fichaPdfPath);
+  fd.append('_csrf', CSRF_TOKEN);
+  try {
+    const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
+    const json = await res.json();
+    if (json.ok) {
+      fichaPdfPath = '';
+      actualizarUIFicha();
+      showToast('Documento eliminado — recuerda guardar cambios');
+    } else { showToast(json.error || 'Error al eliminar', 'error'); }
+  } catch { showToast('Error de conexión', 'error'); }
 }
 
 /* ══ WHATSAPP ════════════════════════════════════ */

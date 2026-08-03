@@ -119,14 +119,14 @@
     <div class="contact-aside">
 
       <!-- Ficha de la empresa -->
-      <div class="aside-block">
+      <div class="aside-block" id="ct-ficha-block">
         <span class="section-tag">Presentación</span>
         <h2>Ficha de la empresa</h2>
-        <button type="button" class="download-btn btn-pulse" data-bs-toggle="modal" data-bs-target="#pdfModal">
+        <button type="button" class="download-btn btn-pulse" id="ct-ficha-btn" data-bs-toggle="modal" data-bs-target="#pdfModal">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
           </svg>
-          Presentación de la empresa.pdf
+          <span id="ct-ficha-btn-text">Presentación de la empresa.pdf</span>
         </button>
       </div>
 
@@ -278,12 +278,35 @@
         if (asideA) asideA.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
       }
 
-      if (d.presentacionPdf) {
-        const src = '/' + d.presentacionPdf;
-        const iframe = document.getElementById('ct-pdf-iframe');
-        if (iframe) iframe.src = src;
+      if (d.presentacionPdf === '') {
+        // El admin eliminó el documento — no mostrar el botón "Presentación"
+        const block = document.getElementById('ct-ficha-block');
+        if (block) block.style.display = 'none';
+      } else if (d.presentacionPdf) {
+        const path  = d.presentacionPdf;
+        const src   = '/' + path;
+        const ext   = (path.split('.').pop() || '').toLowerCase();
+        const esPdf = ext === 'pdf';
+
         const dl = document.getElementById('ct-pdf-download');
-        if (dl) dl.href = src;
+        if (dl) { dl.href = src; dl.setAttribute('download', 'DEMATIQ-Ficha.' + ext); }
+
+        const btn = document.getElementById('ct-ficha-btn');
+        const btnText = document.getElementById('ct-ficha-btn-text');
+        if (btnText) btnText.textContent = 'Presentación de la empresa.' + ext;
+
+        if (esPdf) {
+          const iframe = document.getElementById('ct-pdf-iframe');
+          if (iframe) iframe.src = src;
+        } else if (btn) {
+          // Word/PowerPoint no se pueden mostrar embebidos — descarga directa
+          // en vez de abrir el modal con el visor de PDF (ver handler de click al final).
+          btn.removeAttribute('data-bs-toggle');
+          btn.removeAttribute('data-bs-target');
+          btn.dataset.esPdf = '0';
+          btn.dataset.downloadSrc = src;
+          btn.dataset.downloadExt = ext;
+        }
       }
 
       if (d.social && typeof d.social === 'object') {
@@ -355,8 +378,17 @@
     el._t = setTimeout(() => el.remove(), 6000);
   }
 
-  document.querySelector('[data-bs-target="#pdfModal"]').addEventListener('click', function (e) {
-    if (window.innerWidth < 768) {
+  document.getElementById('ct-ficha-btn')?.addEventListener('click', function (e) {
+    if (this.dataset.esPdf === '0') {
+      // Word/PowerPoint: no hay modal que abrir, descarga directa siempre
+      e.preventDefault(); e.stopPropagation();
+      const a = document.createElement('a');
+      a.href = this.dataset.downloadSrc;
+      a.download = 'DEMATIQ-Ficha.' + this.dataset.downloadExt;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } else if (window.innerWidth < 768) {
       e.preventDefault(); e.stopPropagation();
       window.open(document.getElementById('ct-pdf-download').href, '_blank');
     }

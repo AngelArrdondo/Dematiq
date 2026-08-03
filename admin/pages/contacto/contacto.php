@@ -118,7 +118,7 @@ try {
     <!-- ══ QUICK NAV ═══════════════════════════════════ -->
     <nav class="quick-nav" id="quickNav" aria-label="Ir a sección">
       <a class="qn-pill" data-target="ctEmail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>Email</a>
-      <a class="qn-pill" data-target="ctFicha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ficha PDF</a>
+      <a class="qn-pill" data-target="ctFicha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Ficha</a>
       <a class="qn-pill" data-target="ctWhatsapp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>WhatsApp</a>
       <a class="qn-pill" data-target="ctHorario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>Horario</a>
       <a class="qn-pill" data-target="ctFestivos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Festivos</a>
@@ -148,31 +148,49 @@ try {
       </div>
     </div>
 
-    <!-- ── Ficha de la empresa (PDF) ──────────── -->
+    <!-- ── Ficha de la empresa (PDF / Word / PowerPoint) ──────────── -->
+    <?php
+      $fichaTieneValorGuardado = array_key_exists('presentacionPdf', $d);
+      $fichaPathActual  = $fichaTieneValorGuardado ? $d['presentacionPdf'] : 'assets/docs/DEMATIQ.pdf';
+      $fichaEliminada   = $fichaTieneValorGuardado && $d['presentacionPdf'] === '';
+      $fichaExtActual   = $fichaEliminada ? '' : strtoupper(pathinfo($fichaPathActual, PATHINFO_EXTENSION));
+    ?>
     <div class="ct-card" id="ctFicha" data-accent="navy" style="animation-delay:.03s">
       <div class="ct-card-head">
         <div class="ct-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
         <div class="ct-card-head-text">
-          <h3>Ficha de la empresa (PDF)</h3>
-          <p>El PDF que se descarga desde el botón "Presentación" en la página de Contacto</p>
+          <h3>Ficha de la empresa</h3>
+          <p>El documento (PDF, Word o PowerPoint) que se descarga desde el botón "Presentación" en la página de Contacto</p>
         </div>
       </div>
       <div class="ct-body">
         <div class="ct-field">
           <label class="ct-label">Archivo actual</label>
-          <p style="font-size:.85rem;margin-bottom:10px">
-            <a id="ficha-pdf-link" href="<?= htmlspecialchars('../../../' . ($d['presentacionPdf'] ?? 'assets/docs/DEMATIQ.pdf')) ?>" target="_blank" rel="noopener noreferrer" style="color:var(--brand-mid);font-weight:600">
-              Ver PDF actual
+          <p id="ficha-sin-documento" style="font-size:.85rem;color:var(--text-lt);margin-bottom:10px;<?= $fichaEliminada ? '' : 'display:none' ?>">
+            Sin documento activo — el botón "Presentación" no se muestra en el sitio hasta que subas uno.
+          </p>
+          <p id="ficha-con-documento" style="font-size:.85rem;margin-bottom:10px;<?= $fichaEliminada ? 'display:none' : '' ?>">
+            <a id="ficha-pdf-link" href="<?= htmlspecialchars('../../../' . $fichaPathActual) ?>" target="_blank" rel="noopener noreferrer" style="color:var(--brand-mid);font-weight:600">
+              Ver documento actual <span id="ficha-ext-actual">(<?= htmlspecialchars($fichaExtActual) ?>)</span>
             </a>
           </p>
-          <input type="file" id="ficha-pdf-input" accept="application/pdf" onchange="uploadFichaPdf(this)" style="display:none">
-          <button type="button" class="social-add-btn" onclick="document.getElementById('ficha-pdf-input').click()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Subir nuevo PDF
-          </button>
-          <p style="font-size:.72rem;color:var(--text-lt);margin-top:8px">Máximo 15 MB. Reemplaza el archivo actual de inmediato al subir.</p>
+          <input type="file" id="ficha-pdf-input"
+                 accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                 onchange="uploadFichaPdf(this)" style="display:none">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="button" class="social-add-btn" onclick="document.getElementById('ficha-pdf-input').click()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Subir nuevo documento
+            </button>
+            <button type="button" class="social-add-btn" id="ficha-delete-btn" onclick="eliminarFichaDocumento()"
+                    style="background:#fdecea;color:#b91c1c;border-color:#f5b5ab;<?= $fichaEliminada ? 'display:none' : '' ?>">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+              Eliminar documento actual
+            </button>
+          </div>
+          <p style="font-size:.72rem;color:var(--text-lt);margin-top:8px">Máximo 15 MB (PDF, .doc, .docx, .ppt, .pptx). Reemplaza el archivo actual de inmediato al subir. Word y PowerPoint solo se pueden descargar en el sitio, no se muestran embebidos.</p>
         </div>
       </div>
     </div>
