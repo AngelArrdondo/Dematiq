@@ -9,8 +9,31 @@ if (Auth::check()) {
 $error = '';
 $retry_after = null;
 $remembered_user = $_COOKIE['dematiq_remember_user'] ?? '';
+$show2fa = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['step'] ?? '') === '2fa') {
+    // Paso 2: ya se validó la contraseña, solo falta el código TOTP
+    $codigo = trim($_POST['codigo'] ?? '');
+    $result = Auth::verify2fa($codigo);
+
+    if ($result['ok']) {
+        if (!empty($result['recordar'])) {
+            setcookie('dematiq_remember_user', $result['username'], [
+                'expires'  => time() + (30 * 24 * 3600),
+                'path'     => '/',
+                'httponly' => true,
+                'samesite' => 'Strict',
+            ]);
+        } else {
+            setcookie('dematiq_remember_user', '', ['expires' => time() - 3600, 'path' => '/']);
+        }
+        header('Location: ../../admin/dashboard.php');
+        exit;
+    }
+    $error   = $result['msg'];
+    $show2fa = true;
+
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
@@ -20,8 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($username === '' || $password === '') {
         $error = 'Completa todos los campos.';
     } else {
-        $result = Auth::login($username, $password, $ip, $ua);
-        if ($result['ok']) {
+        $result = Auth::login($username, $password, $ip, $ua, $remember);
+
+        if ($result['ok'] && !empty($result['need2fa'])) {
+            // Contraseña correcta — falta el código de la app autenticadora
+            $show2fa = true;
+        } elseif ($result['ok']) {
             if ($remember) {
                 setcookie('dematiq_remember_user', $username, [
                     'expires'  => time() + (30 * 24 * 3600),
@@ -34,10 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             header('Location: ../../admin/dashboard.php');
             exit;
+        } else {
+            $error = $result['msg'];
+            $retry_after = $result['retry_after'] ?? null;
         }
-        $error = $result['msg'];
-        $retry_after = $result['retry_after'] ?? null;
     }
+}
+
+// Recarga de página en medio del paso 2 (p.ej. F5) — no volver a pedir la contraseña
+if (!$show2fa && $_SERVER['REQUEST_METHOD'] !== 'POST' && Auth::pendiente2fa()) {
+    $show2fa = true;
 }
 ?>
 <!DOCTYPE html>
@@ -345,8 +378,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Panel derecho -->
     <div class="form-panel">
       <div class="form-header">
-        <h2>Bienvenido de vuelta</h2>
-        <p>Ingresa tus credenciales para acceder al panel de administración.</p>
+        <?php if ($show2fa): ?>
+          <h2>Verificación en dos pasos</h2>
+          <p>Ingresa el código de 6 dígitos de tu app autenticadora.</p>
+        <?php else: ?>
+          <h2>Bienvenido de vuelta</h2>
+          <p>Ingresa tus credenciales para acceder al panel de administración.</p>
+        <?php endif; ?>
       </div>
 
       <?php if ($error): ?>
@@ -356,6 +394,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <?php endif; ?>
 
+      <?php if ($show2fa): ?>
+      <form method="POST" action="" autocomplete="off" id="login-form">
+        <input type="hidden" name="step" value="2fa">
+
+        <div class="field-wrap">
+          <label for="twofa-code">Código de verificación</label>
+          <div class="input-row">
+            <input type="text" id="twofa-code" name="codigo"
+                   inputmode="numeric" maxlength="9"
+                   placeholder="123456" autocomplete="one-time-code" required autofocus>
+            <span class="field-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <p style="font-size:.78rem;color:var(--text-lt);margin:-8px 0 20px;line-height:1.5;">
+          ¿Perdiste el acceso a tu app? Usa uno de tus códigos de recuperación (formato XXXX-XXXX).
+        </p>
+
+        <div class="btn-wrap">
+          <button type="submit" class="submit-btn" id="submit-btn">
+            <span class="spinner"></span>
+            <span class="btn-label">Verificar</span>
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </button>
+        </div>
+      </form>
+      <?php else: ?>
       <form method="POST" action="" autocomplete="off" id="login-form">
 
         <div class="field-wrap">
@@ -407,6 +476,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </button>
         </div>
       </form>
+      <?php endif; ?>
 
       <div class="form-divider"><span>DEMATIQ © 2025</span></div>
       <div class="back-link">
@@ -427,7 +497,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 (function(){const t=document.getElementById('clock-time'),d=document.getElementById('clock-date');if(!t)return;const D=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];function tick(){const n=new Date();t.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;d.textContent=`${D[n.getDay()]} ${n.getDate()} ${M[n.getMonth()]} ${n.getFullYear()}`}tick();setInterval(tick,1000)})();
 
-(function(){const i=document.getElementById('login-pass'),b=document.getElementById('eye-btn'),s=document.getElementById('eye-svg');const O='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',X='<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';let show=false;b.addEventListener('click',()=>{show=!show;i.type=show?'text':'password';s.innerHTML=show?X:O})})();
+(function(){const i=document.getElementById('login-pass'),b=document.getElementById('eye-btn'),s=document.getElementById('eye-svg');if(!i||!b||!s)return;const O='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',X='<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';let show=false;b.addEventListener('click',()=>{show=!show;i.type=show?'text':'password';s.innerHTML=show?X:O})})();
 
 (function(){const f=document.getElementById('login-form'),btn=document.getElementById('submit-btn');f.addEventListener('submit',()=>{btn.classList.add('loading');btn.disabled=true;});})();
 

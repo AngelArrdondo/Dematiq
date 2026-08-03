@@ -1,15 +1,18 @@
 <?php
 require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/totp.php';
 
-define('MAX_INTENTOS',     5);
-define('BLOQUEO_MINUTOS',  15);
-define('SESSION_HORAS',    8);
-define('IP_MAX_FALLOS',    20);  // máximo de fallos por IP en 15 min
+define('MAX_INTENTOS',        5);
+define('BLOQUEO_MINUTOS',     15);
+define('SESSION_HORAS',       8);
+define('IP_MAX_FALLOS',       20);  // máximo de fallos por IP en 15 min
+define('PENDIENTE_2FA_MINUTOS', 10);
+define('MAX_INTENTOS_2FA',    6);   // por sesión pendiente — ya se pasó la contraseña, solo frena fuerza bruta del código
 
 class Auth {
 
     // ── Login ──────────────────────────────────────────────────────────
-    public static function login(string $username, string $password, string $ip, string $ua): array {
+    public static function login(string $username, string $password, string $ip, string $ua, bool $remember = false): array {
 
         global $pdo;
 
@@ -34,12 +37,25 @@ class Auth {
         }
 
         // 2. Buscar usuario
-        $stmt = $pdo->prepare(
-            'SELECT id, password_hash, nombre, activo, intentos_fallidos, bloqueado_hasta
-             FROM usuarios WHERE username = ? LIMIT 1'
-        );
-        $stmt->execute([$username]);
-        $user = $stmt->fetch();
+        try {
+            $stmt = $pdo->prepare(
+                'SELECT id, username, password_hash, nombre, activo, intentos_fallidos, bloqueado_hasta,
+                        totp_habilitado
+                 FROM usuarios WHERE username = ? LIMIT 1'
+            );
+            $stmt->execute([$username]);
+            $user = $stmt->fetch();
+        } catch (PDOException $e) {
+            // Migración 008_2fa.sql aún no aplicada — no bloquear el login por eso
+            error_log('Auth::login (sin columnas 2FA): ' . $e->getMessage());
+            $stmt = $pdo->prepare(
+                'SELECT id, username, password_hash, nombre, activo, intentos_fallidos, bloqueado_hasta
+                 FROM usuarios WHERE username = ? LIMIT 1'
+            );
+            $stmt->execute([$username]);
+            $user = $stmt->fetch();
+            if ($user) $user['totp_habilitado'] = 0;
+        }
 
         // 3. Usuario no existe
         if (!$user) {
@@ -92,20 +108,51 @@ class Auth {
             ];
         }
 
-        // 7. Login correcto — resetear intentos y crear sesión
+        // 7. Contraseña correcta — resetear intentos fallidos
         $pdo->prepare(
             'UPDATE usuarios SET intentos_fallidos = 0, bloqueado_hasta = NULL, ultimo_acceso = NOW() WHERE id = ?'
         )->execute([$user['id']]);
 
-        $token   = bin2hex(random_bytes(32));
-        $expira  = date('Y-m-d H:i:s', strtotime('+' . SESSION_HORAS . ' hours'));
+        // 8. Si tiene 2FA activo, no crear la sesión todavía — dejar un
+        // estado "pendiente" de unos minutos y pedir el código TOTP.
+        if (!empty($user['totp_habilitado'])) {
+            $ptoken = bin2hex(random_bytes(32));
+            $pexpira = date('Y-m-d H:i:s', strtotime('+' . PENDIENTE_2FA_MINUTOS . ' minutes'));
+
+            $pdo->prepare(
+                'INSERT INTO sesiones_2fa_pendientes (usuario_id, token, ip, user_agent, recordar, expira_en)
+                 VALUES (?, ?, ?, ?, ?, ?)'
+            )->execute([$user['id'], $ptoken, $ip, $ua, $remember ? 1 : 0, $pexpira]);
+
+            setcookie('dematiq_2fa_pending', $ptoken, [
+                'expires'  => strtotime('+' . PENDIENTE_2FA_MINUTOS . ' minutes'),
+                'path'     => '/pages/corporativo',
+                'httponly' => true,
+                'samesite' => 'Strict',
+                'secure'   => isset($_SERVER['HTTPS']),
+            ]);
+
+            return ['ok' => true, 'need2fa' => true];
+        }
+
+        self::registrarLog($user['id'], $username, $ip, $ua, 'exito');
+        return array_merge(['ok' => true], self::crearSesion($user['id'], $user['nombre']));
+    }
+
+    // ── Crea la sesión real (token + cookie) tras un login completo ─────
+    private static function crearSesion(int $userId, string $nombre): array {
+        global $pdo;
+
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
+
+        $token  = bin2hex(random_bytes(32));
+        $expira = date('Y-m-d H:i:s', strtotime('+' . SESSION_HORAS . ' hours'));
 
         $pdo->prepare(
             'INSERT INTO sesiones (usuario_id, token, ip, user_agent, expira_en)
              VALUES (?, ?, ?, ?, ?)'
-        )->execute([$user['id'], $token, $ip, $ua, $expira]);
-
-        self::registrarLog($user['id'], $username, $ip, $ua, 'exito');
+        )->execute([$userId, $token, $ip, $ua, $expira]);
 
         setcookie('dematiq_session', $token, [
             'expires'  => strtotime('+' . SESSION_HORAS . ' hours'),
@@ -115,7 +162,185 @@ class Auth {
             'secure'   => isset($_SERVER['HTTPS']),
         ]);
 
-        return ['ok' => true, 'nombre' => $user['nombre']];
+        return ['nombre' => $nombre];
+    }
+
+    // ── Segundo paso del login: verifica el código TOTP (o de recuperación) ──
+    public static function verify2fa(string $codigo): array {
+        global $pdo;
+
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
+
+        $ptoken = $_COOKIE['dematiq_2fa_pending'] ?? '';
+        if (!$ptoken) {
+            return ['ok' => false, 'msg' => 'Tu sesión de verificación expiró. Inicia sesión de nuevo.'];
+        }
+
+        $stmt = $pdo->prepare(
+            'SELECT p.id, p.usuario_id, p.intentos, p.recordar, u.username, u.nombre, u.totp_secret
+             FROM sesiones_2fa_pendientes p
+             JOIN usuarios u ON u.id = p.usuario_id
+             WHERE p.token = ? AND p.expira_en > NOW() LIMIT 1'
+        );
+        $stmt->execute([$ptoken]);
+        $pend = $stmt->fetch();
+
+        if (!$pend) {
+            self::limpiarPendiente2fa();
+            return ['ok' => false, 'msg' => 'Tu sesión de verificación expiró. Inicia sesión de nuevo.'];
+        }
+
+        if ($pend['intentos'] >= MAX_INTENTOS_2FA) {
+            $pdo->prepare('DELETE FROM sesiones_2fa_pendientes WHERE id = ?')->execute([$pend['id']]);
+            self::limpiarPendiente2fa();
+            return ['ok' => false, 'msg' => 'Demasiados intentos. Inicia sesión de nuevo.'];
+        }
+
+        $valido = false;
+
+        // Código de recuperación (formato XXXX-XXXX) o código TOTP de 6 dígitos
+        if (preg_match('/^[A-F0-9]{4}-[A-F0-9]{4}$/i', trim($codigo))) {
+            $hash = hash('sha256', strtoupper(trim($codigo)));
+            $rstmt = $pdo->prepare(
+                'SELECT id FROM usuario_codigos_recuperacion
+                 WHERE usuario_id = ? AND codigo_hash = ? AND usado = 0 LIMIT 1'
+            );
+            $rstmt->execute([$pend['usuario_id'], $hash]);
+            $rcode = $rstmt->fetch();
+            if ($rcode) {
+                $pdo->prepare('UPDATE usuario_codigos_recuperacion SET usado = 1 WHERE id = ?')->execute([$rcode['id']]);
+                $valido = true;
+            }
+        } elseif ($pend['totp_secret']) {
+            $valido = Totp::verificar($pend['totp_secret'], $codigo);
+        }
+
+        if (!$valido) {
+            $pdo->prepare('UPDATE sesiones_2fa_pendientes SET intentos = intentos + 1 WHERE id = ?')->execute([$pend['id']]);
+            self::registrarLog($pend['usuario_id'], $pend['username'], $ip, $ua, 'fallo');
+            $restantes = MAX_INTENTOS_2FA - $pend['intentos'] - 1;
+            return ['ok' => false, 'msg' => "Código inválido. Intentos restantes: {$restantes}."];
+        }
+
+        $pdo->prepare('DELETE FROM sesiones_2fa_pendientes WHERE id = ?')->execute([$pend['id']]);
+        self::limpiarPendiente2fa();
+        self::registrarLog($pend['usuario_id'], $pend['username'], $ip, $ua, 'exito');
+
+        return array_merge(
+            ['ok' => true, 'recordar' => (bool) $pend['recordar'], 'username' => $pend['username']],
+            self::crearSesion($pend['usuario_id'], $pend['nombre'])
+        );
+    }
+
+    // ── ¿Hay un login a medias esperando el código 2FA? ─────────────────
+    public static function pendiente2fa(): ?array {
+        global $pdo;
+
+        $ptoken = $_COOKIE['dematiq_2fa_pending'] ?? '';
+        if (!$ptoken) return null;
+
+        $stmt = $pdo->prepare(
+            'SELECT u.username FROM sesiones_2fa_pendientes p
+             JOIN usuarios u ON u.id = p.usuario_id
+             WHERE p.token = ? AND p.expira_en > NOW() LIMIT 1'
+        );
+        $stmt->execute([$ptoken]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            self::limpiarPendiente2fa();
+            return null;
+        }
+        return $row;
+    }
+
+    private static function limpiarPendiente2fa(): void {
+        setcookie('dematiq_2fa_pending', '', [
+            'expires'  => time() - 3600,
+            'path'     => '/pages/corporativo',
+            'httponly' => true,
+            'samesite' => 'Strict',
+            'secure'   => isset($_SERVER['HTTPS']),
+        ]);
+    }
+
+    // ── Activar 2FA: genera un secreto pendiente de confirmar ───────────
+    public static function setup2FA(int $userId): array {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT username FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt->execute([$userId]);
+        $username = $stmt->fetchColumn();
+        if (!$username) return ['ok' => false, 'msg' => 'Usuario no encontrado'];
+
+        $secreto = Totp::generarSecreto();
+        $pdo->prepare('UPDATE usuarios SET totp_secret_pendiente = ? WHERE id = ?')->execute([$secreto, $userId]);
+
+        return [
+            'ok'      => true,
+            'secreto' => $secreto,
+            'otpauth' => Totp::otpauthUri($secreto, $username),
+        ];
+    }
+
+    // ── Confirmar 2FA con el primer código generado por la app ──────────
+    public static function confirm2FA(int $userId, string $codigo): array {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT totp_secret_pendiente FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt->execute([$userId]);
+        $secreto = $stmt->fetchColumn();
+
+        if (!$secreto) {
+            return ['ok' => false, 'msg' => 'No hay una activación de 2FA en curso. Vuelve a empezar.'];
+        }
+        if (!Totp::verificar($secreto, $codigo)) {
+            return ['ok' => false, 'msg' => 'Código incorrecto. Revisa la hora de tu teléfono e intenta de nuevo.'];
+        }
+
+        $pdo->prepare(
+            'UPDATE usuarios SET totp_secret = ?, totp_secret_pendiente = NULL, totp_habilitado = 1 WHERE id = ?'
+        )->execute([$secreto, $userId]);
+
+        return ['ok' => true, 'codigos' => self::generarCodigosRecuperacion($userId)];
+    }
+
+    // ── Desactivar 2FA (requiere confirmar la contraseña actual) ────────
+    public static function disable2FA(int $userId, string $password): array {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT password_hash FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt->execute([$userId]);
+        $hash = $stmt->fetchColumn();
+
+        if (!$hash || !password_verify($password, $hash)) {
+            return ['ok' => false, 'msg' => 'Contraseña incorrecta'];
+        }
+
+        $pdo->prepare(
+            'UPDATE usuarios SET totp_secret = NULL, totp_secret_pendiente = NULL, totp_habilitado = 0 WHERE id = ?'
+        )->execute([$userId]);
+        $pdo->prepare('DELETE FROM usuario_codigos_recuperacion WHERE usuario_id = ?')->execute([$userId]);
+
+        return ['ok' => true];
+    }
+
+    public static function regenerarCodigosRecuperacion(int $userId): array {
+        return ['ok' => true, 'codigos' => self::generarCodigosRecuperacion($userId)];
+    }
+
+    private static function generarCodigosRecuperacion(int $userId, int $cantidad = 8): array {
+        global $pdo;
+        $pdo->prepare('DELETE FROM usuario_codigos_recuperacion WHERE usuario_id = ?')->execute([$userId]);
+
+        $stmt = $pdo->prepare(
+            'INSERT INTO usuario_codigos_recuperacion (usuario_id, codigo_hash) VALUES (?, ?)'
+        );
+        $codigos = [];
+        for ($i = 0; $i < $cantidad; $i++) {
+            $plano = strtoupper(bin2hex(random_bytes(4)));
+            $formateado = substr($plano, 0, 4) . '-' . substr($plano, 4, 4);
+            $stmt->execute([$userId, hash('sha256', $formateado)]);
+            $codigos[] = $formateado;
+        }
+        return $codigos;
     }
 
     // ── Verificar sesión activa ────────────────────────────────────────

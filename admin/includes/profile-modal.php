@@ -105,6 +105,42 @@ $_fotoPrefix = $fotoPrefix ?? '';
           </div>
         </div>
         <button class="profile-save-btn" id="pwdSaveBtn" onclick="changePassword()">Cambiar contraseña</button>
+
+        <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border,#e2e8f0)">
+          <h3 style="font-size:.95rem;margin-bottom:4px">Verificación en dos pasos</h3>
+          <p id="twofaStatusText" style="font-size:.8rem;color:var(--text-lt,#5a6f96);margin-bottom:14px">Cargando…</p>
+
+          <div id="twofaOffPanel" style="display:none">
+            <button class="profile-save-btn" id="twofaSetupBtn" onclick="startSetup2FA()">Activar verificación en dos pasos</button>
+          </div>
+
+          <div id="twofaSetupPanel" style="display:none">
+            <p style="font-size:.8rem;margin-bottom:8px">Ingresa esta clave en tu app autenticadora (Google Authenticator, Authy, etc.):</p>
+            <code id="twofaSecretCode" style="display:block;background:#f0f4fb;padding:10px 12px;border-radius:8px;font-size:.95rem;letter-spacing:1px;word-break:break-all;margin-bottom:14px"></code>
+            <div class="profile-field">
+              <label for="twofaConfirmCode">Código de 6 dígitos</label>
+              <input type="text" id="twofaConfirmCode" inputmode="numeric" maxlength="6" placeholder="123456">
+            </div>
+            <button class="profile-save-btn" id="twofaConfirmBtn" onclick="confirmSetup2FA()">Confirmar y activar</button>
+          </div>
+
+          <div id="twofaCodesPanel" style="display:none">
+            <p style="font-size:.8rem;margin-bottom:8px;font-weight:600;color:#b91c1c">Guarda estos códigos de recuperación — no se volverán a mostrar. Cada uno sirve una sola vez si pierdes tu teléfono.</p>
+            <div id="twofaCodesList" style="font-family:monospace;font-size:.85rem;background:#f0f4fb;padding:12px;border-radius:8px;line-height:1.9;margin-bottom:14px"></div>
+            <button class="profile-save-btn" onclick="closeTwofaCodesPanel()">Ya los guardé</button>
+          </div>
+
+          <div id="twofaOnPanel" style="display:none">
+            <div class="profile-field">
+              <label for="twofaDisablePwd">Contraseña actual</label>
+              <input type="password" id="twofaDisablePwd" placeholder="Necesaria para desactivar o regenerar códigos">
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="profile-save-btn" id="twofaRegenBtn" onclick="regenerateCodes2FA()">Regenerar códigos de recuperación</button>
+              <button class="profile-save-btn" id="twofaDisableBtn" onclick="disable2FA()" style="background:#b91c1c">Desactivar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -175,8 +211,110 @@ $_fotoPrefix = $fotoPrefix ?? '';
       document.getElementById('profileTelefono').value        = json.data.telefono         || '';
       document.getElementById('profileUsername').value        = json.data.username;
       setModalAvatar(json.data.foto, json.data.primer_nombre || json.data.nombre);
+      setTwofaState(!!json.data.totp_habilitado);
     } catch {}
   }
+
+  function setTwofaState(habilitado) {
+    document.getElementById('twofaOffPanel').style.display   = habilitado ? 'none' : 'block';
+    document.getElementById('twofaOnPanel').style.display    = habilitado ? 'block' : 'none';
+    document.getElementById('twofaSetupPanel').style.display = 'none';
+    document.getElementById('twofaCodesPanel').style.display = 'none';
+    document.getElementById('twofaStatusText').textContent = habilitado
+      ? 'Activada — se pedirá un código además de tu contraseña al iniciar sesión.'
+      : 'Desactivada. Recomendado para proteger tu cuenta aunque tu contraseña se filtre.';
+  }
+
+  function showRecoveryCodes(codigos) {
+    document.getElementById('twofaCodesList').innerHTML = codigos.map(function (c) { return '<div>' + c + '</div>'; }).join('');
+    document.getElementById('twofaCodesPanel').style.display = 'block';
+  }
+
+  window.startSetup2FA = async function () {
+    const btn = document.getElementById('twofaSetupBtn');
+    btn.disabled = true;
+    const fd = new FormData();
+    fd.append('action', '2fa_setup');
+    try {
+      const res  = await fetch(_api, { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
+      const json = await res.json();
+      if (json.ok) {
+        document.getElementById('twofaSecretCode').textContent = (json.secreto.match(/.{1,4}/g) || [json.secreto]).join(' ');
+        document.getElementById('twofaOffPanel').style.display   = 'none';
+        document.getElementById('twofaSetupPanel').style.display = 'block';
+      } else { showToast(json.msg || 'Error', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
+    finally { btn.disabled = false; }
+  };
+
+  window.confirmSetup2FA = async function () {
+    const codigo = document.getElementById('twofaConfirmCode').value.trim();
+    if (!codigo) { showToast('Ingresa el código de 6 dígitos', 'error'); return; }
+    const btn = document.getElementById('twofaConfirmBtn');
+    btn.disabled = true; btn.textContent = 'Confirmando…';
+    const fd = new FormData();
+    fd.append('action', '2fa_confirm');
+    fd.append('codigo', codigo);
+    try {
+      const res  = await fetch(_api, { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
+      const json = await res.json();
+      if (json.ok) {
+        showToast('Verificación en dos pasos activada');
+        document.getElementById('twofaConfirmCode').value = '';
+        document.getElementById('twofaSetupPanel').style.display = 'none';
+        document.getElementById('twofaStatusText').textContent = 'Activada — se pedirá un código además de tu contraseña al iniciar sesión.';
+        if (profileData) profileData.totp_habilitado = 1;
+        showRecoveryCodes(json.codigos);
+      } else { showToast(json.msg || 'Código incorrecto', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Confirmar y activar'; }
+  };
+
+  window.closeTwofaCodesPanel = function () {
+    document.getElementById('twofaCodesPanel').style.display = 'none';
+    document.getElementById('twofaOnPanel').style.display    = 'block';
+  };
+
+  window.disable2FA = async function () {
+    const pwd = document.getElementById('twofaDisablePwd').value;
+    if (!pwd) { showToast('Ingresa tu contraseña', 'error'); return; }
+    const btn = document.getElementById('twofaDisableBtn');
+    btn.disabled = true;
+    const fd = new FormData();
+    fd.append('action', '2fa_disable');
+    fd.append('password', pwd);
+    try {
+      const res  = await fetch(_api, { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
+      const json = await res.json();
+      if (json.ok) {
+        showToast('Verificación en dos pasos desactivada');
+        document.getElementById('twofaDisablePwd').value = '';
+        if (profileData) profileData.totp_habilitado = 0;
+        setTwofaState(false);
+      } else { showToast(json.msg || 'Error', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
+    finally { btn.disabled = false; }
+  };
+
+  window.regenerateCodes2FA = async function () {
+    const pwd = document.getElementById('twofaDisablePwd').value;
+    if (!pwd) { showToast('Ingresa tu contraseña arriba para confirmar', 'error'); return; }
+    const btn = document.getElementById('twofaRegenBtn');
+    btn.disabled = true;
+    const fd = new FormData();
+    fd.append('action', '2fa_regenerar_codigos');
+    fd.append('password', pwd);
+    try {
+      const res  = await fetch(_api, { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
+      const json = await res.json();
+      if (json.ok) {
+        document.getElementById('twofaDisablePwd').value = '';
+        document.getElementById('twofaOnPanel').style.display = 'none';
+        showRecoveryCodes(json.codigos);
+      } else { showToast(json.msg || 'Error', 'error'); }
+    } catch { showToast('Error de conexión', 'error'); }
+    finally { btn.disabled = false; }
+  };
 
   function setModalAvatar(foto, nombre) {
     const el    = document.getElementById('modalAvatarCircle');

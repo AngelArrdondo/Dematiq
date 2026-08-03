@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/conexion.php';
+require_once __DIR__ . '/../../includes/formguard.php';
 require_once __DIR__ . '/../../includes/PHPMailer/Exception.php';
 require_once __DIR__ . '/../../includes/PHPMailer/PHPMailer.php';
 require_once __DIR__ . '/../../includes/PHPMailer/SMTP.php';
@@ -13,10 +14,19 @@ $submitted = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
+    $ip    = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
-    if ($email === '') {
+    // Honeypot — campo invisible para humanos
+    if (trim($_POST['sitio_web'] ?? '') !== '') {
+        FormGuard::registrar('recuperacion', $ip, 'honeypot');
+        $submitted = true;
+        $msg = 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada (y spam).';
+    } elseif (FormGuard::golpeado('recuperacion', $ip, 3, 15)) {
+        $error = 'Demasiados intentos. Espera unos minutos e intenta de nuevo.';
+    } elseif ($email === '') {
         $error = 'Ingresa tu correo electrónico.';
     } else {
+        FormGuard::registrar('recuperacion', $ip, 'enviado');
         $stmt = $pdo->prepare('SELECT id, nombre, activo FROM usuarios WHERE username = ? LIMIT 1');
         $stmt->execute([$email]);
         $user = $stmt->fetch();
@@ -191,6 +201,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <?php if (!$submitted): ?>
   <form method="POST">
+    <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+      <label for="fp-sitio-web">No llenar este campo</label>
+      <input type="text" id="fp-sitio-web" name="sitio_web" tabindex="-1" autocomplete="off">
+    </div>
     <div class="field-wrap">
       <input type="email" name="email" placeholder="Correo electrónico"
              value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required autofocus>

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !Auth::csrfVerify()) {
 
 if ($action === 'get') {
     try {
-        $stmt = $pdo->prepare('SELECT id, username, nombre, primer_nombre, segundo_nombre, apellido_paterno, apellido_materno, email_contacto, telefono, foto FROM usuarios WHERE id = ? LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, username, nombre, primer_nombre, segundo_nombre, apellido_paterno, apellido_materno, email_contacto, telefono, foto, totp_habilitado FROM usuarios WHERE id = ? LIMIT 1');
         $stmt->execute([$user['id']]);
         $profile = $stmt->fetch();
     } catch (PDOException $e) {
@@ -49,6 +49,7 @@ if ($action === 'get') {
         $profile['apellido_materno'] = null;
         $profile['email_contacto']   = null;
         $profile['telefono']         = null;
+        $profile['totp_habilitado']  = 0;
     }
     echo json_encode(['ok' => true, 'data' => $profile]);
 
@@ -191,6 +192,44 @@ if ($action === 'get') {
     Auth::invalidarOtrasSesiones($user['id']);
 
     echo json_encode(['ok' => true, 'msg' => 'Contraseña cambiada correctamente']);
+
+} elseif ($action === '2fa_setup') {
+    echo json_encode(Auth::setup2FA($user['id']));
+
+} elseif ($action === '2fa_confirm') {
+    $codigo = trim($_POST['codigo'] ?? '');
+    if (!$codigo) {
+        echo json_encode(['ok' => false, 'msg' => 'Ingresa el código de 6 dígitos']);
+        exit;
+    }
+    echo json_encode(Auth::confirm2FA($user['id'], $codigo));
+
+} elseif ($action === '2fa_disable') {
+    $password = $_POST['password'] ?? '';
+    if (!$password) {
+        echo json_encode(['ok' => false, 'msg' => 'Ingresa tu contraseña para confirmar']);
+        exit;
+    }
+    echo json_encode(Auth::disable2FA($user['id'], $password));
+
+} elseif ($action === '2fa_regenerar_codigos') {
+    $password = $_POST['password'] ?? '';
+    if (!$password) {
+        echo json_encode(['ok' => false, 'msg' => 'Ingresa tu contraseña para confirmar']);
+        exit;
+    }
+    $stmt = $pdo->prepare('SELECT password_hash, totp_habilitado FROM usuarios WHERE id = ? LIMIT 1');
+    $stmt->execute([$user['id']]);
+    $row = $stmt->fetch();
+    if (!$row || !password_verify($password, $row['password_hash'])) {
+        echo json_encode(['ok' => false, 'msg' => 'Contraseña incorrecta']);
+        exit;
+    }
+    if (!$row['totp_habilitado']) {
+        echo json_encode(['ok' => false, 'msg' => 'Activa la verificación en dos pasos primero']);
+        exit;
+    }
+    echo json_encode(Auth::regenerarCodigosRecuperacion($user['id']));
 
 } else {
     http_response_code(400);
