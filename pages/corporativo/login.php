@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 
-if (Auth::check()) {
-    header('Location: ../../admin/dashboard.php');
-    exit;
-}
+$activeUser = Auth::check();
 
 $error = '';
 $retry_after = null;
@@ -228,6 +225,27 @@ if (!$show2fa && $_SERVER['REQUEST_METHOD'] !== 'POST' && Auth::pendiente2fa()) 
     .form-error.show { display:flex; animation:shake .45s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake { 10%,90%{transform:translateX(-2px)} 20%,80%{transform:translateX(4px)} 30%,50%,70%{transform:translateX(-6px)} 40%,60%{transform:translateX(6px)} }
 
+    /* Aviso de sesión activa */
+    .active-session {
+      display:flex; gap:12px; align-items:flex-start;
+      background:#eef4ff; border:1px solid var(--border); border-left:3px solid var(--brand);
+      border-radius:12px; padding:14px 16px; margin-bottom:20px;
+      animation:fadeLeft .65s .18s both;
+    }
+    .active-session svg { flex-shrink:0; color:var(--brand); margin-top:1px; }
+    .active-session strong { display:block; font-size:.85rem; color:var(--text-dark); margin-bottom:2px; }
+    .active-session p { font-size:.78rem; color:var(--text-lt); line-height:1.4; margin-bottom:10px; }
+    .active-session-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .as-btn {
+      font-size:.78rem; font-weight:700; padding:7px 14px; border-radius:9px;
+      text-decoration:none; transition:opacity .18s, background .18s;
+      cursor:pointer;
+    }
+    .as-btn-primary { background:var(--brand); color:#fff; }
+    .as-btn-primary:hover { opacity:.88; }
+    .as-btn-outline { background:transparent; color:var(--text-lt); border:1.5px solid var(--border); }
+    .as-btn-outline:hover { border-color:var(--brand); color:var(--brand); }
+
     .field-wrap { margin-bottom:18px; animation:fadeLeft .65s .25s both; }
     .field-wrap label {
       display:block; margin-bottom:7px; padding-left:3px;
@@ -386,6 +404,20 @@ if (!$show2fa && $_SERVER['REQUEST_METHOD'] !== 'POST' && Auth::pendiente2fa()) 
           <p>Ingresa tus credenciales para acceder al panel de administración.</p>
         <?php endif; ?>
       </div>
+
+      <?php if ($activeUser && !$show2fa): ?>
+      <div class="active-session">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+        <div>
+          <strong>Sesión activa como <?= htmlspecialchars($activeUser['nombre']) ?></strong>
+          <p>¿Quieres continuar con esta cuenta o cerrar sesión para entrar con otra?</p>
+          <div class="active-session-actions">
+            <a href="../../admin/dashboard.php" class="as-btn as-btn-primary">Continuar al panel</a>
+            <a href="../../admin/logout.php" class="as-btn as-btn-outline">Cerrar sesión</a>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
 
       <?php if ($error): ?>
       <div class="form-error show" id="form-error" <?= $retry_after ? 'data-retry="' . (int) $retry_after . '"' : '' ?>>
