@@ -27,7 +27,7 @@ try {
   <link rel="stylesheet" href="../../assets/css/admin.css?v=16">
   <link rel="icon" type="image/svg+xml" href="../../../assets/images/logos/favicon-d.svg">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="../../assets/css/contacto/contacto.css?v=2">
+  <link rel="stylesheet" href="../../assets/css/contacto/contacto.css?v=3">
 </head>
 <body>
 
@@ -171,11 +171,30 @@ try {
           <p id="ficha-sin-documento" style="font-size:.85rem;color:var(--text-lt);margin-bottom:10px;<?= $fichaEliminada ? '' : 'display:none' ?>">
             Sin documento activo — el botón "Presentación" no se muestra en el sitio hasta que subas uno.
           </p>
-          <p id="ficha-con-documento" style="font-size:.85rem;margin-bottom:10px;<?= $fichaEliminada ? 'display:none' : '' ?>">
-            <a id="ficha-pdf-link" href="<?= htmlspecialchars('../../../' . $fichaPathActual) ?>" target="_blank" rel="noopener noreferrer" style="color:var(--brand-mid);font-weight:600">
-              Ver documento actual <span id="ficha-ext-actual">(<?= htmlspecialchars($fichaExtActual) ?>)</span>
-            </a>
-          </p>
+
+          <div id="ficha-con-documento" style="<?= $fichaEliminada ? 'display:none' : '' ?>">
+            <div class="ficha-preview-box" id="ficha-preview-box">
+              <?php if (!$fichaEliminada && $fichaExtActual === 'PDF'): ?>
+                <iframe id="ficha-preview-iframe" class="ficha-preview-iframe" src="<?= htmlspecialchars('../../../' . $fichaPathActual) ?>"></iframe>
+              <?php elseif (!$fichaEliminada): ?>
+                <div class="ficha-file-card" id="ficha-file-card">
+                  <div class="ficha-file-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                  </div>
+                  <div class="ficha-file-info">
+                    <strong id="ficha-file-name"><?= htmlspecialchars(basename($fichaPathActual)) ?></strong>
+                    <span id="ficha-file-ext" class="ficha-file-ext"><?= htmlspecialchars($fichaExtActual) ?></span>
+                  </div>
+                  <p class="ficha-file-note">Vista previa no disponible para este formato</p>
+                </div>
+              <?php endif; ?>
+            </div>
+            <button type="button" class="social-add-btn" id="ficha-ver-btn" onclick="verFichaCompleta()" style="margin-top:10px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Ver documento completo
+            </button>
+          </div>
+
           <input type="file" id="ficha-pdf-input"
                  accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
                  onchange="uploadFichaPdf(this)" style="display:none">
@@ -397,6 +416,15 @@ try {
   </div>
 </div>
 
+<div class="lightbox-backdrop" id="fichaLightbox" onclick="if(event.target===this) closeFichaLightbox()">
+  <div class="lightbox-content ficha-lightbox-content">
+    <button type="button" class="lightbox-close" onclick="closeFichaLightbox()" title="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <iframe id="fichaLightboxIframe" class="ficha-lightbox-iframe" src=""></iframe>
+  </div>
+</div>
+
 <?php $profileApiPath = '../../api/profile.php'; $fotoPrefix = '../../'; require __DIR__ . '/../../includes/profile-modal.php'; ?>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -405,7 +433,7 @@ try {
 const CSRF_TOKEN = '<?= $csrfToken ?>';
 const _D = <?= json_encode($d, JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="../../assets/js/contacto/contacto.js?v=2"></script>
+<script src="../../assets/js/contacto/contacto.js?v=3"></script>
 
 </body>
 </html>

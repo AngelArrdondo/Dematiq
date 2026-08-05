@@ -24,16 +24,55 @@ function actualizarUIFicha() {
   const sinDoc  = document.getElementById('ficha-sin-documento');
   const conDoc  = document.getElementById('ficha-con-documento');
   const delBtn  = document.getElementById('ficha-delete-btn');
+  const box     = document.getElementById('ficha-preview-box');
   const hayDoc  = fichaPdfPath !== '';
   sinDoc.style.display = hayDoc ? 'none' : '';
   conDoc.style.display = hayDoc ? '' : 'none';
   delBtn.style.display = hayDoc ? '' : 'none';
-  if (hayDoc) {
-    document.getElementById('ficha-pdf-link').href = '../../../' + fichaPdfPath;
-    document.getElementById('ficha-ext-actual').textContent =
-      '(' + (fichaPdfPath.split('.').pop() || '').toUpperCase() + ')';
+  if (!hayDoc) { box.innerHTML = ''; return; }
+
+  const url  = '../../../' + fichaPdfPath;
+  const name = fichaPdfPath.split('/').pop();
+  const ext  = (fichaPdfPath.split('.').pop() || '').toUpperCase();
+
+  if (ext === 'PDF') {
+    box.innerHTML = `<iframe id="ficha-preview-iframe" class="ficha-preview-iframe" src="${esc(url)}"></iframe>`;
+  } else {
+    box.innerHTML = `
+      <div class="ficha-file-card" id="ficha-file-card">
+        <div class="ficha-file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        </div>
+        <div class="ficha-file-info">
+          <strong id="ficha-file-name">${esc(name)}</strong>
+          <span id="ficha-file-ext" class="ficha-file-ext">${esc(ext)}</span>
+        </div>
+        <p class="ficha-file-note">Vista previa no disponible para este formato</p>
+      </div>`;
   }
 }
+
+/* ── Visor de documento completo (lightbox) ──────── */
+function verFichaCompleta() {
+  if (!fichaPdfPath) { showToast('Todavía no hay documento para mostrar', 'error'); return; }
+  const url = '../../../' + fichaPdfPath;
+  const ext = (fichaPdfPath.split('.').pop() || '').toLowerCase();
+  if (ext === 'pdf') {
+    document.getElementById('fichaLightboxIframe').src = url;
+    document.getElementById('fichaLightbox').classList.add('show');
+  } else {
+    window.open(url, '_blank');
+  }
+}
+function closeFichaLightbox() {
+  document.getElementById('fichaLightbox').classList.remove('show');
+  document.getElementById('fichaLightboxIframe').src = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('fichaLightbox').classList.contains('show')) {
+    closeFichaLightbox();
+  }
+});
 
 async function uploadFichaPdf(input) {
   if (!input.files[0]) return;

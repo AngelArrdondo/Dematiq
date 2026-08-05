@@ -475,3 +475,55 @@
     .festivo-row-inputs select.festivo-mes { width: 130px; }
     .festivo-row-inputs select:focus { outline: none; border-color: var(--brand-mid); }
     .festivos-empty { font-size: .82rem; color: var(--text-lt); padding: 4px 2px 12px; }
+
+    /* ── Ficha de la empresa — vista previa ──────── */
+    .ficha-preview-box {
+      border-radius: 12px; overflow: hidden; border: 1.5px solid #dde5f5;
+      background: #f5f8ff;
+    }
+    .ficha-preview-iframe { width: 100%; height: 260px; border: 0; display: block; }
+    .ficha-file-card {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: 6px; padding: 28px 20px; color: var(--text-lt);
+    }
+    .ficha-file-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-dark), var(--brand-mid));
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2px;
+    }
+    .ficha-file-icon svg { width: 22px; height: 22px; }
+    .ficha-file-info strong { display: block; font-size: .85rem; color: var(--brand-dark); word-break: break-all; }
+    .ficha-file-ext {
+      display: inline-block; margin-top: 4px; font-size: .68rem; font-weight: 700;
+      letter-spacing: .5px; color: var(--brand-mid); background: var(--brand-xlight);
+      border-radius: 6px; padding: 2px 8px;
+    }
+    .ficha-file-note { font-size: .72rem; margin: 2px 0 0; }
+
+    /* ── Lightbox (visor de documento) ───────────── */
+    .lightbox-backdrop {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(7,23,64,.82); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .22s;
+    }
+    .lightbox-backdrop.show { opacity: 1; pointer-events: auto; }
+    .lightbox-content {
+      max-width: min(92vw, 1000px); max-height: 88vh; position: relative;
+      transform: scale(.94); transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+    }
+    .lightbox-backdrop.show .lightbox-content { transform: scale(1); }
+    .lightbox-close {
+      position: absolute; top: -42px; right: 0; width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.28); color: #fff;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: background .15s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,.24); }
+    .lightbox-close svg { width: 16px; height: 16px; }
+    .ficha-lightbox-content { width: min(92vw, 1000px); }
+    .ficha-lightbox-iframe {
+      width: 100%; height: 82vh; border: 0; border-radius: 14px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5); background: #fff; display: block;
+    }
