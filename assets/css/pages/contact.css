@@ -470,6 +470,42 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
   border: 0;
 }
 
+.map-directions-wrap {
+  max-width: 1200px;
+  margin: 16px auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.map-directions-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  min-height: 46px;
+  background: linear-gradient(135deg, var(--brand-mid), var(--brand-light));
+  color: #fff !important;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 10px;
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(26,74,158,0.3);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.map-directions-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.map-directions-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(26,74,158,0.25);
+}
+
 /* ══ PDF MODAL ══ */
 .pdf-modal-content {
   border: none;
@@ -550,6 +586,12 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
     opacity: 0.92;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(26,74,158,0.45);
+  }
+
+  .map-directions-btn:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26,74,158,0.4);
   }
 
   .map-wrapper { height: 480px; border-radius: 16px; }

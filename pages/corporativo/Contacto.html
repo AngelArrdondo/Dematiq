@@ -6,7 +6,7 @@
   <title>Contacto | DEMATIQ</title>
   <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css?v=31">
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
 </head>
@@ -181,6 +181,14 @@
       allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
     </iframe>
   </div>
+  <div class="map-directions-wrap">
+    <a id="ct-map-directions" class="map-directions-btn"
+       href="https://www.google.com/maps/dir/?api=1&destination=20.621236,-100.470829"
+       target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3,11 22,2 13,21 11,13 3,11"/></svg>
+      Cómo llegar
+    </a>
+  </div>
 </section>
 
 <!-- ═══════════════ MODAL PDF ═══════════════ -->
@@ -285,6 +293,8 @@
         if (a) a.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
         const asideA = document.getElementById('ct-aside-address-a');
         if (asideA) asideA.href = 'https://www.google.com/maps?q=' + encodeURIComponent(d.mapCoords);
+        const directionsA = document.getElementById('ct-map-directions');
+        if (directionsA) directionsA.href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(d.mapCoords);
       }
 
       if (d.presentacionPdf === '') {
