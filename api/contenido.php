@@ -4,7 +4,7 @@ ini_set('display_errors', 0);   // evita que warnings contaminen el JSON
 require_once __DIR__ . '/../includes/contenido.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: public, max-age=60');
+header('Cache-Control: no-store, no-cache, must-revalidate');
 
 $clave = $_GET['clave'] ?? '';
 echo $clave
