@@ -250,6 +250,7 @@ body {
   color: #2c3447;
   max-width: 860px;
   margin: 0 0 clamp(28px, 4vw, 40px);
+  white-space: pre-line;
 }
 
 .ind-groups {
@@ -289,6 +290,7 @@ body {
   font-size: 0.92rem;
   line-height: 1.7;
   color: #5a6473;
+  white-space: pre-line;
 }
 
 @media (max-width: 880px) {
