@@ -45,7 +45,11 @@
       return [0, 1, 2].map(k => ({ v: arr[k]?.v || '', l: arr[k]?.l || '' }));
     })(),
   }));
-  let origJSON = JSON.stringify(projects);
+  let stats = Object.assign(
+    { proyectos: 8, tiposMaquina: 6, anios: 10, porcentaje: 100 },
+    CM.get('proyectos_stats') || {}
+  );
+  let origJSON = JSON.stringify({ projects, stats });
   let dirty    = false;
 
   /* ─── dirty ──────────────────────────────────────── */
@@ -56,13 +60,13 @@
   }
   function clearDirty() {
     dirty    = false;
-    origJSON = JSON.stringify(projects);
+    origJSON = JSON.stringify({ projects, stats });
     document.getElementById('unsavedNotice').classList.add('hidden');
     hideBlurPrompt();
     updateBanner();
   }
   function checkDirty() {
-    JSON.stringify(projects) !== origJSON ? markDirty() : clearDirty();
+    JSON.stringify({ projects, stats }) !== origJSON ? markDirty() : clearDirty();
   }
 
   /* ─── banner ─────────────────────────────────────── */
@@ -493,7 +497,13 @@
   }
 
   function cancelProjects() {
-    projects = JSON.parse(origJSON);
+    const restored = JSON.parse(origJSON);
+    projects = restored.projects;
+    stats    = restored.stats;
+    document.getElementById('statV1').value = stats.proyectos;
+    document.getElementById('statV2').value = stats.tiposMaquina;
+    document.getElementById('statV3').value = stats.anios;
+    document.getElementById('statV4').value = stats.porcentaje;
     renderProjects();
     clearDirty();
     showToast('Cambios descartados');
@@ -502,13 +512,22 @@
   function viewPublic(url) { window.open(url + '?v=' + Date.now(), 'dematiq_public'); }
 
   async function saveProjects() {
-    const before = JSON.parse(origJSON);
+    const before = JSON.parse(origJSON).projects;
     try {
       const payload = projects.map(p => ({
         ...p,
         metricas: (p.metricas || []).filter(m => (m.v || '').trim() || (m.l || '').trim()),
       }));
-      const res = await CM.set('proyectos', payload);
+      const statsPayload = {
+        proyectos:    +stats.proyectos    || 0,
+        tiposMaquina: +stats.tiposMaquina || 0,
+        anios:        +stats.anios        || 0,
+        porcentaje:   +stats.porcentaje   || 0,
+      };
+      const [res] = await Promise.all([
+        CM.set('proyectos', payload),
+        CM.set('proyectos_stats', statsPayload),
+      ]);
       if (res && res.ok) {
         CM.cleanupOrphanedImages(before, payload);
         clearDirty();

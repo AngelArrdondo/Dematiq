@@ -27,19 +27,19 @@
 <div class="proj-stats-band">
   <div class="proj-stats-inner">
     <div class="proj-stat">
-      <span class="proj-stat-v" data-target="8">0</span>
+      <span class="proj-stat-v" id="statV1" data-target="8">0</span>
       <span class="proj-stat-l">Proyectos</span>
     </div>
     <div class="proj-stat">
-      <span class="proj-stat-v" data-target="6">0</span>
+      <span class="proj-stat-v" id="statV2" data-target="6">0</span>
       <span class="proj-stat-l">Tipos de máquina</span>
     </div>
     <div class="proj-stat">
-      <span class="proj-stat-v" data-target="10" data-suffix="+">0+</span>
+      <span class="proj-stat-v" id="statV3" data-target="10" data-suffix="+">0+</span>
       <span class="proj-stat-l">Años automatizando</span>
     </div>
     <div class="proj-stat">
-      <span class="proj-stat-v" data-target="100" data-suffix="%">0%</span>
+      <span class="proj-stat-v" id="statV4" data-target="100" data-suffix="%">0%</span>
       <span class="proj-stat-l">A medida del cliente</span>
     </div>
   </div>
@@ -84,11 +84,24 @@
 <script src="../../assets/js/components/proyectos-data.js"></script>
 <script src="../../assets/js/components/proyectos.js"></script>
 
-<!-- Contadores animados -->
+<!-- Estadísticas: valores editables desde el admin + contadores animados -->
 <script>
-(function(){
+(async function(){
   var els = document.querySelectorAll('.proj-stat-v[data-target]');
   if(!els.length) return;
+
+  try {
+    var s = await fetch('/api/contenido.php?clave=proyectos_stats', { cache: 'no-store' }).then(function(r){ return r.json(); });
+    if (s) {
+      var map = { statV1: s.proyectos, statV2: s.tiposMaquina, statV3: s.anios, statV4: s.porcentaje };
+      Object.keys(map).forEach(function(id){
+        if (map[id] === undefined || map[id] === null || map[id] === '') return;
+        var el = document.getElementById(id);
+        if (el) el.dataset.target = map[id];
+      });
+    }
+  } catch (e) { /* fallo silencioso — quedan los valores estáticos */ }
+
   var done = false;
   function runCounters(){
     if(done) return; done = true;

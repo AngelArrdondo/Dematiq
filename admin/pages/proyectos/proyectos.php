@@ -131,6 +131,44 @@ try {
       </button>
     </div>
 
+    <!-- ══ CARD: ESTADÍSTICAS ══════════════════════════ -->
+    <div class="section-card" data-accent="teal">
+      <div class="sc-head">
+        <div class="sc-icon si-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        <div class="sc-head-text">
+          <h3>Estadísticas</h3>
+          <p>Números de la banda de estadísticas que aparece arriba del listado de proyectos</p>
+        </div>
+      </div>
+
+      <div class="field-row stats-grid">
+        <div class="field">
+          <div class="field-top"><label>Proyectos</label></div>
+          <input type="number" class="fi" id="statV1" value="<?= (int)($content['proyectos_stats']['proyectos'] ?? 8) ?>"
+            oninput="stats.proyectos=this.value;checkDirty()" onblur="onFieldBlur()">
+        </div>
+        <div class="field">
+          <div class="field-top"><label>Tipos de máquina</label></div>
+          <input type="number" class="fi" id="statV2" value="<?= (int)($content['proyectos_stats']['tiposMaquina'] ?? 6) ?>"
+            oninput="stats.tiposMaquina=this.value;checkDirty()" onblur="onFieldBlur()">
+        </div>
+        <div class="field">
+          <div class="field-top"><label>Años automatizando</label></div>
+          <input type="number" class="fi" id="statV3" value="<?= (int)($content['proyectos_stats']['anios'] ?? 10) ?>"
+            oninput="stats.anios=this.value;checkDirty()" onblur="onFieldBlur()">
+        </div>
+        <div class="field">
+          <div class="field-top"><label>% a medida del cliente</label></div>
+          <input type="number" class="fi" id="statV4" value="<?= (int)($content['proyectos_stats']['porcentaje'] ?? 100) ?>"
+            oninput="stats.porcentaje=this.value;checkDirty()" onblur="onFieldBlur()">
+        </div>
+      </div>
+    </div>
+
     <!-- ══ CARD: PROYECTOS ═════════════════════════════ -->
     <div class="section-card" data-accent="orange">
       <div class="sc-head">

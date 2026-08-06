@@ -86,6 +86,7 @@ const DEFAULT_CONTENT = {
     { nombre: 'Proyecto 9',  desc: 'Maquinado CNC de precisión.',                                                                                                           img: 'assets/images/products/maq.webp',        href: 'pages/manufactura/maqindus.html' },
     { nombre: 'Proyecto 10', desc: 'Equipo de manejo y prueba de componentes electrónicos en ambiente controlado.',                                                          img: 'assets/images/general/semi.webp',        href: 'pages/corporativo/soluciones.html' }
   ],
+  proyectos_stats: { proyectos: 8, tiposMaquina: 6, anios: 10, porcentaje: 100 },
   ensamble:   { titulo: 'Ensamble', subtitulo: 'Soluciones de Ensamble', tabs: [
     { nombre: 'Máquinas Automáticas',     desc: 'Unión y montaje autónomo de componentes sin intervención humana directa. Optimizan los tiempos de ciclo, garantizan una repetibilidad perfecta y elevan la productividad en líneas de producción masiva.', images: ['assets/images/products/ejem2.webp', 'assets/images/general/img1.webp'] },
     { nombre: 'Máquinas Semiautomáticas', desc: 'Estaciones de trabajo que combinan la flexibilidad de la carga manual del operador con el accionamiento automatizado y preciso de prensas o atornilladores. Maximizan la seguridad y controlan las variables críticas.', images: ['assets/images/products/en1.webp', 'assets/images/general/img1.webp'] },

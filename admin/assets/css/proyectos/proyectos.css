@@ -91,6 +91,7 @@
     .sc-icon{width:44px;height:44px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.18);}
     .sc-icon svg{width:20px;height:20px;color:#fff;}
     .si-orange{background:linear-gradient(135deg,#c2410c,#ea580c);}
+    .si-teal{background:linear-gradient(135deg,#0e7490,#06b6d4);}
     .sc-head-text{flex:1;min-width:0;}
     .sc-head-text h3{font-size:.95rem;font-weight:700;color:var(--text);}
     .sc-head-text p{font-size:.75rem;color:var(--text-lt);margin-top:2px;}
@@ -107,6 +108,8 @@
     textarea.fi{resize:vertical;line-height:1.6;}
     .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
     @media(max-width:640px){.field-row{grid-template-columns:1fr;}}
+    .stats-grid{grid-template-columns:repeat(4,1fr);gap:10px;}
+    @media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr;}}
 
     /* ─── SECTION DIVIDER ────────────────────────────── */
     .field-divider{font-size:.65rem;font-weight:800;color:var(--accent-lt);text-transform:uppercase;letter-spacing:.8px;margin:22px 0 14px;padding-top:14px;border-top:1.5px dashed var(--border);}
@@ -246,6 +249,7 @@
       transition: transform .35s ease;
     }
     .section-card[data-accent="orange"] { --accent-bar: linear-gradient(90deg,#c2410c,#ea580c); }
+    .section-card[data-accent="teal"]   { --accent-bar: linear-gradient(90deg,#0e7490,#06b6d4); }
     .section-card:hover::before, .section-card:focus-within::before { transform: scaleX(1); }
     .section-card:hover { box-shadow: 0 10px 30px rgba(60,20,0,.09); transform: translateY(-2px); }
     .sc-icon { transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
