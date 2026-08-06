@@ -75,7 +75,13 @@
   display: grid;
   grid-template-columns: calc(300px + clamp(16px, 5vw, 90px)) minmax(0, 1fr);
   align-items: stretch;
+  /* Oculto hasta que el JS termine de cargar el contenido real desde el
+     admin — evita el parpadeo del texto/imagen estática de respaldo antes
+     de mostrar el contenido actual. */
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
+.svc-explorer.svc-ready { opacity: 1; }
 
 /* IZQUIERDA — sidebar azul marino (Servicios) */
 .svc-optionlist {
@@ -183,6 +189,7 @@
   line-height: 1.78;
   color: var(--color-text);
   max-width: 760px;
+  white-space: pre-line;
 }
 
 /* fade al cambiar de opción */

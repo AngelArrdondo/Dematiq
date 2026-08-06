@@ -8,6 +8,7 @@
   line-height: 1.75;
   color: #1e2d50;
   margin-bottom: 14px;
+  white-space: pre-line;
 }
 
 /* ── Nuestra Filosofía ── */
@@ -67,6 +68,7 @@
   color: #3a4a6b;
   line-height: 1.75;
   margin: 0;
+  white-space: pre-line;
 }
 
 

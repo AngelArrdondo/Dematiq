@@ -48,6 +48,25 @@ Options -Indexes
   </IfModule>
 </FilesMatch>
 
+# ── Cache de archivos estáticos (evita re-descargar el video en cada
+#    navegación entre páginas) ─────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType video/mp4 "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(mp4|webp|jpe?g|png|svg|ico)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
 # ── Cabeceras de seguridad HTTP ──────────────────────────────
 <IfModule mod_headers.c>
   Header always set X-Frame-Options "SAMEORIGIN"

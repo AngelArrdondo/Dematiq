@@ -127,8 +127,11 @@
       });
     } catch {}
   })().finally(() => {
+    const reveal = () => document.querySelector('.svc-explorer')?.classList.add('svc-ready');
     const s = document.createElement('script');
     s.src = '../../assets/js/components/solucion-selector.js';
+    s.onload = reveal;
+    s.onerror = reveal;
     document.body.appendChild(s);
   });
   </script>

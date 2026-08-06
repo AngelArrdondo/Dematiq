@@ -146,8 +146,11 @@
         });
       } catch (e) {}
     })().finally(() => {
+      const reveal = () => document.querySelector('.svc-explorer')?.classList.add('svc-ready');
       const script = document.createElement('script');
       script.src = '../../assets/js/components/solucion-selector.js';
+      script.onload = reveal;
+      script.onerror = reveal;
       document.body.appendChild(script);
     });
   </script>

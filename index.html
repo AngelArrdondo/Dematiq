@@ -46,8 +46,9 @@
   <!-- ===================== HERO / VIDEO ===================== -->
   <section id="hero">
     <div class="hero-video-wrap">
+      <img class="hero-poster" src="assets/images/general/index.webp" alt="">
       <!-- Reemplaza assets/videos/hero.mp4 por el video. Mientras tanto se ve el poster. -->
-      <video class="hero-video" autoplay muted loop playsinline poster="assets/images/general/index.webp">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/images/general/index.webp" oncanplay="this.classList.add('is-ready')">
         <source src="assets/videos/hero.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
