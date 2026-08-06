@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /includes/
+Disallow: /database/
+
+Sitemap: https://dematiq.com.mx/sitemap.xml
