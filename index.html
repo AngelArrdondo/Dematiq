@@ -251,9 +251,11 @@
       // Hero
       if (home && home.hero && !Array.isArray(home.hero)) {
         const heroVideo  = document.querySelector('.hero-video');
+        const heroPoster = document.querySelector('.hero-poster');
         const heroSource = heroVideo?.querySelector('source');
         const heroBadge  = document.querySelector('.hero-brand h5');
         if (home.hero.poster && heroVideo)  heroVideo.poster = home.hero.poster;
+        if (home.hero.poster && heroPoster) heroPoster.src   = home.hero.poster;
         if (home.hero.video  && heroSource) { heroSource.src = home.hero.video; heroVideo.load(); }
         if (home.hero.badge  && heroBadge)  heroBadge.textContent = home.hero.badge;
       }
