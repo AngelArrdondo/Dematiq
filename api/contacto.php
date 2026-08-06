@@ -65,7 +65,7 @@ $nombre  = strip_tags($nombre);
 $asunto  = strip_tags($asunto) ?: 'Consulta desde DEMATIQ';
 $mensaje = strip_tags($mensaje);
 
-$destinatario = getenv('SMTP_TO') ?: 'ventas@dematiq.com.mx';
+$destinatario = getenv('SMTP_TO') ?: 'dematiq3@gmail.com';
 
 $cuerpo  = "Has recibido un nuevo mensaje desde el formulario de contacto de DEMATIQ.\n\n";
 $cuerpo .= "Nombre:  {$nombre}\n";
@@ -77,8 +77,9 @@ $cuerpo .= "\n-- \nFormulario web · dematiq.com.mx\n";
 // En producción (Hostinger): definidas via SetEnv en el .htaccess del
 // servidor (no versionado en git, ver .env.example). El puerto 465/smtps
 // se cuelga indefinidamente en este hosting; 587 con STARTTLS sí responde.
-$smtpHost = getenv('SMTP_HOST') ?: 'mail.dematiq.com.mx';
-$smtpUser = getenv('SMTP_USER') ?: 'ventas@dematiq.com.mx';
+// SMTP_USER requiere una "contraseña de aplicación" de Gmail (no la contraseña normal de la cuenta).
+$smtpHost = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
+$smtpUser = getenv('SMTP_USER') ?: 'dematiq3@gmail.com';
 $smtpPass = getenv('SMTP_PASS') ?: '';
 $smtpPort = getenv('SMTP_PORT') ?: 587;
 $smtpSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_STARTTLS;
