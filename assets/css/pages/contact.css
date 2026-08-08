@@ -396,7 +396,8 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
   -webkit-tap-highlight-color: transparent;
 }
 
-.social-pill img {
+.social-pill img,
+.social-pill svg {
   width: 20px;
   height: 20px;
   object-fit: contain;
