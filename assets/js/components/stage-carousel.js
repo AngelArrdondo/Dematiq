@@ -128,7 +128,17 @@
       const db = await fetch('/api/contenido.php?clave=proyectos', { cache: 'no-store' }).then(r => r.json());
       if (Array.isArray(db) && db.length) {
         const byId = Object.fromEntries(list.map(p => [p.id, p]));
-        list = db.map(row => ({ ...byId[row.id], ...row }));
+        list = db.map(row => {
+          const local = byId[row.id] || {};
+          return {
+            ...local,
+            id:        row.id        || local.id        || '',
+            title:     row.title     || local.title     || '',
+            desc:      row.desc      || local.desc      || '',
+            img:       row.img       || local.img       || '',
+            destacado: row.destacado ?? local.destacado ?? false,
+          };
+        });
       }
     } catch (_) {}
 

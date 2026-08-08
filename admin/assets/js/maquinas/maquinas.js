@@ -13,7 +13,10 @@
   document.addEventListener('click', () => userMenuBtn.classList.remove('open'));
 
   /* ─── definición de páginas ──────────────────────── */
-  const PAGES = [
+  /* key/url quedan fijos en código (mapean a archivos reales) — solo la
+     etiqueta y el orden son editables desde el admin, guardados en la
+     clave "maquinasPaginas" como [{key,label}, ...]. */
+  const DEFAULT_PAGES = [
     { key: 'ensamble',   label: 'Ensamble',          url: '/pages/ensamble/ensamble.html' },
     { key: 'maqcontrol', label: 'Control de Torque',  url: '/pages/maquinas/maqcontrol.html' },
     { key: 'maqprob',    label: 'Probadoras de Fuga', url: '/pages/maquinas/maqprob.html' },
@@ -24,23 +27,89 @@
     { key: 'maqindus',   label: 'Manufactura',        url: '/pages/manufactura/maqindus.html' },
   ];
 
+  function buildPagesList() {
+    const byKey = Object.fromEntries(DEFAULT_PAGES.map(p => [p.key, p]));
+    const saved = CM.get('maquinasPaginas');
+    if (!Array.isArray(saved) || !saved.length) return DEFAULT_PAGES.map(p => ({ ...p }));
+    const seen = new Set();
+    const merged = [];
+    saved.forEach(s => {
+      const base = byKey[s.key];
+      if (base && !seen.has(s.key)) {
+        merged.push({ key: base.key, url: base.url, label: (s.label || base.label).trim() || base.label });
+        seen.add(s.key);
+      }
+    });
+    DEFAULT_PAGES.forEach(p => { if (!seen.has(p.key)) merged.push({ ...p }); });
+    return merged;
+  }
+  let PAGES = buildPagesList();
+
   /* ─── estado ──────────────────────────────────────── */
   let currentKey  = 'ensamble';
   let currentData = { titulo: '', subtitulo: '', tabs: [] };
   let origJSON    = JSON.stringify(currentData);
   let dirty       = false;
+  let pagesDirty  = false;
+  let chipEditMode = false;
 
   /* ─── chips de selección de página ──────────────── */
+  function toggleChipEdit() {
+    chipEditMode = !chipEditMode;
+    const btn = document.getElementById('chipEditToggle');
+    if (btn) btn.textContent = chipEditMode ? 'Listo' : 'Renombrar / reordenar';
+    buildChips();
+  }
+
+  function movePage(idx, dir) {
+    const to = idx + dir;
+    if (to < 0 || to >= PAGES.length) return;
+    [PAGES[idx], PAGES[to]] = [PAGES[to], PAGES[idx]];
+    pagesDirty = true;
+    markDirty();
+    buildChips();
+  }
+
+  function renamePage(idx, value) {
+    PAGES[idx].label = value;
+    pagesDirty = true;
+    markDirty();
+  }
+
   function buildChips() {
     const wrap = document.getElementById('pageChips');
     wrap.innerHTML = '';
-    PAGES.forEach(p => {
-      const btn = document.createElement('button');
-      btn.className = 'page-chip' + (p.key === currentKey ? ' active' : '');
-      btn.textContent = p.label;
-      btn.dataset.key = p.key;
-      btn.addEventListener('click', () => requestSwitch(p.key));
-      wrap.appendChild(btn);
+    wrap.classList.remove('page-chips-edit');
+
+    if (!chipEditMode) {
+      PAGES.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'page-chip' + (p.key === currentKey ? ' active' : '');
+        btn.textContent = p.label;
+        btn.dataset.key = p.key;
+        btn.addEventListener('click', () => requestSwitch(p.key));
+        wrap.appendChild(btn);
+      });
+      return;
+    }
+
+    wrap.classList.add('page-chips-edit');
+    PAGES.forEach((p, idx) => {
+      const row = document.createElement('div');
+      row.className = 'page-chip-edit-row';
+      row.innerHTML = `
+        <div class="pcer-arrows">
+          <button type="button" class="pcer-arrow" ${idx === 0 ? 'disabled' : ''} title="Subir">▲</button>
+          <button type="button" class="pcer-arrow" ${idx === PAGES.length - 1 ? 'disabled' : ''} title="Bajar">▼</button>
+        </div>
+        <input type="text" class="fi pcer-input" value="${p.label.replace(/"/g,'&quot;')}" maxlength="40">
+      `;
+      const [upBtn, downBtn] = row.querySelectorAll('.pcer-arrow');
+      upBtn.addEventListener('click', () => movePage(idx, -1));
+      downBtn.addEventListener('click', () => movePage(idx, 1));
+      const input = row.querySelector('.pcer-input');
+      input.addEventListener('input', () => renamePage(idx, input.value));
+      wrap.appendChild(row);
     });
   }
 
@@ -51,8 +120,9 @@
     updateBanner();
   }
   function clearDirty() {
-    dirty    = false;
-    origJSON = JSON.stringify(currentData);
+    dirty      = false;
+    pagesDirty = false;
+    origJSON   = JSON.stringify(currentData);
     document.getElementById('unsavedNotice').classList.add('hidden');
     hideBlurPrompt();
     updateBanner();
@@ -63,7 +133,7 @@
       subtitulo: document.getElementById('fieldSubtitulo').value,
       tabs:      currentData.tabs
     };
-    JSON.stringify(now) !== origJSON ? markDirty() : clearDirty();
+    (JSON.stringify(now) !== origJSON || pagesDirty) ? markDirty() : clearDirty();
   }
 
   /* ─── banner ─────────────────────────────────────── */
@@ -125,6 +195,8 @@
   function modalSwitchDiscard() {
     document.getElementById('switchModal').classList.remove('show');
     dirty = false;
+    pagesDirty = false;
+    PAGES = buildPagesList();
     if (pendingSwitchKey) { loadPage(pendingSwitchKey); pendingSwitchKey = null; }
   }
   function modalSwitchCancel() {
@@ -505,8 +577,10 @@
     document.getElementById('fieldTitulo').value    = currentData.titulo;
     document.getElementById('fieldSubtitulo').value = currentData.subtitulo;
     origJSON = JSON.stringify(currentData);
+    PAGES = buildPagesList();
     renderTabs();
     clearDirty();
+    buildChips();
     showToast('Cambios descartados');
   }
 
@@ -519,8 +593,13 @@
     currentData.titulo    = document.getElementById('fieldTitulo').value.trim();
     currentData.subtitulo = document.getElementById('fieldSubtitulo').value.trim();
     const before = JSON.parse(origJSON);
+    const savingPages = pagesDirty;
     try {
-      const res = await CM.set(currentKey, currentData);
+      const calls = [ CM.set(currentKey, currentData) ];
+      if (savingPages) {
+        calls.push(CM.set('maquinasPaginas', PAGES.map(p => ({ key: p.key, label: p.label }))));
+      }
+      const [res] = await Promise.all(calls);
       if (res && res.ok) {
         CM.cleanupOrphanedImages(before, currentData);
         clearDirty();

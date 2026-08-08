@@ -705,6 +705,50 @@
     };
   }
 
+  /* ── Sincronizar títulos con "Seleccionar página de soluciones" (admin Máquinas) ── */
+  const MAQUINAS_DEFAULT_LABELS = {
+    ensamble: 'Ensamble', maqcontrol: 'Control de Torque', maqprob: 'Probadoras de Fuga',
+    maqinspe: 'Inspección', maclim: 'Limpieza', maqmar: 'Marcado',
+    macrobot: 'Celdas Robóticas', maqindus: 'Manufactura',
+  };
+  const MAQUINAS_KEY_BY_URL = {
+    '/pages/ensamble/ensamble.html': 'ensamble',
+    '/pages/maquinas/maqcontrol.html': 'maqcontrol',
+    '/pages/maquinas/maqprob.html': 'maqprob',
+    '/pages/maquinas/maqinspe.html': 'maqinspe',
+    '/pages/maquinas/maclim.html': 'maclim',
+    '/pages/maquinas/maqmar.html': 'maqmar',
+    '/pages/maquinas/macrobot.html': 'macrobot',
+    '/pages/manufactura/maqindus.html': 'maqindus',
+  };
+
+  function syncSolucionesFromMaquinas() {
+    const saved = CM.get('maquinasPaginas');
+    const labelByKey = Object.assign({}, MAQUINAS_DEFAULT_LABELS);
+    if (Array.isArray(saved)) saved.forEach(s => { if (s && s.key && s.label) labelByKey[s.key] = s.label; });
+
+    let changed = 0;
+    [solData.featured, solData.machines].forEach(list => {
+      list.forEach(card => {
+        const normHref = '/' + String(card.href || '').replace(/^\/+/, '');
+        const key = MAQUINAS_KEY_BY_URL[normHref];
+        if (key && labelByKey[key] && card.titulo !== labelByKey[key]) {
+          card.titulo = labelByKey[key];
+          changed++;
+        }
+      });
+    });
+
+    if (changed) {
+      renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
+      renderSolGrid('solMachinesGrid', solData.machines, 'machines');
+      checkDirty();
+      showToast(`${changed} título(s) sincronizado(s) desde Máquinas`);
+    } else {
+      showToast('Los títulos ya están sincronizados');
+    }
+  }
+
   /* ── CTA Buttons ─────────────────────────────── */
   const _rawCta      = (CM.get('home') || {})?.hero?.cta || {};
   const _rawTitulos  = (CM.get('home') || {})?.titulos   || {};

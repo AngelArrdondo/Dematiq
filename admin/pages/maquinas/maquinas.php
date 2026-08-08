@@ -150,6 +150,7 @@ try {
           <h3>Seleccionar página de soluciones</h3>
           <p>Elige la página que quieres editar — guarda antes de cambiar</p>
         </div>
+        <button type="button" class="btn-admin btn-outline-admin" id="chipEditToggle" onclick="toggleChipEdit()" style="margin-left:auto;flex-shrink:0;font-size:.78rem;padding:6px 12px;">Renombrar / reordenar</button>
       </div>
       <div class="page-chips-wrap" id="pageChips"></div>
     </div>

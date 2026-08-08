@@ -136,6 +136,15 @@
     .page-chip.active{background:linear-gradient(135deg,#0369a1,#0ea5e9);color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(3,105,161,.3);}
     .page-chip svg{width:11px;height:11px;}
 
+    /* ─── PAGE CHIPS — modo renombrar/reordenar ───────── */
+    .page-chips-wrap.page-chips-edit{flex-direction:column;gap:6px;}
+    .page-chip-edit-row{display:flex;align-items:center;gap:10px;padding:6px 10px;border:1.5px solid var(--border);border-radius:10px;background:#f8faff;}
+    .pcer-arrows{display:flex;flex-direction:column;gap:2px;}
+    .pcer-arrow{width:20px;height:16px;line-height:1;font-size:.6rem;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text-lt);cursor:pointer;padding:0;}
+    .pcer-arrow:hover:not(:disabled){border-color:#7ab8da;color:#0369a1;}
+    .pcer-arrow:disabled{opacity:.35;cursor:default;}
+    .pcer-input{flex:1;padding:6px 10px;font-size:.8rem;}
+
     /* ─── META FIELDS ────────────────────────────────── */
     .meta-fields-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px 24px;}
     @media(max-width:640px){.meta-fields-body{grid-template-columns:1fr;}}

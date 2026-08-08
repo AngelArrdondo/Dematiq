@@ -51,6 +51,7 @@
           anio:       row.anio       || local.anio       || '',
           img:        resolveImg(row.img || local.img || '') || '../../assets/images/general/img1.webp',
           alt:        row.alt        || local.alt        || '',
+          desc:       row.desc       || local.desc       || '',
           solucion:   row.solucion   || local.solucion   || '',
           resultados: row.resultados || local.resultados || '',
           metricas:   (Array.isArray(row.metricas) && row.metricas.length) ? row.metricas : (local.metricas || []),
@@ -112,13 +113,14 @@
   const extraParrafo = p.resultados
     ? `<p class="pd-about-text">${esc(p.resultados)}</p>` : '';
 
-  const narrative = p.solucion ? `
+  const lead = p.solucion || p.desc;
+  const narrative = lead ? `
     <section class="pd-about">
       <div class="pd-about-inner">
         <div class="pd-about-text-col">
           <span class="pd-about-eyebrow">Sobre el proyecto</span>
           <h2 class="pd-about-title">${esc(p.title)}</h2>
-          <p class="pd-about-lead">${esc(p.solucion)}</p>
+          <p class="pd-about-lead">${esc(lead)}</p>
           ${extraParrafo}
           <div class="pd-about-data">${dataRows}</div>
         </div>

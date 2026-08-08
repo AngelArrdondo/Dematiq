@@ -427,7 +427,7 @@
               <textarea class="fi" rows="3" placeholder="Párrafo principal: qué se diseñó y qué se resolvió para este proyecto…"
                 oninput="projects[${i}].solucion=this.value;checkDirty()"
                 onblur="onFieldBlur()">${escTxt(p.solucion||'')}</textarea>
-              <p class="field-hint">Párrafo destacado de la ficha del proyecto — si se deja vacío, esa sección no se muestra</p>
+              <p class="field-hint">Párrafo destacado de la ficha del proyecto — si se deja vacío, se usa la descripción breve</p>
             </div>
 
             <div class="field">
@@ -511,13 +511,30 @@
 
   function viewPublic(url) { window.open(url + '?v=' + Date.now(), 'dematiq_public'); }
 
+  function slugify(s) {
+    return (s || '')
+      .toString()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
   async function saveProjects() {
     const before = JSON.parse(origJSON).projects;
+    const usedIds = new Set();
     try {
-      const payload = projects.map(p => ({
-        ...p,
-        metricas: (p.metricas || []).filter(m => (m.v || '').trim() || (m.l || '').trim()),
-      }));
+      const payload = projects.map(p => {
+        let id = (p.id || '').trim() || slugify(p.title) || 'proyecto';
+        let unique = id, n = 2;
+        while (usedIds.has(unique)) unique = `${id}-${n++}`;
+        usedIds.add(unique);
+        return {
+          ...p,
+          id: unique,
+          metricas: (p.metricas || []).filter(m => (m.v || '').trim() || (m.l || '').trim()),
+        };
+      });
       const statsPayload = {
         proyectos:    +stats.proyectos    || 0,
         tiposMaquina: +stats.tiposMaquina || 0,

@@ -360,7 +360,10 @@ try {
         </div>
         <p class="sol-group-label">Fila principal</p>
         <div class="sol-cards-admin-grid" id="solFeaturedGrid"></div>
-        <p class="sol-group-label">Máquinas</p>
+        <p class="sol-group-label">
+          Máquinas
+          <button type="button" class="btn-admin btn-outline-admin" onclick="syncSolucionesFromMaquinas()" style="margin-left:10px;font-size:.72rem;padding:4px 10px;vertical-align:middle;">Sincronizar títulos desde Máquinas</button>
+        </p>
         <div class="sol-cards-admin-grid" id="solMachinesGrid"></div>
       </div>
     </div>
