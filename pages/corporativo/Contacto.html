@@ -19,7 +19,8 @@
   <meta name="twitter:image" content="https://dematiq.com.mx/assets/images/logos/DEMATIQ_logo_blanco_fondo_azul.webp">
   <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/css/styles.css?v=31">
+  <link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css?v=32">
   <link rel="icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/logos/favicon.ico">
 </head>
@@ -171,11 +172,10 @@
     <h2>Nuestra ubicación en el mapa</h2>
   </div>
   <div class="map-wrapper">
-    <iframe id="ct-map-iframe"
-      src="https://www.openstreetmap.org/export/embed.html?bbox=-100.478829%2C20.613236%2C-100.462829%2C20.629236&layer=mapnik&marker=20.621236%2C-100.470829"
-      width="100%" height="100%" style="border:0;"
-      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
+    <div id="ct-map"></div>
+    <button type="button" id="ct-map-recenter" class="map-recenter-btn" title="Volver a la ubicación">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+    </button>
   </div>
   <div class="map-directions-wrap">
     <a id="ct-map-directions" class="map-directions-btn"
@@ -217,6 +217,7 @@
 </div>
 
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/vendor/leaflet/leaflet.js"></script>
 <script src="../../assets/js/components/header.js"></script>
 <script src="../../assets/js/components/footer.js"></script>
 
@@ -241,6 +242,28 @@
     { id:'snapchat',  name:'Snapchat',
       icon:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.166.001C10.009.001 4.5.56 4.5 6.899V9H3l-.5 2.5h2C4.18 13.274 3.5 14.5 2 15c0 0 .5 2 4 2 0 0 .9 2 6 2s6-2 6-2c3.5 0 4-2 4-2-1.5-.5-2.18-1.726-2.5-3.5h2L21 9h-1.5V6.899C19.5.56 14.323.001 12.166.001z"/></svg>` },
   ];
+
+  // ── Mapa (Leaflet) ──
+  let ctMap, ctMarker;
+  let ctMapCenter = [20.621236, -100.470829];
+  const ctMapZoom = 16;
+
+  function initCtMap() {
+    const el = document.getElementById('ct-map');
+    if (!el || typeof L === 'undefined') return;
+    ctMap = L.map('ct-map', { scrollWheelZoom: false }).setView(ctMapCenter, ctMapZoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(ctMap);
+    ctMarker = L.marker(ctMapCenter).addTo(ctMap);
+  }
+  function recenterCtMap() {
+    if (!ctMap) return;
+    ctMap.setView(ctMapCenter, ctMapZoom);
+  }
+  initCtMap();
+  document.getElementById('ct-map-recenter')?.addEventListener('click', recenterCtMap);
 
   // ── Carga dinámica de datos de contacto ──
   (async function () {
@@ -297,11 +320,10 @@
       if (d.mapCoords) {
         const [lat, lng] = d.mapCoords.split(',').map(s => parseFloat(s.trim()));
         if (!isNaN(lat) && !isNaN(lng)) {
-          const iframe = document.getElementById('ct-map-iframe');
-          if (iframe) {
-            const delta = 0.008;
-            const bbox = [lng - delta, lat - delta, lng + delta, lat + delta].join(',');
-            iframe.src = 'https://www.openstreetmap.org/export/embed.html?bbox=' + encodeURIComponent(bbox) + '&layer=mapnik&marker=' + encodeURIComponent(lat + ',' + lng);
+          ctMapCenter = [lat, lng];
+          if (ctMap) {
+            ctMap.setView(ctMapCenter, ctMapZoom);
+            if (ctMarker) ctMarker.setLatLng(ctMapCenter);
           }
         }
         // Google Maps sí funciona bien como enlace normal (no embebido) — se usa

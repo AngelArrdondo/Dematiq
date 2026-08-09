@@ -455,6 +455,7 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
 }
 
 .map-wrapper {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   height: 260px;
@@ -464,12 +465,35 @@ a.contact-strip-card:hover span { color: var(--brand-mid); }
   box-shadow: 0 4px 24px rgba(13,33,85,0.2);
 }
 
-.map-wrapper iframe {
+.map-wrapper iframe,
+.map-wrapper #ct-map {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
 }
+
+.map-recenter-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--brand-mid);
+  box-shadow: 0 2px 8px rgba(13,33,85,0.3);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.map-recenter-btn svg { width: 19px; height: 19px; }
+.map-recenter-btn:hover { background: var(--brand-xlight); }
+.map-recenter-btn:active { transform: scale(0.94); }
 
 .map-directions-wrap {
   max-width: 1200px;
