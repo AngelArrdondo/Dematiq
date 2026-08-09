@@ -10,6 +10,7 @@
 let PROJECTS = window.DEMATIQ_PROJECTS || [];
 
 const ARROW_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+const ZOOM_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`;
 
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -54,6 +55,7 @@ function buildCard(p) {
   a.innerHTML = `
     <div class="proj-card-media">
       <span class="proj-badge">${esc(p.badge)}</span>
+      <button type="button" class="proj-zoom-btn" title="Ver imagen">${ZOOM_SVG}</button>
       <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy">
     </div>
     <div class="proj-card-body">
@@ -68,6 +70,11 @@ function buildCard(p) {
         <span class="proj-card-label">Ver proyecto</span>
       </div>
     </div>`;
+  a.querySelector('.proj-zoom-btn').addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    openProjLightbox(p.img, p.title);
+  });
   return a;
 }
 
@@ -84,6 +91,7 @@ function buildWide(p) {
   a.innerHTML = `
     <div class="proj-card-media">
       <span class="proj-badge">${esc(p.badge)}</span>
+      <button type="button" class="proj-zoom-btn" title="Ver imagen">${ZOOM_SVG}</button>
       <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy">
     </div>
     <div class="proj-card-body">
@@ -98,7 +106,29 @@ function buildWide(p) {
         <span class="proj-card-label">Ver proyecto completo</span>
       </div>
     </div>`;
+  a.querySelector('.proj-zoom-btn').addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    openProjLightbox(p.img, p.title);
+  });
   return a;
+}
+
+/* ── Lightbox (vista previa grande de la imagen) ── */
+function openProjLightbox(src, caption) {
+  if (!src) return;
+  const modal = document.getElementById('projLightbox');
+  const img   = document.getElementById('projLightboxImg');
+  if (!modal || !img) return;
+  img.src = src;
+  img.alt = caption || '';
+  const capEl = document.getElementById('projLightboxCaption');
+  if (capEl) capEl.textContent = caption || '';
+  modal.classList.add('show');
+}
+function closeProjLightbox() {
+  const modal = document.getElementById('projLightbox');
+  if (modal) modal.classList.remove('show');
 }
 
 let currentCat = 'all';
@@ -135,6 +165,16 @@ function render() {
 document.addEventListener('DOMContentLoaded', () => {
   paintCounts();
   render();
+
+  const lightbox = document.getElementById('projLightbox');
+  if (lightbox) {
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeProjLightbox(); });
+    const closeBtn = document.getElementById('projLightboxClose');
+    if (closeBtn) closeBtn.addEventListener('click', closeProjLightbox);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeProjLightbox();
+  });
 
   document.querySelectorAll('.proj-chip').forEach(btn => {
     btn.addEventListener('click', () => {

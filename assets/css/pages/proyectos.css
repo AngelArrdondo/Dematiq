@@ -179,6 +179,36 @@
   padding: 4px 9px;
 }
 
+/* ── Botón de lupa (ver imagen en grande) ── */
+.proj-zoom-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 3;
+  width: 32px; height: 32px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 50%;
+  background: rgba(0,0,40,0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.18s, transform 0.18s, background 0.15s;
+}
+.proj-card:hover .proj-zoom-btn,
+.proj-zoom-btn:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.proj-zoom-btn:hover { background: var(--brand-mid, #1a4a9e); }
+.proj-zoom-btn svg { width: 15px; height: 15px; }
+@media (hover: none) {
+  .proj-zoom-btn { opacity: 1; transform: scale(1); }
+}
+
 /* ── Cuerpo de texto (flex para alinear pies de tarjeta) ── */
 .proj-card-body {
   padding: 18px 20px 16px;
@@ -378,4 +408,64 @@
   .proj-stats-inner { grid-template-columns: repeat(2, 1fr); }
   .proj-stat:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.1); }
   .proj-stat:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.1); }
+}
+
+/* ══════════ LIGHTBOX (vista previa grande de la imagen) ══════════ */
+.proj-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0,0,20,0.86);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s;
+}
+.proj-lightbox-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.proj-lightbox-content {
+  position: relative;
+  max-width: min(92vw, 1100px);
+  max-height: 88vh;
+  transform: scale(0.94);
+  transition: transform 0.22s cubic-bezier(.34,1.56,.64,1);
+}
+.proj-lightbox-backdrop.show .proj-lightbox-content { transform: scale(1); }
+.proj-lightbox-content img {
+  max-width: 100%;
+  max-height: 82vh;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  background: #000028;
+  margin: 0 auto;
+}
+.proj-lightbox-close {
+  position: absolute;
+  top: -42px; right: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.proj-lightbox-close:hover { background: rgba(255,255,255,0.24); }
+.proj-lightbox-close svg { width: 16px; height: 16px; }
+.proj-lightbox-caption {
+  margin-top: 12px;
+  text-align: center;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
