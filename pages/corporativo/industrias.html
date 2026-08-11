@@ -167,6 +167,7 @@
     }
 
     renderAll(DATA);
+    document.querySelector('.svc-explorer')?.classList.add('svc-ready');
 
     // Sincroniza nombre/intro desde la BD si existe, conservando áreas y temas locales
     (async function () {
