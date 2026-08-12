@@ -97,15 +97,15 @@
     function panelHTML(ind, i) {
       const areas = (ind.areas || []).map(subItem).join('');
       const temas = (ind.temas || []).map(subItem).join('');
-      const img1  = ind.imagen1 ? '../../' + txt(ind.imagen1) : '../../assets/images/general/img1.webp';
-      const img2  = ind.imagen2 ? '../../' + txt(ind.imagen2) : '../../assets/images/general/img2.webp';
+      const img1  = ind.imagen1 ? '../../' + txt(ind.imagen1) : '';
+      const img2  = ind.imagen2 ? '../../' + txt(ind.imagen2) : '';
       return `<div id="${txt(ind.id)}" class="info-industria"${i === 0 ? ' style="display:block;"' : ''}>
         <h3>${txt(ind.nombre)}</h3>
         <p class="ind-intro">${txt(ind.intro)}</p>
         <div class="carousel2" data-idx="0">
           <div class="c2-track">
-            <img src="${img1}" alt="${txt(ind.nombre)}">
-            <img src="${img2}" alt="${txt(ind.nombre)}">
+            <img src="${img1}" alt="${txt(ind.nombre)}" onerror="this.onerror=null;this.style.display='none'">
+            <img src="${img2}" alt="${txt(ind.nombre)}" onerror="this.onerror=null;this.style.display='none'">
           </div>
           <div class="c2-dots"><span class="active" data-i="0"></span><span data-i="1"></span></div>
         </div>

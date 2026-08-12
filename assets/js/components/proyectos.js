@@ -56,7 +56,7 @@ function buildCard(p) {
     <div class="proj-card-media">
       <span class="proj-badge">${esc(p.badge)}</span>
       <button type="button" class="proj-zoom-btn" title="Ver imagen">${ZOOM_SVG}</button>
-      <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy">
+      <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy" onerror="this.onerror=null;this.style.display='none'">
     </div>
     <div class="proj-card-body">
       <div class="proj-card-meta">
@@ -92,7 +92,7 @@ function buildWide(p) {
     <div class="proj-card-media">
       <span class="proj-badge">${esc(p.badge)}</span>
       <button type="button" class="proj-zoom-btn" title="Ver imagen">${ZOOM_SVG}</button>
-      <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy">
+      <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy" onerror="this.onerror=null;this.style.display='none'">
     </div>
     <div class="proj-card-body">
       <div class="proj-card-meta">
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
           badge:  row.badge  || local.badge  || '',
           sector: row.sector || local.sector || '',
           anio:   row.anio   || local.anio   || '',
-          img:    resolveImg(row.img || local.img || '') || '../../assets/images/general/img1.webp',
+          img:    resolveImg(row.img || local.img || ''),
           alt:    row.alt    || local.alt    || '',
           desc:   row.desc   || local.desc   || '',
         };

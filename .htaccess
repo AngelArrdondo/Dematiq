@@ -65,6 +65,9 @@ Options -Indexes
   <FilesMatch "\.(mp4|webp|jpe?g|png|svg|ico)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
 </IfModule>
 
 # ── Cabeceras de seguridad HTTP ──────────────────────────────

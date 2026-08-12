@@ -49,7 +49,7 @@
           servicios:  row.servicios  || local.servicios  || '',
           ubicacion:  row.ubicacion  || local.ubicacion  || '',
           anio:       row.anio       || local.anio       || '',
-          img:        resolveImg(row.img || local.img || '') || '../../assets/images/general/img1.webp',
+          img:        resolveImg(row.img || local.img || ''),
           alt:        row.alt        || local.alt        || '',
           desc:       row.desc       || local.desc       || '',
           solucion:   row.solucion   || local.solucion   || '',
@@ -127,7 +127,7 @@
         <div class="pd-about-media-col">
           <div class="pd-about-media-sticky">
             <figure class="pd-about-figure">
-              <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy">
+              <img src="${esc(p.img)}" alt="${esc(p.alt)}" loading="lazy" onerror="this.onerror=null;this.style.display='none'">
             </figure>
           </div>
         </div>
@@ -139,7 +139,7 @@
     <a class="pd-rel-card" href="proyecto.html?id=${encodeURIComponent(r.id)}">
       <div class="pd-rel-media">
         <span class="pd-rel-badge">${esc(r.badge)}</span>
-        <img src="${esc(r.img)}" alt="${esc(r.alt)}" loading="lazy">
+        <img src="${esc(r.img)}" alt="${esc(r.alt)}" loading="lazy" onerror="this.onerror=null;this.style.display='none'">
       </div>
       <div class="pd-rel-body"><h3>${esc(r.title)}</h3></div>
     </a>`).join('');
@@ -150,7 +150,7 @@
       <span class="pd-tick pd-tick--tr" aria-hidden="true"></span>
       <span class="pd-tick pd-tick--bl" aria-hidden="true"></span>
       <span class="pd-tick pd-tick--br" aria-hidden="true"></span>
-      <img class="pd-hero-bg" src="${esc(p.img)}" alt="${esc(p.alt)}">
+      <img class="pd-hero-bg" src="${esc(p.img)}" alt="${esc(p.alt)}" onerror="this.onerror=null;this.style.display='none'">
       <div class="pd-hero-inner">
         <h1>${esc(p.title)}</h1>
       </div>

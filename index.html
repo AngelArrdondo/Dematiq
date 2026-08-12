@@ -46,9 +46,7 @@
   <!-- ===================== HERO / VIDEO ===================== -->
   <section id="hero">
     <div class="hero-video-wrap">
-      <img class="hero-poster" src="assets/images/general/index.webp" alt="">
-      <!-- Reemplaza assets/videos/hero.mp4 por el video. Mientras tanto se ve el poster. -->
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/images/general/index.webp" oncanplay="this.classList.add('is-ready')">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/images/general/index.webp?v=2">
         <source src="assets/videos/hero.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
@@ -251,11 +249,9 @@
       // Hero
       if (home && home.hero && !Array.isArray(home.hero)) {
         const heroVideo  = document.querySelector('.hero-video');
-        const heroPoster = document.querySelector('.hero-poster');
         const heroSource = heroVideo?.querySelector('source');
         const heroBadge  = document.querySelector('.hero-brand h5');
         if (home.hero.poster && heroVideo)  heroVideo.poster = home.hero.poster;
-        if (home.hero.poster && heroPoster) heroPoster.src   = home.hero.poster;
         if (home.hero.video  && heroSource) { heroSource.src = home.hero.video; heroVideo.load(); }
         if (home.hero.badge  && heroBadge)  heroBadge.textContent = home.hero.badge;
       }
@@ -284,7 +280,7 @@
             ? `<h5 class="card-title card-title--split">${esc(c.titulo)}<span class="card-title-line2">${esc(c.subtitulo)}</span></h5>`
             : `<h5 class="card-title">${esc(c.titulo)}</h5>`;
           const desc = c.descripcion ? `<span class="solucion-card-desc">${esc(c.descripcion)}</span>` : '';
-          return `<a href="${esc(c.href)}" class="custom-card-link"><div class="card custom-card solucion-icon-card"><div class="solucion-icon-wrapper"><img src="${esc(c.imagen)}" class="solucion-icon" alt="${esc(c.titulo)}" onerror="this.src='assets/images/general/img1.webp'"></div>${title}${desc}</div></a>`;
+          return `<a href="${esc(c.href)}" class="custom-card-link"><div class="card custom-card solucion-icon-card"><div class="solucion-icon-wrapper"><img src="${esc(c.imagen)}" class="solucion-icon" alt="${esc(c.titulo)}" onerror="this.onerror=null;this.style.display='none'"></div>${title}${desc}</div></a>`;
         }
         const feat = document.getElementById('solucionesFeatured');
         if (feat && Array.isArray(sol.featured)) feat.innerHTML = sol.featured.map(solCard).join('');

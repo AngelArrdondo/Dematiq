@@ -33,15 +33,6 @@
   min-height: 400px;
   overflow: hidden;
 }
-#hero .hero-poster {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
 #hero .hero-video {
   position: absolute;
   inset: 0;
@@ -51,10 +42,7 @@
   object-position: center;
   display: block;
   background: #000028;
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
-#hero .hero-video.is-ready { opacity: 1; }
 #hero .hero-overlay {
   position: absolute;
   inset: 0;
