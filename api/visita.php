@@ -12,10 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $pdo->prepare(
-        'INSERT INTO visitas_diarias (fecha, total) VALUES (CURDATE(), 1)
+    // No usar CURDATE(): corre en la zona horaria del servidor de MySQL (normalmente
+    // UTC en Hostinger), no en America/Mexico_City, así que el "día" no coincidía con
+    // la medianoche local (el contador arrancaba de madrugada en vez de a las 12am).
+    $hoy = date('Y-m-d');
+    $stmt = $pdo->prepare(
+        'INSERT INTO visitas_diarias (fecha, total) VALUES (:fecha, 1)
          ON DUPLICATE KEY UPDATE total = total + 1'
-    )->execute();
+    );
+    $stmt->execute(['fecha' => $hoy]);
     echo json_encode(['ok' => true]);
 } catch (PDOException $e) {
     error_log('Error al registrar visita diaria: ' . $e->getMessage());
