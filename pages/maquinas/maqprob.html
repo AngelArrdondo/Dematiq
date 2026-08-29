@@ -107,7 +107,7 @@
   <script>
   (async function() {
     try {
-      const data = await fetch('/api/contenido.php?clave=maqprob', { cache: 'no-store' }).then(r => r.json());
+      const data = await fetch('/api/contenido.php?clave=maqprob', { cache: 'no-store', signal: AbortSignal.timeout(3000) }).then(r => r.json());
       if (!data || !Array.isArray(data.tabs) || !data.tabs.length) return;
 
       if (data.titulo) {

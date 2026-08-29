@@ -97,6 +97,15 @@ const FOOTER_SOCIAL_NETWORKS = [
 ];
 
 function registrarVisita() {
+  // Sitio multipágina: cada clic a otra sección es una carga de página nueva, así
+  // que sin este candado cada navegación interna sumaba una "visita" (el contador
+  // debe medir visitantes por día, no cargas de página). Un candado por día en
+  // localStorage evita contar de nuevo hasta el día siguiente.
+  try {
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (localStorage.getItem('dtq_visita') === hoy) return;
+    localStorage.setItem('dtq_visita', hoy);
+  } catch {}
   fetch('/api/visita.php', { method: 'POST' }).catch(() => {});
 }
 
