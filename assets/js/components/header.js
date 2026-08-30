@@ -33,10 +33,14 @@ class HeaderComponent {
       { href: `${base}/pages/corporativo/nosotros.html`,   text: 'Sobre Nosotros',page: 'nosotros.html' },
       { href: `${base}/pages/corporativo/soluciones.html`, text: 'Proyectos',     page: ['soluciones.html', 'proyecto.html']},
       { href: `${base}/pages/corporativo/industrias.html`, text: 'Industrias',    page: 'industrias.html'},
-      { href: `${base}/pages/corporativo/Contacto.html`,   text: 'Contacto',      page: 'Contacto.html' }
+      { href: `${base}/pages/corporativo/Contacto.html`,   text: 'Contacto',      page: 'Contacto.html' },
+      { href: 'https://tienda.dematiq.com.mx/',            text: 'Tienda',        external: true }
     ];
 
     const navHTML = navItems.map(item => {
+      if (item.external) {
+        return `<li><a href="${item.href}" target="_blank" rel="noopener">${item.text}</a></li>`;
+      }
       const pages = Array.isArray(item.page) ? item.page : [item.page];
       const active = pages.includes(currentPage) ? ' class="active"' : '';
       return `<li><a href="${item.href}"${active}>${item.text}</a></li>`;
