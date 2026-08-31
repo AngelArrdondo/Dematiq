@@ -18,12 +18,12 @@
      clave "maquinasPaginas" como [{key,label}, ...]. */
   const DEFAULT_PAGES = [
     { key: 'ensamble',   label: 'Ensamble',          url: '/pages/ensamble/ensamble.html' },
-    { key: 'maqcontrol', label: 'Control de Torque',  url: '/pages/maquinas/maqcontrol.html' },
-    { key: 'maqprob',    label: 'Probadoras de Fuga', url: '/pages/maquinas/maqprob.html' },
+    { key: 'maqcontrol', label: 'Torque',             url: '/pages/maquinas/maqcontrol.html' },
+    { key: 'maqprob',    label: 'Fuga',               url: '/pages/maquinas/maqprob.html' },
     { key: 'maqinspe',   label: 'Inspección',         url: '/pages/maquinas/maqinspe.html' },
     { key: 'maclim',     label: 'Limpieza',           url: '/pages/maquinas/maclim.html' },
     { key: 'maqmar',     label: 'Marcado',            url: '/pages/maquinas/maqmar.html' },
-    { key: 'macrobot',   label: 'Celdas Robóticas',   url: '/pages/maquinas/macrobot.html' },
+    { key: 'macrobot',   label: 'Celdas robóticas',   url: '/pages/maquinas/macrobot.html' },
     { key: 'maqindus',   label: 'Manufactura',        url: '/pages/manufactura/maqindus.html' },
   ];
 

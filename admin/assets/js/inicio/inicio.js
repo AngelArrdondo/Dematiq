@@ -14,7 +14,7 @@
   document.addEventListener('click', () => userMenuBtn.classList.remove('open'));
 
   /* ── Load saved values ───────────────────────── */
-  const DEFAULTS = { video: 'assets/videos/hero.mp4', poster: 'assets/images/general/index.webp', badge: 'Bienvenido' };
+  const DEFAULTS = { video: 'assets/videos/hero.mp4', badge: 'Bienvenido' };
   const rawHome  = CM.get('home');
   const hero = (rawHome && rawHome.hero && !Array.isArray(rawHome.hero))
     ? Object.assign({}, DEFAULTS, rawHome.hero)
@@ -31,14 +31,12 @@
   function getValues() {
     return {
       badge:  document.getElementById('heroBadge').value,
-      poster: document.getElementById('posterPath').value,
       video:  document.getElementById('heroVideo').value,
     };
   }
   function checkDirty() {
     const cur = getValues();
     const heroChanged = cur.badge !== original.badge
-                     || cur.poster !== original.poster
                      || cur.video  !== original.video;
     const solChanged = typeof solOriginal !== 'undefined'
       && JSON.stringify(getSolValues()) !== JSON.stringify(solOriginal);
@@ -171,11 +169,9 @@
   });
 
   document.getElementById('heroBadge').value  = hero.badge  || '';
-  document.getElementById('posterPath').value = hero.poster || '';
   document.getElementById('heroVideo').value  = hero.video  || '';
 
   onBadgeChange(hero.badge  || '');
-  setPosterPreview(hero.poster || '');
   onVideoChange(hero.video  || '');
 
   /* ── Badge ───────────────────────────────────── */
@@ -187,56 +183,6 @@
     s.textContent = val.trim() || '—';
     s.className   = val.trim() ? 'bsc-val' : 'bsc-val dim';
     document.getElementById('tickBadge')?.classList.toggle('on', val.trim().length > 0);
-    checkDirty();
-  }
-
-  /* ── Poster ──────────────────────────────────── */
-  function setPosterPreview(src) {
-    const frame      = document.getElementById('posterFrame');
-    const img        = document.getElementById('posterImg');
-    const noImg      = document.getElementById('posterNoImg');
-    const deviceImg  = document.getElementById('devicePoster');
-    const deviceNone = document.getElementById('deviceNoPoster');
-    const statPoster = document.getElementById('statPoster');
-
-    const specs = document.getElementById('posterAnalysis');
-    document.getElementById('tickPoster')?.classList.toggle('on', !!src);
-    const lpFrame = document.getElementById('badgeLpFrame');
-    if (!src) {
-      img.style.display    = 'none';
-      noImg.style.display  = '';
-      deviceImg.style.display  = 'none';
-      deviceNone.style.display = '';
-      statPoster.textContent   = '—';
-      statPoster.className     = 'bsc-val dim';
-      if (lpFrame) lpFrame.style.backgroundImage = '';
-      document.getElementById('posterZoomBtn').style.display = 'none';
-      if (specs) ImageAnalysis.render(specs, '');
-      return;
-    }
-    const fullSrc = '../../../' + src;
-    img.onload = () => {
-      img.style.display   = 'block';
-      noImg.style.display = 'none';
-      deviceImg.style.display  = 'block';
-      deviceNone.style.display = 'none';
-      document.getElementById('posterZoomBtn').style.display = 'flex';
-      if (specs) ImageAnalysis.render(specs, fullSrc, { minW: 1920, minH: 1080, minRatio: 16 / 9, enforced: false });
-    };
-    img.onerror = () => {
-      img.style.display   = 'none';
-      noImg.style.display = '';
-      deviceImg.style.display  = 'none';
-      deviceNone.style.display = '';
-      document.getElementById('posterZoomBtn').style.display = 'none';
-      if (specs) ImageAnalysis.render(specs, '');
-    };
-    img.src = fullSrc;
-    deviceImg.src = fullSrc;
-    if (lpFrame) lpFrame.style.backgroundImage = `url("${fullSrc}")`;
-    const short = src.split('/').pop();
-    statPoster.textContent = short || src;
-    statPoster.className   = 'bsc-val';
     checkDirty();
   }
 
@@ -518,80 +464,11 @@
     analyzeVideo(player.src, null);
   }
 
-  /* ── Drag & drop zone ────────────────────────── */
-  function onDragOver(e) {
-    e.preventDefault();
-    document.getElementById('uploadZone').classList.add('dragging');
-    document.getElementById('uploadZoneText').textContent = 'Suelta para subir';
-  }
-  function onDragLeave(e) {
-    document.getElementById('uploadZone').classList.remove('dragging');
-    document.getElementById('uploadZoneText').textContent = 'Clic o arrastra una imagen';
-  }
-  function onDrop(e) {
-    e.preventDefault();
-    onDragLeave(e);
-    const file = e.dataTransfer.files[0];
-    if (file) uploadPosterFile(file);
-  }
-
-  /* ── Upload poster ───────────────────────────── */
-  const pickIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
-
-  async function uploadPoster(input) {
-    if (!input.files[0]) return;
-    await uploadPosterFile(input.files[0]);
-    input.value = '';
-  }
-
-  async function uploadPosterFile(file) {
-    const sizeMB = file.size / 1024 / 1024;
-    if (file.size > 5 * 1024 * 1024) {
-      showToast(`La imagen pesa ${sizeMB.toFixed(1)} MB — el máximo permitido es 5 MB`, 'error'); return;
-    }
-    if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes (JPG, PNG, WebP)', 'error'); return; }
-
-    const localURL = URL.createObjectURL(file);
-    const oldPosterPath = document.getElementById('posterPath').value;
-    document.getElementById('posterPath').value = '';
-    setPosterPreview('');
-    const img = document.getElementById('posterImg');
-    img.src = localURL; img.style.display = 'block';
-    document.getElementById('posterNoImg').style.display = 'none';
-    document.getElementById('devicePoster').src = localURL;
-    document.getElementById('devicePoster').style.display = 'block';
-    document.getElementById('deviceNoPoster').style.display = 'none';
-
-    const zone = document.getElementById('uploadZone');
-    zone.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="22" height="22"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg><div><strong>Subiendo imagen…</strong></div><span>${sizeMB.toFixed(1)} MB · por favor espera</span>`;
-
-    const fd = new FormData();
-    fd.append('image', file);
-    fd.append('oldPath', oldPosterPath || '');
-    try {
-      const res  = await fetch('../../api/contenido.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF_TOKEN }, body: fd });
-      const json = await res.json();
-      if (json.ok) {
-        document.getElementById('posterPath').value = json.path;
-        setPosterPreview(json.path); /* checkDirty() ya se llama dentro */
-        showToast('Imagen subida correctamente');
-      } else {
-        showToast(json.error || 'Error al subir', 'error');
-      }
-    } catch {
-      showToast('Error de conexión', 'error');
-    } finally {
-      zone.innerHTML = pickIcon + '<div><strong id="uploadZoneText">Clic o arrastra una imagen</strong></div><span>JPG, PNG, WebP · máx 5 MB</span>';
-    }
-  }
-
   /* ── Cancel / Save ───────────────────────────── */
   function cancelInicio() {
     document.getElementById('heroBadge').value  = original.badge  || '';
-    document.getElementById('posterPath').value = original.poster || '';
     document.getElementById('heroVideo').value  = original.video  || '';
     onBadgeChange(original.badge  || '');
-    setPosterPreview(original.poster || '');
     onVideoChange(original.video  || '');
     const player = document.getElementById('videoPlayer');
     player.pause(); player.src = original.video ? '../../../' + original.video : '';
@@ -639,7 +516,6 @@
     const ctaVals = getCtaValues();
     home.hero = {
       badge:  document.getElementById('heroBadge').value.trim(),
-      poster: document.getElementById('posterPath').value.trim(),
       video:  document.getElementById('heroVideo').value.trim(),
       cta: ctaVals,
     };
@@ -650,6 +526,7 @@
     try {
       const res = await CM.set('home', home);
       if (res && res.ok) {
+        if (home.soluciones) await pushSolucionTitlesToMaquinas(home.soluciones);
         original = Object.assign({}, home.hero);
         if (typeof solData !== 'undefined') solOriginal = JSON.parse(JSON.stringify(home.soluciones));
         originalCta     = Object.assign({}, ctaVals);
@@ -659,11 +536,14 @@
         const btn = document.getElementById('mainSaveBtn');
         if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 900); }
         viewPublic('/index.html');
+        return true;
       } else {
         showToast(res?.error || 'Error al guardar', 'error');
+        return false;
       }
     } catch {
       showToast('Error de conexión', 'error');
+      return false;
     }
   }
 
@@ -705,12 +585,7 @@
     };
   }
 
-  /* ── Sincronizar títulos con "Seleccionar página de soluciones" (admin Máquinas) ── */
-  const MAQUINAS_DEFAULT_LABELS = {
-    ensamble: 'Ensamble', maqcontrol: 'Control de Torque', maqprob: 'Probadoras de Fuga',
-    maqinspe: 'Inspección', maclim: 'Limpieza', maqmar: 'Marcado',
-    macrobot: 'Celdas Robóticas', maqindus: 'Manufactura',
-  };
+  /* ── Sincronizar títulos con el "Título principal (h1)" de cada página de Máquinas ── */
   const MAQUINAS_KEY_BY_URL = {
     '/pages/ensamble/ensamble.html': 'ensamble',
     '/pages/maquinas/maqcontrol.html': 'maqcontrol',
@@ -722,18 +597,34 @@
     '/pages/manufactura/maqindus.html': 'maqindus',
   };
 
-  function syncSolucionesFromMaquinas() {
-    const saved = CM.get('maquinasPaginas');
-    const labelByKey = Object.assign({}, MAQUINAS_DEFAULT_LABELS);
-    if (Array.isArray(saved)) saved.forEach(s => { if (s && s.key && s.label) labelByKey[s.key] = s.label; });
+  /* Al guardar Inicio, cualquier título de tarjeta que apunte a una página de
+     Máquinas se escribe también como el h1 real de esa página — una sola fuente
+     de verdad, sin necesidad de sincronizar manualmente. */
+  async function pushSolucionTitlesToMaquinas(sol) {
+    const writes = [];
+    [sol.featured, sol.machines].forEach(list => {
+      (list || []).forEach(card => {
+        const normHref = '/' + String(card.href || '').replace(/^\/+/, '');
+        const key = MAQUINAS_KEY_BY_URL[normHref];
+        if (!key) return;
+        const pageData = CM.get(key);
+        if (pageData && card.titulo && pageData.titulo !== card.titulo) {
+          writes.push(CM.set(key, Object.assign({}, pageData, { titulo: card.titulo })));
+        }
+      });
+    });
+    if (writes.length) await Promise.all(writes);
+  }
 
+  async function syncSolucionesFromMaquinas() {
     let changed = 0;
     [solData.featured, solData.machines].forEach(list => {
       list.forEach(card => {
         const normHref = '/' + String(card.href || '').replace(/^\/+/, '');
         const key = MAQUINAS_KEY_BY_URL[normHref];
-        if (key && labelByKey[key] && card.titulo !== labelByKey[key]) {
-          card.titulo = labelByKey[key];
+        const titulo = key && CM.get(key)?.titulo;
+        if (titulo && card.titulo !== titulo) {
+          card.titulo = titulo;
           changed++;
         }
       });
@@ -742,8 +633,8 @@
     if (changed) {
       renderSolGrid('solFeaturedGrid', solData.featured, 'featured');
       renderSolGrid('solMachinesGrid', solData.machines, 'machines');
-      checkDirty();
-      showToast(`${changed} título(s) sincronizado(s) desde Máquinas`);
+      const ok = await saveInicio();
+      if (ok) showToast(`${changed} título(s) sincronizado(s) y guardado(s) desde Máquinas`);
     } else {
       showToast('Los títulos ya están sincronizados');
     }

@@ -33,8 +33,6 @@ try {
 <div style="display:none;position:fixed;top:-9999px;left:-9999px;pointer-events:none" aria-hidden="true">
   <span id="deviceBadge">Bienvenido</span>
   <span id="deviceVideoBadge"></span>
-  <div  id="deviceNoPoster"></div>
-  <img  id="devicePoster" src="" alt="">
 </div>
 
 <script>window.__DB_CONTENT = <?= json_encode($content, JSON_UNESCAPED_UNICODE) ?>;</script>
@@ -94,7 +92,7 @@ try {
           Portada activa
         </div>
         <h1 class="banner-title">Hero Principal</h1>
-        <p class="banner-desc">Controla el video de fondo, la imagen de respaldo y el texto de bienvenida que ven los visitantes al entrar al sitio.</p>
+        <p class="banner-desc">Controla el video de fondo y el texto de bienvenida que ven los visitantes al entrar al sitio.</p>
         <div class="banner-section-cards">
           <div class="bsc">
             <div class="bsc-icon bsci-blue">
@@ -103,15 +101,6 @@ try {
             <div>
               <div class="bsc-label">Bienvenida</div>
               <div class="bsc-val" id="statBadge">—</div>
-            </div>
-          </div>
-          <div class="bsc">
-            <div class="bsc-icon bsci-teal">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-            </div>
-            <div>
-              <div class="bsc-label">Poster</div>
-              <div class="bsc-val" id="statPoster">—</div>
             </div>
           </div>
           <div class="bsc">
@@ -130,7 +119,6 @@ try {
     <!-- ── QUICK NAV ──────────────────────────────────────── -->
     <nav class="quick-nav" id="quickNav" aria-label="Ir a sección">
       <a class="qn-pill" data-target="secBienvenida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Bienvenida</a>
-      <a class="qn-pill" data-target="secPoster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>Imagen</a>
       <a class="qn-pill" data-target="secVideo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23,7 16,12 23,17 23,7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>Video</a>
       <a class="qn-pill" data-target="secSoluciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Soluciones</a>
       <a class="qn-pill" data-target="secCta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13,17 18,12 13,7"/><polyline points="6,17 11,12 6,7"/></svg>Botones</a>
@@ -191,71 +179,14 @@ try {
                   <span class="badge-lp-btn ghost" id="badgeLpBtn2">Servicios</span>
                 </div>
               </div>
-              <p class="field-hint" style="margin-top:8px">Refleja el badge, el poster y los botones CTA en tiempo real</p>
+              <p class="field-hint" style="margin-top:8px">Refleja el badge y los botones CTA en tiempo real</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ── 2. IMAGEN DE RESPALDO ──────────────────────────── -->
-    <div class="section-card" id="secPoster" data-accent="teal" style="animation-delay:.07s">
-      <div class="sc-head">
-        <div class="sc-icon si-teal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-        </div>
-        <div class="sc-head-text">
-          <h3>Imagen de respaldo <span style="font-size:.72rem;font-weight:400;color:var(--text-lt)">(poster)</span></h3>
-          <p>Se muestra mientras carga el video o si el video no está disponible</p>
-        </div>
-      </div>
-      <div class="sc-body">
-        <div class="poster-layout">
-          <!-- preview -->
-          <div class="poster-frame" id="posterFrame" onclick="document.getElementById('posterFile').click()" title="Clic para seleccionar imagen">
-            <div class="poster-no-img" id="posterNoImg">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-              <span>Sin imagen</span>
-            </div>
-            <img id="posterImg" src="" alt="Poster" style="display:none">
-            <button type="button" class="preview-zoom-btn" id="posterZoomBtn" style="display:none" title="Ver en grande"
-              onclick="event.stopPropagation(); openLightboxImage(document.getElementById('posterImg').src, 'Imagen de respaldo (poster)')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-            </button>
-            <div class="poster-hover-hint">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              Cambiar imagen
-            </div>
-          </div>
-
-          <!-- controls -->
-          <div class="poster-controls">
-            <div class="upload-zone" id="uploadZone"
-              onclick="document.getElementById('posterFile').click()"
-              ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <div><strong id="uploadZoneText">Clic o arrastra una imagen</strong></div>
-              <span>JPG, PNG, WebP · máx 5 MB
-                <span class="spec-badge" tabindex="0" onclick="event.stopPropagation()" data-tip="Formato horizontal panorámico, mínimo recomendado 1920×1080px (16:9) — entre más ancha, mejor. Se recorta automáticamente tipo &quot;cover&quot; para llenar el hero completo, así que evita fotos verticales, cuadradas o con lo importante muy cerca de los bordes (se puede cortar).">i</span>
-              </span>
-            </div>
-            <input type="file" id="posterFile" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadPoster(this)">
-            <div class="field" style="margin-bottom:0">
-              <div class="field-top">
-                <label>Ruta manual <span class="field-tick" id="tickPoster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></span></label>
-              </div>
-              <input type="text" class="fi" id="posterPath" style="font-family:monospace;font-size:.78rem"
-                oninput="setPosterPreview(this.value)" onblur="onFieldBlur()"
-                placeholder="assets/images/general/index.webp">
-              <p class="field-hint">Se recorta automáticamente para llenar el hero (recorte tipo "cover"), sin dimensión mínima obligatoria — pero para que se vea bien sin recortes raros, usa una imagen horizontal panorámica (16:9 o más ancha).</p>
-              <div class="media-analysis" id="posterAnalysis"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 3. VIDEO ───────────────────────────────────────── -->
+    <!-- ── 2. VIDEO ───────────────────────────────────────── -->
     <div class="section-card" id="secVideo" data-accent="violet" style="animation-delay:.12s">
       <div class="sc-head">
         <div class="sc-icon si-violet">

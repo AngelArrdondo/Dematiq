@@ -46,7 +46,7 @@
   <!-- ===================== HERO / VIDEO ===================== -->
   <section id="hero">
     <div class="hero-video-wrap">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/images/general/index.webp?v=2">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto">
         <source src="assets/videos/hero.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
@@ -251,7 +251,6 @@
         const heroVideo  = document.querySelector('.hero-video');
         const heroSource = heroVideo?.querySelector('source');
         const heroBadge  = document.querySelector('.hero-brand h5');
-        if (home.hero.poster && heroVideo)  heroVideo.poster = home.hero.poster;
         if (home.hero.video  && heroSource) { heroSource.src = home.hero.video; heroVideo.load(); }
         if (home.hero.badge  && heroBadge)  heroBadge.textContent = home.hero.badge;
       }
