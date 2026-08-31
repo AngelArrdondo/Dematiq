@@ -6,13 +6,10 @@
    Esquinas rectas · reglas finas · datos en monoespaciada.
    Secuencia 01/02/03 para reto · solución · resultados.
 
-   ⚠️ FRANJA DE MÉTRICAS desactivada por ahora (números de ejemplo).
-      Para reactivarla cuando tengas cifras reales:
-      pon  SHOW_METRICS = true  aquí abajo. El bloque ya está listo.
    ══════════════════════════════════════════════════ */
 
 (async function () {
-  const SHOW_METRICS = false;   // ← cambia a true cuando las métricas sean reales
+  const SHOW_METRICS = true;
 
   let PROJECTS = window.DEMATIQ_PROJECTS || [];
   const root = document.getElementById('pd-root');

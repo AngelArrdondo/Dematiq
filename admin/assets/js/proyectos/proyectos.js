@@ -24,6 +24,8 @@
     { val: 'otro',       label: 'Otro' },
   ];
 
+  const METRIC_LABELS = ['Eficiencia', 'Producción', 'Calidad', 'Tiempo', 'Costo'];
+
   let projects = (CM.get('proyectos') || []).map(p => ({
     id:         p.id         || '',
     title:      p.title      || p.nombre || '',   /* backward compat */
@@ -275,6 +277,13 @@
     return CATS.map(c => `<option value="${c.val}"${c.val === selected ? ' selected' : ''}>${c.label}</option>`).join('');
   }
 
+  function metricLabelOptions(selected) {
+    const opts = METRIC_LABELS.slice();
+    if (selected && !opts.includes(selected)) opts.push(selected); /* conserva valores antiguos de texto libre */
+    return '<option value="">— Seleccionar —</option>' +
+      opts.map(l => `<option value="${esc(l)}"${l === selected ? ' selected' : ''}>${esc(l)}</option>`).join('');
+  }
+
   function renderProjects() {
     const c = document.getElementById('projects-container');
     c.innerHTML = '';
@@ -444,8 +453,10 @@
                   <div class="metric-mini">
                     <input type="text" class="fi metric-v" placeholder="+35%" value="${esc(p.metricas[m].v)}"
                       oninput="projects[${i}].metricas[${m}].v=this.value;checkDirty()" onblur="onFieldBlur()">
-                    <input type="text" class="fi metric-l" placeholder="Eficiencia" value="${esc(p.metricas[m].l)}"
-                      oninput="projects[${i}].metricas[${m}].l=this.value;checkDirty()" onblur="onFieldBlur()">
+                    <select class="fi metric-l"
+                      onchange="projects[${i}].metricas[${m}].l=this.value;checkDirty()" onblur="onFieldBlur()">
+                      ${metricLabelOptions(p.metricas[m].l)}
+                    </select>
                   </div>`).join('')}
               </div>
               <p class="field-hint">Valor + etiqueta de cada cifra — deja en blanco las que no apliquen</p>
