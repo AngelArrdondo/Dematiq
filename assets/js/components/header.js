@@ -29,21 +29,21 @@ class HeaderComponent {
     const currentPage = this.getCurrentPage();
 
     const navItems = [
-      { href: `${base}/index.html`,                        text: 'Inicio',        page: 'index.html'    },
-      { href: `${base}/pages/corporativo/nosotros.html`,   text: 'Sobre Nosotros',page: 'nosotros.html' },
-      { href: `${base}/pages/corporativo/soluciones.html`, text: 'Proyectos',     page: ['soluciones.html', 'proyecto.html']},
-      { href: `${base}/pages/corporativo/industrias.html`, text: 'Industrias',    page: 'industrias.html'},
-      { href: `${base}/pages/corporativo/Contacto.html`,   text: 'Contacto',      page: 'Contacto.html' },
-      { href: 'https://tienda.dematiq.com.mx/',            text: 'Tienda',        external: true }
+      { id: 'inicio',      href: `${base}/index.html`,                        text: 'Inicio',        page: 'index.html'    },
+      { id: 'nosotros',    href: `${base}/pages/corporativo/nosotros.html`,   text: 'Sobre Nosotros',page: 'nosotros.html' },
+      { id: 'proyectos',   href: `${base}/pages/corporativo/soluciones.html`, text: 'Proyectos',     page: ['soluciones.html', 'proyecto.html']},
+      { id: 'industrias',  href: `${base}/pages/corporativo/industrias.html`, text: 'Industrias',    page: 'industrias.html'},
+      { id: 'contacto',    href: `${base}/pages/corporativo/Contacto.html`,   text: 'Contacto',      page: 'Contacto.html' },
+      { id: 'tienda',      href: 'https://tienda.dematiq.com.mx/',            text: 'Tienda',        external: true }
     ];
 
     const navHTML = navItems.map(item => {
       if (item.external) {
-        return `<li><a href="${item.href}" target="_blank" rel="noopener">${item.text}</a></li>`;
+        return `<li><a href="${item.href}" target="_blank" rel="noopener" data-nav-id="${item.id}">${item.text}</a></li>`;
       }
       const pages = Array.isArray(item.page) ? item.page : [item.page];
       const active = pages.includes(currentPage) ? ' class="active"' : '';
-      return `<li><a href="${item.href}"${active}>${item.text}</a></li>`;
+      return `<li><a href="${item.href}"${active} data-nav-id="${item.id}">${item.text}</a></li>`;
     }).join('');
 
     return `
@@ -113,6 +113,49 @@ class HeaderComponent {
 
     // Mostrar el body YA con header listo — evita el flash sin header
     document.body.style.visibility = 'visible';
+
+    this.applyNavOverrides();
+  }
+
+  // Los textos del menú se renderizan primero con sus valores por defecto
+  // (para no bloquear el primer pintado) y aquí se sobreescriben si el
+  // admin definió textos personalizados en la sección "Navegación".
+  static applyNavOverrides() {
+    fetch('/api/contenido.php?clave=navegacion', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => {
+        if (!d || typeof d !== 'object') return;
+        ['inicio', 'nosotros', 'proyectos', 'industrias', 'contacto', 'tienda'].forEach(id => {
+          const el = document.querySelector(`#main-nav a[data-nav-id="${id}"]`);
+          if (!el) return;
+          if (d[id]) el.textContent = d[id];
+          const url = d[id + 'Url'];
+          if (url) el.href = url;
+        });
+        this.renderExtraLinks(d.extras);
+      })
+      .catch(() => {});
+  }
+
+  // Enlaces adicionales, configurables desde el admin, que se muestran al
+  // final del menú (justo antes del botón de inicio de sesión).
+  static renderExtraLinks(extras) {
+    if (!Array.isArray(extras) || !extras.length) return;
+    const ul = document.querySelector('#main-nav ul');
+    if (!ul) return;
+    extras.forEach(ex => {
+      const texto = (ex && ex.texto || '').trim();
+      const url   = (ex && ex.url || '').trim();
+      if (!texto || !url) return;
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = texto;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
   }
 }
 

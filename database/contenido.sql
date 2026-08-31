@@ -70,5 +70,14 @@ INSERT INTO contenido (clave, valor) VALUES
   {"id":"instalaciones", "nombre":"Servicio de Instalaciones Eléctricas",     "image":"assets/images/general/img2.png"},
   {"id":"ingenieria",    "nombre":"Ingeniería Básica y de Detalle",           "image":"assets/images/general/img3.png"},
   {"id":"variadores",    "nombre":"Programación de Variadores de Frecuencia", "image":"assets/images/general/img1.png"}
-]')
+]'),
+('navegacion', '{
+  "inicio": "Inicio",
+  "nosotros": "Sobre Nosotros",
+  "proyectos": "Proyectos",
+  "industrias": "Industrias",
+  "contacto": "Contacto",
+  "tienda": "Tienda",
+  "tiendaUrl": "https://tienda.dematiq.com.mx/"
+}')
 ON DUPLICATE KEY UPDATE clave = clave;

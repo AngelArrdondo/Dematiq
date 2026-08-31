@@ -297,6 +297,23 @@ if ($method === 'GET') {
         }
     }
 
+    if ($clave === 'navegacion' && is_array($valor) && isset($valor['extras']) && is_array($valor['extras'])) {
+        $maxExtras = 6;
+        if (count($valor['extras']) > $maxExtras) {
+            http_response_code(400);
+            echo json_encode(['error' => "Máximo {$maxExtras} enlaces adicionales permitidos"]);
+            exit;
+        }
+        foreach ($valor['extras'] as $ex) {
+            $url = $ex['url'] ?? '';
+            if ($url !== '' && !filter_var($url, FILTER_VALIDATE_URL)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Uno de los enlaces adicionales tiene una URL no válida']);
+                exit;
+            }
+        }
+    }
+
     $clavesMaquinas = ['ensamble', 'maqcontrol', 'maqprob', 'maqinspe', 'maclim', 'maqmar', 'macrobot', 'maqindus'];
     $limiteTabs     = 10;
     if (in_array($clave, $clavesMaquinas, true) && is_array($valor) && isset($valor['tabs']) && is_array($valor['tabs']) && count($valor['tabs']) > $limiteTabs) {
