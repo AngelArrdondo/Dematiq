@@ -65,7 +65,7 @@ $nombre  = strip_tags($nombre);
 $asunto  = strip_tags($asunto) ?: 'Consulta desde DEMATIQ';
 $mensaje = strip_tags($mensaje);
 
-$destinatario = getenv('SMTP_TO') ?: 'dematiq3@gmail.com';
+$destinatario = getenv('SMTP_TO') ?: 'ventas@dematiq.com.mx';
 
 $cuerpo  = "Has recibido un nuevo mensaje desde el formulario de contacto de DEMATIQ.\n\n";
 $cuerpo .= "Nombre:  {$nombre}\n";
