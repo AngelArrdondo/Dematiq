@@ -102,7 +102,14 @@ function registrarVisita() {
   // debe medir visitantes por día, no cargas de página). Un candado por día en
   // localStorage evita contar de nuevo hasta el día siguiente.
   try {
-    const hoy = new Date().toISOString().slice(0, 10);
+    // Fecha LOCAL del visitante, no UTC: toISOString() da la fecha UTC, que
+    // se adelanta a la de México (UTC-6) desde las 6pm hora local en adelante,
+    // haciendo que este candado deje de coincidir con el día que registra el
+    // servidor (api/visita.php usa America/Mexico_City) y dispare un conteo
+    // duplicado cada noche — el mismo bug de sobreconteo que este candado
+    // existe para evitar.
+    const d = new Date();
+    const hoy = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     if (localStorage.getItem('dtq_visita') === hoy) return;
     localStorage.setItem('dtq_visita', hoy);
   } catch {}
