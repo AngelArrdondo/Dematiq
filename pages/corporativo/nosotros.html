@@ -174,6 +174,25 @@
       if (data.mision  && filosofia[0]) { const p = filosofia[0].querySelector('p'); if (p) p.textContent = data.mision; }
       if (data.vision  && filosofia[1]) { const p = filosofia[1].querySelector('p'); if (p) p.textContent = data.vision; }
       if (data.valores && filosofia[2]) { const p = filosofia[2].querySelector('p'); if (p) p.textContent = data.valores; }
+
+      if (data.cta) {
+        const cta = data.cta;
+        const ctaSection = document.querySelector('.nosotros-cta');
+        if (ctaSection) {
+          if (cta.titulo)    { const el = ctaSection.querySelector('h2'); if (el) el.textContent = cta.titulo; }
+          if (cta.subtitulo) { const el = ctaSection.querySelector('p');  if (el) el.textContent = cta.subtitulo; }
+          const btn1 = ctaSection.querySelector('.ncta-btn--primary');
+          const btn2 = ctaSection.querySelector('.ncta-btn--ghost');
+          if (btn1) {
+            if (cta.btn1Text) btn1.textContent = cta.btn1Text;
+            if (cta.btn1Href) btn1.href = cta.btn1Href;
+          }
+          if (btn2) {
+            if (cta.btn2Text) btn2.textContent = cta.btn2Text;
+            if (cta.btn2Href) btn2.href = cta.btn2Href;
+          }
+        }
+      }
     } catch (e) { /* fallo silencioso */ }
 
     // ── Empresas Asociadas (Socios) — marquee (duplicado para loop continuo) ──
