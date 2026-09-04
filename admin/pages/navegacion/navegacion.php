@@ -91,57 +91,62 @@ try {
       </p>
 
       <?php
+        $dominio  = 'https://dematiq.com.mx';
         $destinos = [
-          'inicio'     => '/index.html',
-          'nosotros'   => '/pages/corporativo/nosotros.html',
-          'proyectos'  => '/pages/corporativo/soluciones.html',
-          'industrias' => '/pages/corporativo/industrias.html',
-          'contacto'   => '/pages/corporativo/Contacto.html',
+          'inicio'     => $dominio . '/index.html',
+          'nosotros'   => $dominio . '/pages/corporativo/nosotros.html',
+          'proyectos'  => $dominio . '/pages/corporativo/soluciones.html',
+          'industrias' => $dominio . '/pages/corporativo/industrias.html',
+          'contacto'   => $dominio . '/pages/corporativo/Contacto.html',
         ];
+        // Un valor guardado vacío ("") debe verse igual que uno nunca guardado:
+        // ambos muestran el texto/URL por defecto en el campo. ?? no basta porque
+        // solo cubre null/no-existe, no la cadena vacía.
+        function nv($v, $def) { return empty($v) ? $def : $v; }
       ?>
 
       <div style="padding:0 20px">
         <div class="form-grid-2">
           <div class="form-group">
             <label for="navInicio">Inicio</label>
-            <input type="text" id="navInicio" maxlength="40" placeholder="Inicio" autocomplete="off" value="<?= htmlspecialchars($d['inicio'] ?? '') ?>">
+            <input type="text" id="navInicio" maxlength="40" placeholder="Inicio" autocomplete="off" value="<?= htmlspecialchars(nv($d['inicio'] ?? '', 'Inicio')) ?>">
             <label for="navInicioUrl" style="display:block;margin-top:8px">URL de destino</label>
-            <input type="text" id="navInicioUrl" maxlength="255" placeholder="<?= $destinos['inicio'] ?>" autocomplete="off" value="<?= htmlspecialchars($d['inicioUrl'] ?? '') ?>">
+            <input type="text" id="navInicioUrl" maxlength="255" placeholder="<?= $destinos['inicio'] ?>" autocomplete="off" value="<?= htmlspecialchars(nv($d['inicioUrl'] ?? '', $destinos['inicio'])) ?>">
             <p style="font-size:.72rem;color:var(--text-lt);margin:5px 0 0">Déjalo vacío para usar <code><?= $destinos['inicio'] ?></code></p>
           </div>
           <div class="form-group">
             <label for="navNosotros">Sobre Nosotros</label>
-            <input type="text" id="navNosotros" maxlength="40" placeholder="Sobre Nosotros" autocomplete="off" value="<?= htmlspecialchars($d['nosotros'] ?? '') ?>">
+            <input type="text" id="navNosotros" maxlength="40" placeholder="Sobre Nosotros" autocomplete="off" value="<?= htmlspecialchars(nv($d['nosotros'] ?? '', 'Sobre Nosotros')) ?>">
             <label for="navNosotrosUrl" style="display:block;margin-top:8px">URL de destino</label>
-            <input type="text" id="navNosotrosUrl" maxlength="255" placeholder="<?= $destinos['nosotros'] ?>" autocomplete="off" value="<?= htmlspecialchars($d['nosotrosUrl'] ?? '') ?>">
+            <input type="text" id="navNosotrosUrl" maxlength="255" placeholder="<?= $destinos['nosotros'] ?>" autocomplete="off" value="<?= htmlspecialchars(nv($d['nosotrosUrl'] ?? '', $destinos['nosotros'])) ?>">
             <p style="font-size:.72rem;color:var(--text-lt);margin:5px 0 0">Déjalo vacío para usar <code><?= $destinos['nosotros'] ?></code></p>
           </div>
           <div class="form-group">
             <label for="navProyectos">Proyectos</label>
-            <input type="text" id="navProyectos" maxlength="40" placeholder="Proyectos" autocomplete="off" value="<?= htmlspecialchars($d['proyectos'] ?? '') ?>">
+            <input type="text" id="navProyectos" maxlength="40" placeholder="Proyectos" autocomplete="off" value="<?= htmlspecialchars(nv($d['proyectos'] ?? '', 'Proyectos')) ?>">
             <label for="navProyectosUrl" style="display:block;margin-top:8px">URL de destino</label>
-            <input type="text" id="navProyectosUrl" maxlength="255" placeholder="<?= $destinos['proyectos'] ?>" autocomplete="off" value="<?= htmlspecialchars($d['proyectosUrl'] ?? '') ?>">
+            <input type="text" id="navProyectosUrl" maxlength="255" placeholder="<?= $destinos['proyectos'] ?>" autocomplete="off" value="<?= htmlspecialchars(nv($d['proyectosUrl'] ?? '', $destinos['proyectos'])) ?>">
             <p style="font-size:.72rem;color:var(--text-lt);margin:5px 0 0">Déjalo vacío para usar <code><?= $destinos['proyectos'] ?></code></p>
           </div>
           <div class="form-group">
             <label for="navIndustrias">Industrias</label>
-            <input type="text" id="navIndustrias" maxlength="40" placeholder="Industrias" autocomplete="off" value="<?= htmlspecialchars($d['industrias'] ?? '') ?>">
+            <input type="text" id="navIndustrias" maxlength="40" placeholder="Industrias" autocomplete="off" value="<?= htmlspecialchars(nv($d['industrias'] ?? '', 'Industrias')) ?>">
             <label for="navIndustriasUrl" style="display:block;margin-top:8px">URL de destino</label>
-            <input type="text" id="navIndustriasUrl" maxlength="255" placeholder="<?= $destinos['industrias'] ?>" autocomplete="off" value="<?= htmlspecialchars($d['industriasUrl'] ?? '') ?>">
+            <input type="text" id="navIndustriasUrl" maxlength="255" placeholder="<?= $destinos['industrias'] ?>" autocomplete="off" value="<?= htmlspecialchars(nv($d['industriasUrl'] ?? '', $destinos['industrias'])) ?>">
             <p style="font-size:.72rem;color:var(--text-lt);margin:5px 0 0">Déjalo vacío para usar <code><?= $destinos['industrias'] ?></code></p>
           </div>
           <div class="form-group">
             <label for="navContacto">Contacto</label>
-            <input type="text" id="navContacto" maxlength="40" placeholder="Contacto" autocomplete="off" value="<?= htmlspecialchars($d['contacto'] ?? '') ?>">
+            <input type="text" id="navContacto" maxlength="40" placeholder="Contacto" autocomplete="off" value="<?= htmlspecialchars(nv($d['contacto'] ?? '', 'Contacto')) ?>">
             <label for="navContactoUrl" style="display:block;margin-top:8px">URL de destino</label>
-            <input type="text" id="navContactoUrl" maxlength="255" placeholder="<?= $destinos['contacto'] ?>" autocomplete="off" value="<?= htmlspecialchars($d['contactoUrl'] ?? '') ?>">
+            <input type="text" id="navContactoUrl" maxlength="255" placeholder="<?= $destinos['contacto'] ?>" autocomplete="off" value="<?= htmlspecialchars(nv($d['contactoUrl'] ?? '', $destinos['contacto'])) ?>">
             <p style="font-size:.72rem;color:var(--text-lt);margin:5px 0 0">Déjalo vacío para usar <code><?= $destinos['contacto'] ?></code></p>
           </div>
           <div class="form-group">
             <label for="navTienda">Tienda</label>
-            <input type="text" id="navTienda" maxlength="40" placeholder="Tienda" autocomplete="off" value="<?= htmlspecialchars($d['tienda'] ?? '') ?>">
+            <input type="text" id="navTienda" maxlength="40" placeholder="Tienda" autocomplete="off" value="<?= htmlspecialchars(nv($d['tienda'] ?? '', 'Tienda')) ?>">
             <label for="navTiendaUrl" style="display:block;margin-top:8px">URL de destino</label>
-            <input type="url" id="navTiendaUrl" maxlength="255" placeholder="https://tienda.dematiq.com.mx/" autocomplete="off" value="<?= htmlspecialchars($d['tiendaUrl'] ?? '') ?>">
+            <input type="url" id="navTiendaUrl" maxlength="255" placeholder="https://tienda.dematiq.com.mx/" autocomplete="off" value="<?= htmlspecialchars(nv($d['tiendaUrl'] ?? '', 'https://tienda.dematiq.com.mx/')) ?>">
             <p style="font-size:.72rem;color:var(--text-lt);margin:5px 0 0">Link externo — se abre en una pestaña nueva. Déjalo vacío para usar <code>https://tienda.dematiq.com.mx/</code></p>
           </div>
         </div>
@@ -189,7 +194,7 @@ try {
 
 <script src="../../assets/js/auth.js?v=5"></script>
 <script>const CSRF_TOKEN = '<?= $csrfToken ?>';</script>
-<script src="../../assets/js/navegacion/navegacion.js?v=1"></script>
+<script src="../../assets/js/navegacion/navegacion.js?v=2"></script>
 
 </body>
 </html>

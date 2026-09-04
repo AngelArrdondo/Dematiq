@@ -123,6 +123,7 @@ async function saveNavegacion() {
     const res = await CM.set('navegacion', valor);
     if (res && res.ok) {
       showToast('Cambios guardados correctamente');
+      setTimeout(() => location.reload(), 900);
     } else {
       showToast(res?.error || 'Error al guardar', 'error');
     }
